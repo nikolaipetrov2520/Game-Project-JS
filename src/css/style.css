@@ -1,0 +1,93 @@
+body {
+    font-family: 'Consolas';
+    margin: 0;
+    overflow: hidden;
+}
+
+.game {
+    background: rgb(47,230,50);
+    background: linear-gradient(0deg, rgba(47,230,50,1) 0%, rgba(215,237,238,1) 10%, rgba(21,229,233,1) 100%); 
+    width: 100vw;
+    height: 100vh;
+}
+
+.start-screen {
+    text-align: center;
+    padding: 35px;
+    font-size: 55px;
+    width: 500px;
+    background-color: #0942093b;
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%);
+    border-style: solid;
+    border-radius: 6px;
+}
+
+.start-screen:hover {
+    background-color: rgba(9, 63, 9, 0.698);
+    cursor: pointer;
+    border-color: rgba(248, 44, 44, 0.472);
+}
+
+.game-screen {
+    width: 100%;
+    height: 100%;
+    background: rgb(47,230,50);
+    background: linear-gradient(0deg, rgba(47,230,50,1) 0%, rgba(215,237,238,1) 10%, rgba(21,229,233,1) 100%); 
+}
+
+.wizard {
+    position: absolute;
+    background-image: url("../images/1.png");
+    background-size: cover;
+}
+
+.bug {
+    position: absolute;
+    background-image: url("../images/man.png");
+    background-size: cover;
+}
+
+.fireball {
+    position: absolute;
+    background-image: url("../images/fire-ball.png");
+    background-size: cover;
+}
+
+.hidden {
+    display: none;
+}
+
+.score {
+    position: absolute;
+    top: 10px;
+    left: 90%;
+    transform: translate(-50%);
+    text-align: center;
+    padding: 20px;
+    font-size: 35px;
+    width: 200px;
+    background-color: #0942093b;
+    border-style: solid;
+    border-radius: 6px;
+}
+h3{
+    text-align: center;
+    padding: 40px;
+    font-size: 64px;
+    width: 500px;
+    background-color: #0942093b;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translate(-50%);
+    border-style: solid;
+    border-radius: 6px;
+}
+.cloud{
+    position: absolute;
+    background-image: url("../images/cloud.png");
+    background-size: cover;
+}
