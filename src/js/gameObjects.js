@@ -52,6 +52,26 @@ function initGameObject() {
             cloudElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight / 2 - stats.height)) + 'px';
 
             gameScreen.appendChild(cloudElement);
-        }
+        },
+        createTree1(stats) {
+            const tree1Element = document.createElement('div');
+            tree1Element.classList.add('tree1');
+            tree1Element.style.width = stats.width + 'px';
+            tree1Element.style.height = stats.height + 'px';
+            tree1Element.style.left = gameScreen.offsetWidth - stats.width + 'px';
+            tree1Element.style.top = gameScreen.offsetHeight - stats.height + 'px';
+
+            gameScreen.appendChild(tree1Element);
+        },
+        createTree2(stats) {
+            const tree2Element = document.createElement('div');
+            tree2Element.classList.add('tree2');
+            tree2Element.style.width = stats.width + 'px';
+            tree2Element.style.height = stats.height + 'px';
+            tree2Element.style.left = gameScreen.offsetWidth - stats.width + 'px';
+            tree2Element.style.top = gameScreen.offsetHeight - stats.height + 'px';
+
+            gameScreen.appendChild(tree2Element);
+        },
     };
 }

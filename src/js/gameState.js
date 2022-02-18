@@ -46,8 +46,22 @@ function initState() {
             height: 200,
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 8000,
-            speed: 0.5, 
-        }
+            speed: 2, 
+        },
+        tree1Stats: {
+            width: 100,
+            height: 150,
+            nextSpawnTimestamp: 0,
+            maxSpawnInterval: 4000,
+            speed: 1, 
+        },
+        tree2Stats: {
+            width: 100,
+            height: 150,
+            nextSpawnTimestamp: 0,
+            maxSpawnInterval: 15000,
+            speed: 1, 
+        },
     }
 
     return state;

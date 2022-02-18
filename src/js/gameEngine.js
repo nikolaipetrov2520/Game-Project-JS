@@ -43,6 +43,42 @@ function gameLoop(state, game, timestamp) {
         }
     });
 
+    // Spawn tree1
+    if (timestamp > state.tree1Stats.nextSpawnTimestamp) {
+        game.createTree1(state.tree1Stats);
+        state.tree1Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree1Stats.maxSpawnInterval;
+    }
+
+    // Render tree1
+    let tree1Element = document.querySelectorAll('.tree1');
+    tree1Element.forEach(tree1 => {
+        let posX = parseInt(tree1.style.left);
+
+        if (posX > 0) {
+            tree1.style.left = posX - state.tree1Stats.speed + 'px';
+        } else {
+            tree1.remove();
+        }
+    });
+
+    // Spawn tree2
+    // if (timestamp > state.tree2Stats.nextSpawnTimestamp) {
+    //     game.createTree2(state.tree2Stats);
+    //     state.tree2Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree2Stats.maxSpawnInterval;
+    // }
+
+    // // Render tree2
+    // let tree2Element = document.querySelectorAll('.tree2');
+    // tree2Element.forEach(tree2 => {
+    //     let posX = parseInt(tree2.style.left);
+
+    //     if (posX > 0) {
+    //         tree2.style.left = posX - state.tree2.speed + 'px';
+    //     } else {
+    //         tree2.remove();
+    //     }
+    // });
+
     // Spawn bugs
     if (timestamp > state.bugStats.nextSpawnTimestamp) {
         game.createBug(state.bugStats);

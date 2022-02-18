@@ -91,3 +91,13 @@ h3{
     background-image: url("../images/cloud.png");
     background-size: cover;
 }
+.tree1{
+    position: absolute;
+    background-image: url("../images/tree1.png");
+    background-size: cover;
+}
+.tree2{
+    position: absolute;
+    background-image: url("../images/tree2.png");
+    background-size: cover;
+}
