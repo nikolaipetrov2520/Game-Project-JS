@@ -5,9 +5,10 @@ function initState() {
     const state = {
         player: 'Pesho',
         gameOver: false,
-        score: 0,
+        score: 1,
         scoreRate: 0.02,
         killScore: 100,
+        level: 1,
         wizard: {
             width: 57,
             height: 110,
@@ -19,8 +20,8 @@ function initState() {
             width: 90,
             height: 80,
             nextSpawnTimestamp: 0,
-            maxSpawnInterval: 1500,
-            speed: 3,
+            maxSpawnInterval: 3000,
+            speed: 2,
         },
         fireball: {
             width: 20,
@@ -45,7 +46,7 @@ function initState() {
             height: 200,
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 8000,
-            speed: 2, 
+            speed: 0.5, 
         }
     }
 

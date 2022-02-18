@@ -8,8 +8,10 @@ function gameLoop(state, game, timestamp) {
     const { wizard } = state;
     const { wizardElement } = game;
 
-    game.scoreScreen.textContent = `${state.score.toFixed(0)} pts.`;
-    
+    game.scoreScreen.textContent = `${state.score.toFixed(0)} pts. Level: ${state.level}`;
+
+    upLevel(state);
+
     modifyWizardPosition(state, game);
 
     if (state.keys.Space) {
@@ -28,12 +30,12 @@ function gameLoop(state, game, timestamp) {
         game.createCloud(state.cloudStats);
         state.cloudStats.nextSpawnTimestamp = timestamp + Math.random() * state.cloudStats.maxSpawnInterval;
     }
-    
+
     // Render cloud
     let cloudElement = document.querySelectorAll('.cloud');
     cloudElement.forEach(cloud => {
         let posX = parseInt(cloud.style.left);
-        
+
         if (posX > 0) {
             cloud.style.left = posX - state.cloudStats.speed + 'px';
         } else {
@@ -89,17 +91,48 @@ function gameLoop(state, game, timestamp) {
     wizardElement.style.left = wizard.posX + 'px';
     wizardElement.style.top = wizard.posY + 'px';
 
-    
+
     if (state.gameOver) {
         //alert(`Game Over - You had ${state.score} pts.`);
         const gameOver = document.createElement('h3');
-        gameOver.textContent = `Game Over! Your Score is: ${state.score.toFixed(0) } points`
+        gameOver.textContent = `Game Over! Your Score is: ${state.score.toFixed(0)} points`
         game.gameScreen.innerHTML = '';
         game.gameScreen.appendChild(gameOver);
     } else {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
     }
+}
+
+function upLevel(state) {   
+    if (state.score > 100) {
+        state.level = 2;
+    } 
+    if (state.score > 1000) {
+        state.level = 3;
+    } 
+    if (state.score > 5000) {
+        state.level = 4;
+    }
+    if (state.score > 10000) {
+        state.level = 5;
+    }
+    if (state.score > 15000) {
+        state.level = 6;
+    }
+    if (state.score > 20000) {
+        state.level = 7;
+    }
+    if (state.score > 25000) {
+        state.level = 8;
+    }
+    if (state.score > 30000) {
+        state.level = 9;
+    }
+    if (state.score > 35000) {
+        state.level = 10;
+    }
+     state.bugStats.speed = state.level * 1.3;
 }
 
 function modifyWizardPosition(state, game) {
