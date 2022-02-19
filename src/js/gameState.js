@@ -49,17 +49,17 @@ function initState() {
             speed: 2, 
         },
         tree1Stats: {
-            width: 100,
-            height: 150,
+            width: 90,
+            height: 130,
             nextSpawnTimestamp: 0,
-            maxSpawnInterval: 4000,
+            maxSpawnInterval: 6000,
             speed: 1, 
         },
         tree2Stats: {
             width: 100,
             height: 150,
             nextSpawnTimestamp: 0,
-            maxSpawnInterval: 15000,
+            maxSpawnInterval: 4000,
             speed: 1, 
         },
     }

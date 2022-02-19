@@ -61,23 +61,23 @@ function gameLoop(state, game, timestamp) {
         }
     });
 
-    // Spawn tree2
-    // if (timestamp > state.tree2Stats.nextSpawnTimestamp) {
-    //     game.createTree2(state.tree2Stats);
-    //     state.tree2Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree2Stats.maxSpawnInterval;
-    // }
+    //Spawn tree2
+    if (timestamp > state.tree2Stats.nextSpawnTimestamp) {
+        game.createTree2(state.tree2Stats);
+        state.tree2Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree2Stats.maxSpawnInterval;
+    }
 
-    // // Render tree2
-    // let tree2Element = document.querySelectorAll('.tree2');
-    // tree2Element.forEach(tree2 => {
-    //     let posX = parseInt(tree2.style.left);
+    // Render tree2
+    let tree2Element = document.querySelectorAll('.tree2');
+    tree2Element.forEach(tree2 => {
+        let posX = parseInt(tree2.style.left);
 
-    //     if (posX > 0) {
-    //         tree2.style.left = posX - state.tree2.speed + 'px';
-    //     } else {
-    //         tree2.remove();
-    //     }
-    // });
+        if (posX > 0) {
+            tree2.style.left = posX - state.tree2Stats.speed + 'px';
+        } else {
+            tree2.remove();
+        }
+    });
 
     // Spawn bugs
     if (timestamp > state.bugStats.nextSpawnTimestamp) {
@@ -141,34 +141,52 @@ function gameLoop(state, game, timestamp) {
 }
 
 function upLevel(state) {   
-    if (state.score > 100) {
+    if (state.score > 500) {
         state.level = 2;
     } 
     if (state.score > 1000) {
         state.level = 3;
     } 
-    if (state.score > 5000) {
+    if (state.score > 2000) {
         state.level = 4;
     }
-    if (state.score > 10000) {
+    if (state.score > 5000) {
         state.level = 5;
     }
-    if (state.score > 15000) {
+    if (state.score > 8000) {
         state.level = 6;
     }
-    if (state.score > 20000) {
+    if (state.score > 12000) {
         state.level = 7;
     }
-    if (state.score > 25000) {
+    if (state.score > 18000) {
         state.level = 8;
     }
-    if (state.score > 30000) {
+    if (state.score > 25000) {
         state.level = 9;
     }
     if (state.score > 35000) {
         state.level = 10;
     }
+    if (state.score > 40000) {
+        state.level = 11;
+    }
+    if (state.score > 45000) {
+        state.level = 12;
+    }
+    if (state.score > 50000) {
+        state.level = 13;
+    }
+    if (state.score > 55000) {
+        state.level = 14;
+    }
+    if (state.score > 60000) {
+        state.level = 15;
+    }
      state.bugStats.speed = state.level * 1.3;
+    //  state.bugStats.width -= Math.round(state.level * 2);
+    //  state.bugStats.height -= Math.round(state.level *2);
+
 }
 
 function modifyWizardPosition(state, game) {
