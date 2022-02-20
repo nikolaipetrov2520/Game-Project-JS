@@ -1,21 +1,40 @@
+let state1 = initState();
+let game1 = initGameObject();
+
 function start(state, game) {
     game.createWizard(state.wizard);
-    game.createLevelProgress();
-    let pElement = document.createElement('p');
-    game.levelScreen.appendChild(pElement);
-    window.requestAnimationFrame(gameLoop.bind(null, state, game, pElement))
+    game.createLevelProgress(state.progressBar);
+    game.createEmptyProgress(state.progressEmpty);
+    window.requestAnimationFrame(gameLoop.bind(null, state, game));
 }
 
-function gameLoop(state, game, timestamp, pElement) {
+function gameLoop(state, game, timestamp) {
     const { wizard } = state;
+    const { progressBar } = state;
+    const { progressEmpty } = state;
     const { wizardElement } = game;
     const { levelProgress } = game;
-    game.scoreScreen.textContent = `${state.score.toFixed(0)} pts.`;
-    // pElement.textContent = `Level: ${state.level}`;
-    
-    
-    //levelProgress.style.width = Math.floor(200 / state.toNextLevel * state.score) + 'px';
+    const { emptyProgress } = game;
+    game.scoreScreen.textContent = `${state.score.toFixed(0)} pts. Level: ${state.level}`;
 
+    // Render Progress
+    levelProgress.style.left = progressBar.posX + '%';
+    levelProgress.style.top = progressBar.posY + 'px';
+
+    emptyProgress.style.left = progressEmpty.posX + '%';
+    emptyProgress.style.top = progressEmpty.posY + 'px';
+
+    levelProgress.style.width = progressBar.width / state.toNextLevel * state.neededScore + 'px';
+    if( parseInt(levelProgress.style.width) <= 50){
+        levelProgress.className = '';
+        levelProgress.classList.add('progress-red');
+    }else if( parseInt(levelProgress.style.width) <= 150){
+        levelProgress.className = '';
+        levelProgress.classList.add('progress-yello');
+    }else{
+        levelProgress.className = '';
+        levelProgress.classList.add('progress-green');
+    }
 
     upLevel(state);
 
@@ -136,9 +155,16 @@ function gameLoop(state, game, timestamp, pElement) {
 
     if (state.gameOver) {
         const gameOver = document.createElement('h3');
-        gameOver.textContent = `Game Over! Your Score is: ${state.score.toFixed(0)} points`
+        const startBtn = document.createElement('h3');
+        startBtn.classList.add('start-btn');
+        startBtn.textContent = 'Start again'
+        gameOver.textContent = `Game Over! Your Score is: ${state.score.toFixed(0)} points.                    Level ${state.level}`
         game.gameScreen.innerHTML = '';
         game.gameScreen.appendChild(gameOver);
+        game.gameScreen.appendChild(startBtn);
+        startBtn.addEventListener('click',(e) => {
+            document.location.reload(true);
+        });
     } else {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
@@ -146,53 +172,77 @@ function gameLoop(state, game, timestamp, pElement) {
 }
 
 function upLevel(state) { 
-    state.toNextLevel = 500;  
+    state.toNextLevel = 500;
+    state.neededScore = state.score;
     if (state.score > 500) {
         state.level = 2;
-        state.toNextLevel = 1000;
+        state.toNextLevel = 1000 - 500;
+        state.neededScore =  state.score - 500;
     } 
     if (state.score > 1000) {
         state.level = 3;
-        state.toNextLevel = 2000;
+        state.toNextLevel = 2000 - 1000;
+        state.neededScore =  state.score - 1000;
     } 
     if (state.score > 2000) {
         state.level = 4;
-        state.toNextLevel = 5000;
+        state.toNextLevel = 5000 - 2000;
+        state.neededScore =  state.score - 2000;
     }
     if (state.score > 5000) {
         state.level = 5;
-        state.toNextLevel = 8000;
+        state.toNextLevel = 8000 - 5000;
+        state.neededScore =  state.score - 5000;
     }
     if (state.score > 8000) {
         state.level = 6;
-        state.toNextLevel = 12000;
+        state.toNextLevel = 12000 - 8000;
+        state.neededScore =  state.score - 8000;
     }
     if (state.score > 12000) {
         state.level = 7;
+        state.toNextLevel = 18000 - 12000;
+        state.neededScore =  state.score - 12000;
     }
     if (state.score > 18000) {
         state.level = 8;
+        state.toNextLevel = 25000 - 18000;
+        state.neededScore =  state.score - 18000;
     }
     if (state.score > 25000) {
         state.level = 9;
+        state.toNextLevel = 35000 - 25000;
+        state.neededScore =  state.score - 25000;
     }
     if (state.score > 35000) {
         state.level = 10;
+        state.toNextLevel = 40000 - 35000;
+        state.neededScore =  state.score - 35000;
     }
     if (state.score > 40000) {
         state.level = 11;
+        state.toNextLevel = 45000 - 40000;
+        state.neededScore =  state.score - 40000;
     }
     if (state.score > 45000) {
         state.level = 12;
+        state.toNextLevel = 50000 - 45000;
+        state.neededScore =  state.score - 45000;
     }
     if (state.score > 50000) {
         state.level = 13;
+        state.toNextLevel = 55000 - 50000;
+        state.neededScore =  state.score - 50000;
     }
     if (state.score > 55000) {
         state.level = 14;
+        state.toNextLevel = 60000 - 55000;
+        state.neededScore =  state.score - 55000;
     }
     if (state.score > 60000) {
         state.level = 15;
+        state.toNextLevel = 70000 - 60000;
+        state.neededScore =  state.score - 60000;
     }
      state.bugStats.speed = state.level * 1.3;
      state.bugStats.maxSpawnInterval = state.bugStats.startInterval - state.level * 70;

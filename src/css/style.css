@@ -30,6 +30,24 @@ body {
     cursor: pointer;
     border-color: rgba(248, 44, 44, 0.472);
 }
+.start-btn {
+    text-align: center;
+    padding: 35px;
+    font-size: 55px;
+    width: 500px;
+    background-color: #0942093b;
+    position: absolute;
+    left: 50%;
+    top: 65%;
+    transform: translate(-50%);
+    border-style: solid;
+    border-radius: 6px;
+}
+.start-btn:hover {
+    background-color: rgba(9, 63, 9, 0.698);
+    cursor: pointer;
+    border-color: rgba(248, 44, 44, 0.472);
+}
 
 .game-screen {
     width: 100%;
@@ -66,37 +84,39 @@ body {
     left: 90%;
     transform: translate(-50%);
     text-align: center;
-    padding: 20px;
+    padding: 45px;
     font-size: 35px;
     width: 200px;
     background-color: #0942093b;
     border-style: solid;
     border-radius: 6px;
 }
-.level {
+
+.progress-red {
     position: absolute;
-    top: 10px;
-    left: 75%;
-    transform: translate(-50%);
-    text-align: center;
-    padding: 20px;
-    font-size: 35px;
-    width: 200px;
-    height: 41px;
-    background-color: #0942093b;
-    border-style: solid;
+    background-image: url("../images/progressRed.png");
+    background-size: cover;
     border-radius: 6px;
 }
-.progress {
+.progress-green {
     position: absolute;
-    transform: translate(-50%);
-    padding: 20px;
-    font-size: 15px;
-    width: 1px;
-    height: 3px;
-    background-color: #0516053b;
+    background-image: url("../images/progressGreen.png");
+    background-size: cover;
+    border-radius: 5px;
+}
+.progress-yello {
+    position: absolute;
+    background-image: url("../images/progressYello.png");
+    background-size: cover;
+    border-radius: 5px;
+}
+.progress-empty{
+    position: absolute;
+    background-image: url("../images/progressEmpty.png");
+    background-size: cover;
+    background-color: #0942093b;
     border-style: solid;
-    border-radius: 6px;
+    border-radius: 5px;
 }
 h3{
     text-align: center;

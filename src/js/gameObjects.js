@@ -2,18 +2,42 @@ function initGameObject() {
     const startScreen = document.querySelector('.start-screen');
     const gameScreen = document.querySelector('.game-screen');
     const scoreScreen = document.querySelector('.score');
-    const levelScreen = document.querySelector('.level');
 
     return {
         startScreen,
         gameScreen,
         scoreScreen,
-        levelScreen,
-        createLevelProgress(){
+        createLevelProgress(initialState){
             let levelProgress = document.createElement('div');
-            levelProgress.classList.add('progress');
-            levelScreen.appendChild(levelProgress);
+            levelProgress.classList.add('progress-red');
+
+            levelProgress.style.width = initialState.width + 'px';
+            levelProgress.style.height = initialState.height + 'px';
+
+            levelProgress.style.left = initialState.posX + '%';
+            levelProgress.style.top = initialState.posY + 'px';
+
+            this.levelProgress = levelProgress;
+
+            gameScreen.appendChild(levelProgress);
+
             return levelProgress
+        },
+        createEmptyProgress(initialState){
+            let emptyProgress = document.createElement('div');
+            emptyProgress.classList.add('progress-empty');
+
+            emptyProgress.style.width = initialState.width + 'px';
+            emptyProgress.style.height = initialState.height + 'px';
+
+            emptyProgress.style.left = initialState.posX + '%';
+            emptyProgress.style.top = initialState.posY + 'px';
+
+            this.emptyProgress = emptyProgress;
+
+            gameScreen.appendChild(emptyProgress);
+
+            return emptyProgress
         },
         createWizard(initialState) {
             let wizardElement = document.createElement('div');

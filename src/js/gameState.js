@@ -10,6 +10,7 @@ function initState() {
         killScore: 100,
         level: 1,
         toNextLevel: 1,
+        neededScore: 1,
         wizard: {
             width: 57,
             height: 110,
@@ -65,6 +66,18 @@ function initState() {
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 4000,
             speed: 1, 
+        },
+        progressBar: {
+            width: 224,
+            height: 20,
+            posX: 84,
+            posY: 150,
+        },
+        progressEmpty: {
+            width: 224,
+            height: 20,
+            posX: 84,
+            posY: 147,
         },
     }
 
