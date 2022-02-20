@@ -2,11 +2,19 @@ function initGameObject() {
     const startScreen = document.querySelector('.start-screen');
     const gameScreen = document.querySelector('.game-screen');
     const scoreScreen = document.querySelector('.score');
+    const levelScreen = document.querySelector('.level');
 
     return {
         startScreen,
         gameScreen,
         scoreScreen,
+        levelScreen,
+        createLevelProgress(){
+            let levelProgress = document.createElement('div');
+            levelProgress.classList.add('progress');
+            levelScreen.appendChild(levelProgress);
+            return levelProgress
+        },
         createWizard(initialState) {
             let wizardElement = document.createElement('div');
             wizardElement.classList.add('wizard');

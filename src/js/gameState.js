@@ -9,6 +9,7 @@ function initState() {
         scoreRate: 0.02,
         killScore: 100,
         level: 1,
+        toNextLevel: 1,
         wizard: {
             width: 57,
             height: 110,
@@ -19,8 +20,11 @@ function initState() {
         bugStats: {
             width: 90,
             height: 80,
+            startWidth: 90,
+            startHight: 80,
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 3000,
+            startInterval: 3000,
             speed: 2,
         },
         fireball: {
