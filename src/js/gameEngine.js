@@ -167,12 +167,10 @@ function gameLoop(state, game, timestamp) {
         });
         let body = document.getElementsByTagName('body')[0];
         body.addEventListener('keydown', (e) => {
-           if(e.code == 'Enter'){
+           if(e.code == 'Enter' || e.code == 'NumpadEnter'){
             document.location.reload(true);
            }
         });
-        
-     
     } else {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));

@@ -31,3 +31,12 @@ game.startScreen.addEventListener('click', (e) => {
     // Start game
     start(state, game);
 });
+let body = document.getElementsByTagName('body')[0];
+body.addEventListener('keydown', (e) => {
+   if(e.code == 'Enter' || e.code == 'NumpadEnter'){
+    game.startScreen.classList.add('hidden');
+    game.gameScreen.classList.remove('hidden');
+    // Start game
+    start(state, game);
+   }
+});
