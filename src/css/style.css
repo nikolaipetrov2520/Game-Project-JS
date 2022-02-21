@@ -5,10 +5,15 @@ body {
 }
 
 .game {
-    background: rgb(47,230,50);
-    background: linear-gradient(0deg, rgba(47,230,50,1) 0%, rgba(215,237,238,1) 10%, rgba(21,229,233,1) 100%); 
+    background: linear-gradient(0deg, rgba(47,230,50,1) 0%, rgba(215,237,238,1) 10%, rgba(21,229,233,1) 100%);
     width: 100vw;
-    height: 100vh;
+    height: 100vh; 
+}
+#span{
+    background-image: url("../images/instructions.png");
+    background-size: cover;
+    width: 450px;
+    height: 350px;
 }
 
 .start-screen {
@@ -19,7 +24,7 @@ body {
     background-color: #0942093b;
     position: absolute;
     left: 50%;
-    top: 30%;
+    top: 15%;
     transform: translate(-50%);
     border-style: solid;
     border-radius: 6px;
