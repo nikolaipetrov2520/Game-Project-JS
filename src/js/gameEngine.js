@@ -28,7 +28,7 @@ function gameLoop(state, game, timestamp) {
     if( parseInt(levelProgress.style.width) <= 50){
         levelProgress.className = '';
         levelProgress.classList.add('progress-red');
-    }else if( parseInt(levelProgress.style.width) <= 150){
+    }else if( parseInt(levelProgress.style.width) <= 180){
         levelProgress.className = '';
         levelProgress.classList.add('progress-yello');
     }else{
@@ -162,9 +162,17 @@ function gameLoop(state, game, timestamp) {
         game.gameScreen.innerHTML = '';
         game.gameScreen.appendChild(gameOver);
         game.gameScreen.appendChild(startBtn);
-        startBtn.addEventListener('click',(e) => {
+        startBtn.addEventListener('click', () => {
             document.location.reload(true);
         });
+        let body = document.getElementsByTagName('body')[0];
+        body.addEventListener('keydown', (e) => {
+           if(e.code == 'Enter'){
+            document.location.reload(true);
+           }
+        });
+        
+     
     } else {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
@@ -172,77 +180,77 @@ function gameLoop(state, game, timestamp) {
 }
 
 function upLevel(state) { 
-    state.toNextLevel = 500;
+    state.toNextLevel = 1000;
     state.neededScore = state.score;
-    if (state.score > 500) {
-        state.level = 2;
-        state.toNextLevel = 1000 - 500;
-        state.neededScore =  state.score - 500;
-    } 
     if (state.score > 1000) {
-        state.level = 3;
-        state.toNextLevel = 2000 - 1000;
-        state.neededScore =  state.score - 1000;
+        state.level = 2;
+        state.toNextLevel = 2000 - 100;
+        state.neededScore =  state.score - 100;
     } 
     if (state.score > 2000) {
-        state.level = 4;
-        state.toNextLevel = 5000 - 2000;
+        state.level = 3;
+        state.toNextLevel = 4000 - 2000;
         state.neededScore =  state.score - 2000;
+    } 
+    if (state.score > 4000) {
+        state.level = 4;
+        state.toNextLevel = 6000 - 4000;
+        state.neededScore =  state.score - 4000;
     }
-    if (state.score > 5000) {
+    if (state.score > 6000) {
         state.level = 5;
-        state.toNextLevel = 8000 - 5000;
-        state.neededScore =  state.score - 5000;
+        state.toNextLevel = 8000 - 6000;
+        state.neededScore =  state.score - 6000;
     }
     if (state.score > 8000) {
         state.level = 6;
-        state.toNextLevel = 12000 - 8000;
+        state.toNextLevel = 10000 - 8000;
         state.neededScore =  state.score - 8000;
     }
-    if (state.score > 12000) {
+    if (state.score > 10000) {
         state.level = 7;
-        state.toNextLevel = 18000 - 12000;
-        state.neededScore =  state.score - 12000;
+        state.toNextLevel = 15000 - 10000;
+        state.neededScore =  state.score - 10000;
     }
-    if (state.score > 18000) {
+    if (state.score > 15000) {
         state.level = 8;
-        state.toNextLevel = 25000 - 18000;
-        state.neededScore =  state.score - 18000;
+        state.toNextLevel = 20000 - 15000;
+        state.neededScore =  state.score - 15000;
+    }
+    if (state.score > 20000) {
+        state.level = 9;
+        state.toNextLevel = 25000 - 20000;
+        state.neededScore =  state.score - 20000;
     }
     if (state.score > 25000) {
-        state.level = 9;
+        state.level = 10;
         state.toNextLevel = 35000 - 25000;
         state.neededScore =  state.score - 25000;
     }
     if (state.score > 35000) {
-        state.level = 10;
-        state.toNextLevel = 40000 - 35000;
-        state.neededScore =  state.score - 35000;
-    }
-    if (state.score > 40000) {
         state.level = 11;
-        state.toNextLevel = 45000 - 40000;
-        state.neededScore =  state.score - 40000;
+        state.toNextLevel = 45000 - 35000;
+        state.neededScore =  state.score - 35000;
     }
     if (state.score > 45000) {
         state.level = 12;
-        state.toNextLevel = 50000 - 45000;
+        state.toNextLevel = 55000 - 45000;
         state.neededScore =  state.score - 45000;
     }
-    if (state.score > 50000) {
-        state.level = 13;
-        state.toNextLevel = 55000 - 50000;
-        state.neededScore =  state.score - 50000;
-    }
     if (state.score > 55000) {
-        state.level = 14;
-        state.toNextLevel = 60000 - 55000;
+        state.level = 13;
+        state.toNextLevel = 65000 - 55000;
         state.neededScore =  state.score - 55000;
     }
-    if (state.score > 60000) {
+    if (state.score > 65000) {
+        state.level = 14;
+        state.toNextLevel = 75000 - 65000;
+        state.neededScore =  state.score - 65000;
+    }
+    if (state.score > 75000) {
         state.level = 15;
-        state.toNextLevel = 70000 - 60000;
-        state.neededScore =  state.score - 60000;
+        state.toNextLevel = 100000 - 75000;
+        state.neededScore =  state.score - 75000;
     }
      state.bugStats.speed = state.level * 1.3;
      state.bugStats.maxSpawnInterval = state.bugStats.startInterval - state.level * 70;

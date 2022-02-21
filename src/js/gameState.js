@@ -68,16 +68,16 @@ function initState() {
             speed: 1, 
         },
         progressBar: {
-            width: 224,
-            height: 20,
+            width: 228,
+            height: 15,
             posX: 84,
             posY: 150,
         },
         progressEmpty: {
-            width: 224,
-            height: 20,
+            width: 230,
+            height: 15,
             posX: 84,
-            posY: 147,
+            posY: 149,
         },
     }
 
