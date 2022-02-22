@@ -1,5 +1,6 @@
 let state1 = initState();
 let game1 = initGameObject();
+let counter = 1;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -16,6 +17,23 @@ function gameLoop(state, game, timestamp) {
     const { levelProgress } = game;
     const { emptyProgress } = game;
     game.scoreScreen.textContent = `${state.score.toFixed(0)} pts. Level: ${state.level}`;
+
+    // if(state.level > state.previousLevel){     
+    //     if(counter < 6){
+    //         if(counter % 2 == 0){
+    //             game1.scoreScreen.remove("score");
+    //             game1.scoreScreen.classList.add('score-blink');
+    //             counter++;
+    //         }else{
+    //             game1.scoreScreen.remove("score-blink");
+    //             game1.scoreScreen.classList.add('score');
+    //             counter++;
+    //         }
+    //     }else{
+    //         state.previousLevel = state.level;
+    //         counter = 1;
+    //     }
+    // }
 
     // Render Progress
     levelProgress.style.left = progressBar.posX + '%';
@@ -182,48 +200,75 @@ function upLevel(state) {
     state.neededScore = state.score;
     if (state.score > 1000) {
         state.level = 2;
-        state.toNextLevel = 2000 - 100;
-        state.neededScore =  state.score - 100;
+        state.toNextLevel = 2000 - 1000;
+        state.neededScore =  state.score - 1000;
+        state.bugStats.maxSpawnInterval = 3700;
+        state.bugStats.width = 88;
+        state.bugStats.height = 78;
     } 
     if (state.score > 2000) {
         state.level = 3;
         state.toNextLevel = 4000 - 2000;
         state.neededScore =  state.score - 2000;
+        state.bugStats.maxSpawnInterval = 3400;
+        state.bugStats.width = 86;
+        state.bugStats.height = 75;
     } 
     if (state.score > 4000) {
         state.level = 4;
         state.toNextLevel = 6000 - 4000;
         state.neededScore =  state.score - 4000;
+        state.bugStats.maxSpawnInterval = 3100;
+        state.bugStats.width = 84;
+        state.bugStats.height = 73;
     }
     if (state.score > 6000) {
         state.level = 5;
         state.toNextLevel = 8000 - 6000;
         state.neededScore =  state.score - 6000;
+        state.bugStats.maxSpawnInterval = 2800;
+        state.bugStats.width = 82;
+        state.bugStats.height = 70;
     }
     if (state.score > 8000) {
         state.level = 6;
         state.toNextLevel = 10000 - 8000;
         state.neededScore =  state.score - 8000;
+        state.bugStats.maxSpawnInterval = 2500;
+        state.bugStats.width = 80;
+        state.bugStats.height = 68;
     }
     if (state.score > 10000) {
         state.level = 7;
         state.toNextLevel = 15000 - 10000;
         state.neededScore =  state.score - 10000;
+        state.bugStats.maxSpawnInterval = 2200;
+        state.bugStats.width = 78;
+        state.bugStats.height = 65;
     }
     if (state.score > 15000) {
         state.level = 8;
         state.toNextLevel = 20000 - 15000;
         state.neededScore =  state.score - 15000;
+        state.bugStats.maxSpawnInterval = 1900;
+        state.bugStats.width = 76;
+        state.bugStats.height = 63;
     }
     if (state.score > 20000) {
         state.level = 9;
         state.toNextLevel = 25000 - 20000;
         state.neededScore =  state.score - 20000;
+        state.bugStats.maxSpawnInterval = 1600;
+        state.bugStats.width = 74;
+        state.bugStats.height = 60;
     }
     if (state.score > 25000) {
         state.level = 10;
         state.toNextLevel = 35000 - 25000;
         state.neededScore =  state.score - 25000;
+        state.bugStats.maxSpawnInterval = 1300;
+        state.bugStats.width = 72;
+        state.bugStats.height = 58;
     }
     if (state.score > 35000) {
         state.level = 11;
@@ -251,9 +296,7 @@ function upLevel(state) {
         state.neededScore =  state.score - 75000;
     }
      state.bugStats.speed = state.level * 1.3;
-     state.bugStats.maxSpawnInterval = state.bugStats.startInterval - state.level * 70;
-    //  state.bugStats.width = state.bugStats.startWidth - state.level * 2;
-    //  state.bugStats.height = state.bugStats.startHeight - state.level * 2;
+     state.scoreRate = state.startScoreRate * (state.level / 2);
 
 }
 
