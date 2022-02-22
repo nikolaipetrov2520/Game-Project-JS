@@ -140,11 +140,11 @@ h3{
     text-align: center;
     padding: 40px;
     font-size: 64px;
-    width: 500px;
+    width: 600px;
     background-color: #0942093b;
     position: absolute;
     left: 50%;
-    top: 20%;
+    top: 5%;
     transform: translate(-50%);
     border-style: solid;
     border-radius: 6px;

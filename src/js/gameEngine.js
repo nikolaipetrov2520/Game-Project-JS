@@ -1,6 +1,7 @@
 let state1 = initState();
 let game1 = initGameObject();
 let counter = 1;
+let countKill = 0;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -156,6 +157,7 @@ function gameLoop(state, game, timestamp) {
                 state.score += state.killScore;
                 bug.remove();
                 fireball.remove();
+                countKill++;
             }
         });
 
@@ -176,7 +178,7 @@ function gameLoop(state, game, timestamp) {
         const startBtn = document.createElement('h3');
         startBtn.classList.add('start-btn');
         startBtn.textContent = 'Start again'
-        gameOver.textContent = `Game Over! Your Score is: ${state.score.toFixed(0)} points.                    Level ${state.level}`
+        gameOver.innerHTML = `Game Over! Your Score is: ${state.score.toFixed(0)} points.<br/> Level ${state.level}<br> You Killed ${countKill} enemies.`
         game.gameScreen.innerHTML = '';
         game.gameScreen.appendChild(gameOver);
         game.gameScreen.appendChild(startBtn);
