@@ -14,11 +14,13 @@ function initState() {
         toNextLevel: 1,
         neededScore: 1,
         wizard: {
+            
             width: 57,
             height: 110,
             posX: startX,
             posY: startY,
             speed: 10,
+            health: 2,
         },
         bugStats: {
             width: 90,

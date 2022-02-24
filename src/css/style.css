@@ -15,6 +15,9 @@ body {
     width: 450px;
     height: 350px;
 }
+h3 span{
+    color: rgb(179, 16, 16);
+}
 
 .start-screen {
     text-align: center;
@@ -43,7 +46,7 @@ body {
     background-color: #0942093b;
     position: absolute;
     left: 50%;
-    top: 65%;
+    top: 55%;
     transform: translate(-50%);
     border-style: solid;
     border-radius: 6px;
@@ -140,7 +143,7 @@ h3{
     text-align: center;
     padding: 40px;
     font-size: 64px;
-    width: 600px;
+    width: 980px;
     background-color: #0942093b;
     position: absolute;
     left: 50%;

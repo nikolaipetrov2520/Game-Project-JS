@@ -2,12 +2,16 @@ let state1 = initState();
 let game1 = initGameObject();
 let counter = 1;
 let countKill = 0;
+let healthInterval = 0;
+// let body = document.getElementsByTagName('body')[0];
+let gameBody = document.getElementsByClassName('game');
 
 function start(state, game) {
     game.createWizard(state.wizard);
     game.createLevelProgress(state.progressBar);
     game.createEmptyProgress(state.progressEmpty);
     window.requestAnimationFrame(gameLoop.bind(null, state, game));
+    
 }
 
 function gameLoop(state, game, timestamp) {
@@ -19,6 +23,15 @@ function gameLoop(state, game, timestamp) {
     const { emptyProgress } = game;
     game.scoreScreen.textContent = `${state.score.toFixed(0)} pts. Level: ${state.level}`;
 
+    //Pause
+    // gameBody.addEventListener('keydown', (e) => {
+
+    //     if(e.code == 'Escape'){
+    //         while(e.code == 'Escape'){
+
+    //         }
+    //     }
+    // })
     // if(state.level > state.previousLevel){     
     //     if(counter < 6){
     //         if(counter % 2 == 0){
@@ -44,13 +57,13 @@ function gameLoop(state, game, timestamp) {
     emptyProgress.style.top = progressEmpty.posY + 'px';
 
     levelProgress.style.width = progressBar.width / state.toNextLevel * state.neededScore + 'px';
-    if( parseInt(levelProgress.style.width) <= 50){
+    if (parseInt(levelProgress.style.width) <= 50) {
         levelProgress.className = '';
         levelProgress.classList.add('progress-red');
-    }else if( parseInt(levelProgress.style.width) <= 180){
+    } else if (parseInt(levelProgress.style.width) <= 180) {
         levelProgress.className = '';
         levelProgress.classList.add('progress-yello');
-    }else{
+    } else {
         levelProgress.className = '';
         levelProgress.classList.add('progress-green');
     }
@@ -129,17 +142,30 @@ function gameLoop(state, game, timestamp) {
         game.createBug(state.bugStats);
         state.bugStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugStats.maxSpawnInterval;
     }
-
+    healthInterval--;
+    if(healthInterval >= 0){
+        if(healthInterval % 20 == 0){
+            wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+        }else{
+            wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        }
+    }else{
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
     // Render bugs
     let bugElements = document.querySelectorAll('.bug');
     bugElements.forEach(bug => {
         let posX = parseInt(bug.style.left);
 
         // Detect collsion with wizard
-        if (detectCollision(wizardElement, bug)) {
-            state.gameOver = true;
+        if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
+            state.wizard.health--;
+            healthInterval = 100;
+            bug.remove();
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
+            }
         }
-
         if (posX > 0) {
             bug.style.left = posX - state.bugStats.speed + 'px';
         } else {
@@ -178,7 +204,7 @@ function gameLoop(state, game, timestamp) {
         const startBtn = document.createElement('h3');
         startBtn.classList.add('start-btn');
         startBtn.textContent = 'Start again'
-        gameOver.innerHTML = `Game Over! Your Score is: ${state.score.toFixed(0)} points.<br/> Level ${state.level}<br> You Killed ${countKill} enemies.`
+        gameOver.innerHTML = `<span>Game Over!</span><br/> Your Score is: ${state.score.toFixed(0)} points<br/> Level ${state.level}<br> You Killed ${countKill} enemies`
         game.gameScreen.innerHTML = '';
         game.gameScreen.appendChild(gameOver);
         game.gameScreen.appendChild(startBtn);
@@ -187,9 +213,9 @@ function gameLoop(state, game, timestamp) {
         });
         let body = document.getElementsByTagName('body')[0];
         body.addEventListener('keydown', (e) => {
-           if(e.code == 'Enter' || e.code == 'NumpadEnter'){
-            document.location.reload(true);
-           }
+            if (e.code == 'Enter' || e.code == 'NumpadEnter') {
+                document.location.reload(true);
+            }
         });
     } else {
         state.score += state.scoreRate;
@@ -197,29 +223,29 @@ function gameLoop(state, game, timestamp) {
     }
 }
 
-function upLevel(state) { 
+function upLevel(state) {
     state.toNextLevel = 1000;
     state.neededScore = state.score;
     if (state.score > 1000) {
         state.level = 2;
         state.toNextLevel = 2000 - 1000;
-        state.neededScore =  state.score - 1000;
+        state.neededScore = state.score - 1000;
         state.bugStats.maxSpawnInterval = 3700;
         state.bugStats.width = 88;
         state.bugStats.height = 78;
-    } 
+    }
     if (state.score > 2000) {
         state.level = 3;
         state.toNextLevel = 4000 - 2000;
-        state.neededScore =  state.score - 2000;
+        state.neededScore = state.score - 2000;
         state.bugStats.maxSpawnInterval = 3400;
         state.bugStats.width = 86;
         state.bugStats.height = 75;
-    } 
+    }
     if (state.score > 4000) {
         state.level = 4;
         state.toNextLevel = 6000 - 4000;
-        state.neededScore =  state.score - 4000;
+        state.neededScore = state.score - 4000;
         state.bugStats.maxSpawnInterval = 3100;
         state.bugStats.width = 84;
         state.bugStats.height = 73;
@@ -227,7 +253,7 @@ function upLevel(state) {
     if (state.score > 6000) {
         state.level = 5;
         state.toNextLevel = 8000 - 6000;
-        state.neededScore =  state.score - 6000;
+        state.neededScore = state.score - 6000;
         state.bugStats.maxSpawnInterval = 2800;
         state.bugStats.width = 82;
         state.bugStats.height = 70;
@@ -235,7 +261,7 @@ function upLevel(state) {
     if (state.score > 8000) {
         state.level = 6;
         state.toNextLevel = 10000 - 8000;
-        state.neededScore =  state.score - 8000;
+        state.neededScore = state.score - 8000;
         state.bugStats.maxSpawnInterval = 2500;
         state.bugStats.width = 80;
         state.bugStats.height = 68;
@@ -243,7 +269,7 @@ function upLevel(state) {
     if (state.score > 10000) {
         state.level = 7;
         state.toNextLevel = 15000 - 10000;
-        state.neededScore =  state.score - 10000;
+        state.neededScore = state.score - 10000;
         state.bugStats.maxSpawnInterval = 2200;
         state.bugStats.width = 78;
         state.bugStats.height = 65;
@@ -251,7 +277,7 @@ function upLevel(state) {
     if (state.score > 15000) {
         state.level = 8;
         state.toNextLevel = 20000 - 15000;
-        state.neededScore =  state.score - 15000;
+        state.neededScore = state.score - 15000;
         state.bugStats.maxSpawnInterval = 1900;
         state.bugStats.width = 76;
         state.bugStats.height = 63;
@@ -259,7 +285,7 @@ function upLevel(state) {
     if (state.score > 20000) {
         state.level = 9;
         state.toNextLevel = 25000 - 20000;
-        state.neededScore =  state.score - 20000;
+        state.neededScore = state.score - 20000;
         state.bugStats.maxSpawnInterval = 1600;
         state.bugStats.width = 74;
         state.bugStats.height = 60;
@@ -267,7 +293,7 @@ function upLevel(state) {
     if (state.score > 25000) {
         state.level = 10;
         state.toNextLevel = 35000 - 25000;
-        state.neededScore =  state.score - 25000;
+        state.neededScore = state.score - 25000;
         state.bugStats.maxSpawnInterval = 1300;
         state.bugStats.width = 72;
         state.bugStats.height = 58;
@@ -275,30 +301,30 @@ function upLevel(state) {
     if (state.score > 35000) {
         state.level = 11;
         state.toNextLevel = 45000 - 35000;
-        state.neededScore =  state.score - 35000;
+        state.neededScore = state.score - 35000;
     }
     if (state.score > 45000) {
         state.level = 12;
         state.toNextLevel = 55000 - 45000;
-        state.neededScore =  state.score - 45000;
+        state.neededScore = state.score - 45000;
     }
     if (state.score > 55000) {
         state.level = 13;
         state.toNextLevel = 65000 - 55000;
-        state.neededScore =  state.score - 55000;
+        state.neededScore = state.score - 55000;
     }
     if (state.score > 65000) {
         state.level = 14;
         state.toNextLevel = 75000 - 65000;
-        state.neededScore =  state.score - 65000;
+        state.neededScore = state.score - 65000;
     }
     if (state.score > 75000) {
         state.level = 15;
         state.toNextLevel = 100000 - 75000;
-        state.neededScore =  state.score - 75000;
+        state.neededScore = state.score - 75000;
     }
-     state.bugStats.speed = state.level * 1.3;
-     state.scoreRate = state.startScoreRate * (state.level / 2);
+    state.bugStats.speed = state.level * 1.3;
+    state.scoreRate = state.startScoreRate * (state.level / 2);
 
 }
 
@@ -325,7 +351,6 @@ function modifyWizardPosition(state, game) {
 function detectCollision(objectA, objectB) {
     let first = objectA.getBoundingClientRect();
     let second = objectB.getBoundingClientRect();
-
     let hasCollision = !(first.top > second.bottom || first.bottom < second.top || first.right < second.left || first.left > second.right)
 
     return hasCollision;
