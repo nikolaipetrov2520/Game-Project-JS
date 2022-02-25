@@ -3,6 +3,7 @@ let game1 = initGameObject();
 let counter = 100;
 let countKill = 0;
 let healthInterval = 0;
+let isBlink = false;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -32,12 +33,6 @@ function gameLoop(state, game, timestamp) {
     
     game.scoreScreen.innerHTML = `Health <br/><br/> points<br/>  ${state.score.toFixed(0)}<br/> Level: ${state.level}`;
     
-    if(state.level > state.previousLevel){  
-        scoreScreenBlink();
-    }else{
-        counter = 100;
-    }
-
     // Render Level Progress
     levelProgress.style.left = progressBar.posX + '%';
     levelProgress.style.top = progressBar.posY + 'px';
@@ -145,13 +140,7 @@ function gameLoop(state, game, timestamp) {
     if (timestamp > state.bugStats.nextSpawnTimestamp) {
         game.createBug(state.bugStats);
         state.bugStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugStats.maxSpawnInterval;
-    }
-    healthInterval--;
-    if(healthInterval >= 0){
-        wizardBlink(wizardElement);
-    }else{
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
-    }
+    }   
     // Render bugs
     let bugElements = document.querySelectorAll('.bug');
     bugElements.forEach(bug => {
@@ -205,6 +194,28 @@ function gameLoop(state, game, timestamp) {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
     }
+    
+    if(state.level > state.previousLevel){ 
+        isBlink = true; 
+        counter--; 
+        scoreScreenBlink("#1ae41ae0"); 
+    }else{
+        if(!isBlink){
+            counter = 100;
+        }       
+    }
+    healthInterval--;
+    if(healthInterval >= 0){
+        isBlink = true;       
+        counter--;
+        scoreScreenBlink("#e61a1ac9");
+        wizardBlink(wizardElement);
+    }else{
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        if(!isBlink){
+            counter = 100;
+        }       
+    }
 }
 
 function wizardBlink(wizardElement){
@@ -242,48 +253,49 @@ function wizardBlink(wizardElement){
         wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
     }
     if(healthInterval > 80 && healthInterval <= 90){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";        
     }
 }
 
-function scoreScreenBlink(){
-    counter--;   
+function scoreScreenBlink(color){
+      
     if(counter >= 0){
         if(counter < 100 && counter >= 95){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 95 && counter >= 90){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 90 && counter >= 85){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 85 && counter >= 80){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 80 && counter >= 75){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 75 && counter >= 70){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 70 && counter >= 65){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 65 && counter >= 60){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 60 && counter >= 55){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 55 && counter >= 50){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 50 && counter >= 45){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 45 && counter >= 40){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 40 && counter >= 35){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 35 && counter >= 30){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }else if(counter < 30 && counter >= 25){
-            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+            game1.scoreScreen.style.backgroundColor = color;
         }else if(counter < 25 && counter >= 20){
             game1.scoreScreen.style.backgroundColor = "#0942093b";
         }
     }else{
-        state.previousLevel = state.level;           
+        state.previousLevel = state.level;   
+        isBlink = false;        
     }
 }
 
