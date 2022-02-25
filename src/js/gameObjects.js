@@ -39,6 +39,38 @@ function initGameObject() {
 
             return emptyProgress
         },
+        createHiroProgress(initialState){
+            let hiroProgress = document.createElement('div');
+            hiroProgress.classList.add('progress-red');
+
+            hiroProgress.style.width = initialState.width + 'px';
+            hiroProgress.style.height = initialState.height + 'px';
+
+            hiroProgress.style.left = initialState.posX + '%';
+            hiroProgress.style.top = (initialState.posY + 50) + 'px';
+
+            this.hiroProgress = hiroProgress;
+
+            gameScreen.appendChild(hiroProgress);
+
+            return hiroProgress
+        },
+        createEmptyHiroProgress(initialState){
+            let emptyHiroProgress = document.createElement('div');
+            emptyHiroProgress.classList.add('progress-empty');
+
+            emptyHiroProgress.style.width = initialState.width + 'px';
+            emptyHiroProgress.style.height = initialState.height + 'px';
+
+            emptyHiroProgress.style.left = initialState.posX + '%';
+            emptyHiroProgress.style.top = (initialState.posY + 50) + 'px';
+
+            this.emptyHiroProgress = emptyHiroProgress;
+
+            gameScreen.appendChild(emptyHiroProgress);
+
+            return emptyHiroProgress
+        },
         createWizard(initialState) {
             let wizardElement = document.createElement('div');
             wizardElement.classList.add('wizard');

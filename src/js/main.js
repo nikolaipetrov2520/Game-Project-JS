@@ -37,8 +37,8 @@ body.addEventListener('keydown', (e) => {
    if(e.code == 'Enter' || e.code == 'NumpadEnter'){
      game.startScreen.classList.add('hidden');
     game.gameScreen.classList.remove('hidden');
-    
+
     // Start game
     start(state, game);
    }
-});
+}, { once: true });

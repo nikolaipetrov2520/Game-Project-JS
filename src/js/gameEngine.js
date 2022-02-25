@@ -1,15 +1,15 @@
 let state1 = initState();
 let game1 = initGameObject();
-let counter = 1;
+let counter = 100;
 let countKill = 0;
 let healthInterval = 0;
-// let body = document.getElementsByTagName('body')[0];
-let gameBody = document.getElementsByClassName('game');
 
 function start(state, game) {
     game.createWizard(state.wizard);
     game.createLevelProgress(state.progressBar);
     game.createEmptyProgress(state.progressEmpty);
+    game.createHiroProgress(state.heroBar)
+    game.createEmptyHiroProgress(state.heroEmpty)
     window.requestAnimationFrame(gameLoop.bind(null, state, game));
     
 }
@@ -18,38 +18,27 @@ function gameLoop(state, game, timestamp) {
     const { wizard } = state;
     const { progressBar } = state;
     const { progressEmpty } = state;
+    const { heroBar } = state;
+    const { heroEmpty } = state;
     const { wizardElement } = game;
     const { levelProgress } = game;
     const { emptyProgress } = game;
-    game.scoreScreen.textContent = `${state.score.toFixed(0)} pts. Level: ${state.level}`;
+    const { hiroProgress } = game;
+    const { emptyHiroProgress } = game;
 
-    //Pause
-    // gameBody.addEventListener('keydown', (e) => {
+    upLevel(state);
 
-    //     if(e.code == 'Escape'){
-    //         while(e.code == 'Escape'){
+    modifyWizardPosition(state, game);
+    
+    game.scoreScreen.innerHTML = `Health <br/><br/> points<br/>  ${state.score.toFixed(0)}<br/> Level: ${state.level}`;
+    
+    if(state.level > state.previousLevel){  
+        scoreScreenBlink();
+    }else{
+        counter = 100;
+    }
 
-    //         }
-    //     }
-    // })
-    // if(state.level > state.previousLevel){     
-    //     if(counter < 6){
-    //         if(counter % 2 == 0){
-    //             game1.scoreScreen.remove("score");
-    //             game1.scoreScreen.classList.add('score-blink');
-    //             counter++;
-    //         }else{
-    //             game1.scoreScreen.remove("score-blink");
-    //             game1.scoreScreen.classList.add('score');
-    //             counter++;
-    //         }
-    //     }else{
-    //         state.previousLevel = state.level;
-    //         counter = 1;
-    //     }
-    // }
-
-    // Render Progress
+    // Render Level Progress
     levelProgress.style.left = progressBar.posX + '%';
     levelProgress.style.top = progressBar.posY + 'px';
 
@@ -68,9 +57,24 @@ function gameLoop(state, game, timestamp) {
         levelProgress.classList.add('progress-green');
     }
 
-    upLevel(state);
+    //render Hiro Progress
+    hiroProgress.style.left = heroBar.posX + '%';
+    hiroProgress.style.top = heroBar.posY + 'px';
 
-    modifyWizardPosition(state, game);
+    emptyHiroProgress.style.left = heroEmpty.posX + '%';
+    emptyHiroProgress.style.top = heroEmpty.posY + 'px';
+
+    hiroProgress.style.width = heroBar.width / state.wizard.maxHealth * state.wizard.health + 'px';
+    if (parseInt(hiroProgress.style.width) <= 50) {
+        hiroProgress.className = '';
+        hiroProgress.classList.add('progress-red');
+    } else if (parseInt(hiroProgress.style.width) <= 180) {
+        hiroProgress.className = '';
+        hiroProgress.classList.add('progress-yello');
+    } else {
+        hiroProgress.className = '';
+        hiroProgress.classList.add('progress-green');
+    }   
 
     if (state.keys.Space) {
         game.wizardElement.style.backgroundImage = 'url("images/2.png")';
@@ -144,11 +148,7 @@ function gameLoop(state, game, timestamp) {
     }
     healthInterval--;
     if(healthInterval >= 0){
-        if(healthInterval % 20 == 0){
-            wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
-        }else{
-            wizardElement.style.backgroundImage = "url('../src/images/1.png')";
-        }
+        wizardBlink(wizardElement);
     }else{
         wizardElement.style.backgroundImage = "url('../src/images/1.png')";
     }
@@ -160,7 +160,7 @@ function gameLoop(state, game, timestamp) {
         // Detect collsion with wizard
         if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
             state.wizard.health--;
-            healthInterval = 100;
+            healthInterval = 200;
             bug.remove();
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
@@ -200,27 +200,111 @@ function gameLoop(state, game, timestamp) {
 
 
     if (state.gameOver) {
-        const gameOver = document.createElement('h3');
-        const startBtn = document.createElement('h3');
-        startBtn.classList.add('start-btn');
-        startBtn.textContent = 'Start again'
-        gameOver.innerHTML = `<span>Game Over!</span><br/> Your Score is: ${state.score.toFixed(0)} points<br/> Level ${state.level}<br> You Killed ${countKill} enemies`
-        game.gameScreen.innerHTML = '';
-        game.gameScreen.appendChild(gameOver);
-        game.gameScreen.appendChild(startBtn);
-        startBtn.addEventListener('click', () => {
-            document.location.reload(true);
-        });
-        let body = document.getElementsByTagName('body')[0];
-        body.addEventListener('keydown', (e) => {
-            if (e.code == 'Enter' || e.code == 'NumpadEnter') {
-                document.location.reload(true);
-            }
-        });
+       gameOver();
     } else {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
     }
+}
+
+function wizardBlink(wizardElement){
+    if(healthInterval > 190){
+        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+    }
+    if(healthInterval > 180 && healthInterval <= 190){
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
+    if(healthInterval > 170 && healthInterval <= 180){
+        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+    }
+    if(healthInterval > 160 && healthInterval <= 170){
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
+    if(healthInterval > 150 && healthInterval <= 160){
+        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+    }
+    if(healthInterval > 140 && healthInterval <= 150){
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
+    if(healthInterval > 130 && healthInterval <= 140){
+        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+    }
+    if(healthInterval > 120 && healthInterval <= 130){
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
+    if(healthInterval > 110 && healthInterval <= 120){
+        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+    }
+    if(healthInterval > 100 && healthInterval <= 110){
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
+    if(healthInterval > 90 && healthInterval <= 100){
+        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+    }
+    if(healthInterval > 80 && healthInterval <= 90){
+        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+    }
+}
+
+function scoreScreenBlink(){
+    counter--;   
+    if(counter >= 0){
+        if(counter < 100 && counter >= 95){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 95 && counter >= 90){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 90 && counter >= 85){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 85 && counter >= 80){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 80 && counter >= 75){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 75 && counter >= 70){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 70 && counter >= 65){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 65 && counter >= 60){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 60 && counter >= 55){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 55 && counter >= 50){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 50 && counter >= 45){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 45 && counter >= 40){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 40 && counter >= 35){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 35 && counter >= 30){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }else if(counter < 30 && counter >= 25){
+            game1.scoreScreen.style.backgroundColor = "#e61a1ac9";
+        }else if(counter < 25 && counter >= 20){
+            game1.scoreScreen.style.backgroundColor = "#0942093b";
+        }
+    }else{
+        state.previousLevel = state.level;           
+    }
+}
+
+function gameOver(){
+    const gameOver = document.createElement('h3');
+    const startBtn = document.createElement('h3');
+    startBtn.classList.add('start-btn');
+    startBtn.textContent = 'Start again'
+    gameOver.innerHTML = `<span>Game Over!</span><br/> Your Score is: ${state.score.toFixed(0)} points<br/> Level ${state.level}<br> You Killed ${countKill} enemies`
+    game.gameScreen.innerHTML = '';
+    game.gameScreen.appendChild(gameOver);
+    game.gameScreen.appendChild(startBtn);
+    startBtn.addEventListener('click', () => {
+        document.location.reload(true);
+    });
+    let body = document.getElementsByTagName('body')[0];
+    body.addEventListener('keydown', (e) => {
+        if (e.code == 'Enter' || e.code == 'NumpadEnter') {
+            document.location.reload(true);
+        }
+    });
 }
 
 function upLevel(state) {

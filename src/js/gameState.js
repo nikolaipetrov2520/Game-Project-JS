@@ -20,7 +20,8 @@ function initState() {
             posX: startX,
             posY: startY,
             speed: 10,
-            health: 2,
+            maxHealth: 3,
+            health: 3,
         },
         bugStats: {
             width: 90,
@@ -73,13 +74,25 @@ function initState() {
             width: 228,
             height: 15,
             posX: 84,
-            posY: 150,
+            posY: 225,
         },
         progressEmpty: {
             width: 230,
             height: 15,
             posX: 84,
-            posY: 149,
+            posY: 224,
+        },
+        heroBar: {
+            width: 228,
+            height: 15,
+            posX: 84,
+            posY: 65,
+        },
+        heroEmpty: {
+            width: 230,
+            height: 15,
+            posX: 84,
+            posY: 64,
         },
     }
 

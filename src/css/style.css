@@ -92,23 +92,12 @@ h3 span{
     left: 90%;
     transform: translate(-50%);
     text-align: center;
-    padding: 45px;
+    padding-left: 45px;
+    padding-bottom: 45px;
+    padding-right: 45px;
     font-size: 35px;
     width: 200px;
     background-color: #0942093b;
-    border-style: solid;
-    border-radius: 6px;
-}
-.score-blink {
-    position: absolute;
-    top: 10px;
-    left: 90%;
-    transform: translate(-50%);
-    text-align: center;
-    padding: 45px;
-    font-size: 35px;
-    width: 200px;
-    background-color: #4209093b;
     border-style: solid;
     border-radius: 6px;
 }
