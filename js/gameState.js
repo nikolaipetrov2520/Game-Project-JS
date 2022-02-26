@@ -3,7 +3,7 @@ function initState() {
     let startY = Math.floor(Math.random() * 500);
 
     const state = {
-        player: 'Pesho',
+        player: '',
         gameOver: false,
         score: 1,
         scoreRate: 0.02,
@@ -20,8 +20,8 @@ function initState() {
             posX: startX,
             posY: startY,
             speed: 10,
-            maxHealth: 3,
-            health: 3,
+            maxHealth: 100,
+            health: 100,
         },
         bugStats: {
             width: 90,
@@ -29,6 +29,30 @@ function initState() {
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 4000,
             startInterval: 4000,
+            speed: 2,
+        },
+        heartStats: {
+            width: 80,
+            height: 70,
+            nextSpawnTimestamp: 10000,
+            maxSpawnInterval: 20000,
+            startInterval: 20000,
+            speed: 2,
+        },
+        diamondStats: {
+            width: 80,
+            height: 70,
+            nextSpawnTimestamp: 10000,
+            maxSpawnInterval: 20000,
+            startInterval: 20000,
+            speed: 2,
+        },
+        bugDropStats: {
+            width: 90,
+            height: 80,
+            nextSpawnTimestamp: 10000,
+            maxSpawnInterval: 20000,
+            startInterval: 20000,
             speed: 2,
         },
         fireball: {
@@ -74,25 +98,25 @@ function initState() {
             width: 228,
             height: 15,
             posX: 84,
-            posY: 225,
+            posY: 145,
         },
         progressEmpty: {
             width: 230,
             height: 15,
             posX: 84,
-            posY: 224,
+            posY: 144,
         },
-        heroBar: {
+        healthBar: {
             width: 228,
             height: 15,
-            posX: 84,
-            posY: 65,
+            posX: 67,
+            posY: 145,
         },
-        heroEmpty: {
+        healthEmpty: {
             width: 230,
             height: 15,
-            posX: 84,
-            posY: 64,
+            posX: 67,
+            posY: 144,
         },
     }
 

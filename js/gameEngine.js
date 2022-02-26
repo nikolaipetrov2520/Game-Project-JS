@@ -9,8 +9,8 @@ function start(state, game) {
     game.createWizard(state.wizard);
     game.createLevelProgress(state.progressBar);
     game.createEmptyProgress(state.progressEmpty);
-    game.createHiroProgress(state.heroBar)
-    game.createEmptyHiroProgress(state.heroEmpty)
+    game.createHealthProgress(state.healthBar);
+    game.createEmptyHealthProgress(state.healthEmpty);
     window.requestAnimationFrame(gameLoop.bind(null, state, game));
     
 }
@@ -19,20 +19,26 @@ function gameLoop(state, game, timestamp) {
     const { wizard } = state;
     const { progressBar } = state;
     const { progressEmpty } = state;
-    const { heroBar } = state;
-    const { heroEmpty } = state;
+    const { healthBar } = state;
+    const { healthEmpty } = state;
     const { wizardElement } = game;
     const { levelProgress } = game;
     const { emptyProgress } = game;
-    const { hiroProgress } = game;
-    const { emptyHiroProgress } = game;
+    const { healthProgress } = game;
+    const { emptyHealthProgress } = game;
 
     upLevel(state);
 
     modifyWizardPosition(state, game);
-    
-    game.scoreScreen.innerHTML = `Health <br/><br/> points<br/>  ${state.score.toFixed(0)}<br/> Level: ${state.level}`;
-    
+    if(state.wizard.health >= 100){
+        state.wizard.health = 100;
+    }
+    game.scoreScreen.innerText = `Points \r\n  ${state.score.toFixed(0)}\r\n Level: ${state.level}`;
+    let playerName = game.player.value;
+    if(playerName.length > 7){
+        playerName = playerName.substring(0,7) + '...';
+    }
+    game.healthScreen.innerText = `${playerName} \r\n Health \r\n ${state.wizard.health} %`;
     // Render Level Progress
     levelProgress.style.left = progressBar.posX + '%';
     levelProgress.style.top = progressBar.posY + 'px';
@@ -52,34 +58,33 @@ function gameLoop(state, game, timestamp) {
         levelProgress.classList.add('progress-green');
     }
 
-    //render Hiro Progress
-    hiroProgress.style.left = heroBar.posX + '%';
-    hiroProgress.style.top = heroBar.posY + 'px';
+    //render Health Progress
+    healthProgress.style.left = healthBar.posX + '%';
+    healthProgress.style.top = healthBar.posY + 'px';
+    emptyHealthProgress.style.left = healthEmpty.posX + '%';
+    emptyHealthProgress.style.top = healthEmpty.posY + 'px';
 
-    emptyHiroProgress.style.left = heroEmpty.posX + '%';
-    emptyHiroProgress.style.top = heroEmpty.posY + 'px';
-
-    hiroProgress.style.width = heroBar.width / state.wizard.maxHealth * state.wizard.health + 'px';
-    if (parseInt(hiroProgress.style.width) <= 50) {
-        hiroProgress.className = '';
-        hiroProgress.classList.add('progress-red');
-    } else if (parseInt(hiroProgress.style.width) <= 180) {
-        hiroProgress.className = '';
-        hiroProgress.classList.add('progress-yello');
+    healthProgress.style.width = healthBar.width / state.wizard.maxHealth * state.wizard.health + 'px';
+    if (parseInt(healthProgress.style.width) <= 50) {
+        healthProgress.className = '';
+        healthProgress.classList.add('progress-red');
+    } else if (parseInt(healthProgress.style.width) <= 180) {
+        healthProgress.className = '';
+        healthProgress.classList.add('progress-yello');
     } else {
-        hiroProgress.className = '';
-        hiroProgress.classList.add('progress-green');
+        healthProgress.className = '';
+        healthProgress.classList.add('progress-green');
     }   
 
     if (state.keys.Space) {
-        game.wizardElement.style.backgroundImage = 'url("images/2.png")';
+        game.wizardElement.style.backgroundImage = 'url("../images/2.png")';
 
         if (timestamp > state.fireball.nextSpawnTimestamp) {
             game.createFireball(wizard, state.fireball);
             state.fireball.nextSpawnTimestamp = timestamp + state.fireball.fireRate;
         }
     } else {
-        game.wizardElement.style.backgroundImage = 'url("images/1.png")';
+        game.wizardElement.style.backgroundImage = 'url("../images/1.png")';
     }
 
     // Spawn cloud
@@ -148,7 +153,7 @@ function gameLoop(state, game, timestamp) {
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
-            state.wizard.health--;
+            state.wizard.health-=10;
             healthInterval = 200;
             bug.remove();
             if (state.wizard.health <= 0) {
@@ -161,6 +166,31 @@ function gameLoop(state, game, timestamp) {
             bug.remove();
         }
     });
+     // Spawn DropBugs
+     if (timestamp > state.bugDropStats.nextSpawnTimestamp) {
+        game.createDropBug(state.bugDropStats);
+        state.bugDropStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugDropStats.maxSpawnInterval;
+    }   
+    // Render DropBugs
+    let dropBugElements = document.querySelectorAll('.dropBug');
+    dropBugElements.forEach(bug => {
+        let posY = parseInt(bug.style.top);
+
+        // Detect collsion with wizard
+        if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
+            state.wizard.health-=10;
+            healthInterval = 200;
+            bug.remove();
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
+            }
+        }
+        if (posY < game.gameScreen.offsetHeight) {
+            bug.style.top = posY + state.bugDropStats.speed + 'px';
+        } else {
+            bug.remove();
+        }
+    });
 
     // Render fireballs
     document.querySelectorAll('.fireball').forEach(fireball => {
@@ -168,6 +198,14 @@ function gameLoop(state, game, timestamp) {
 
         // Detect collision
         bugElements.forEach(bug => {
+            if (detectCollision(bug, fireball)) {
+                state.score += state.killScore;
+                bug.remove();
+                fireball.remove();
+                countKill++;
+            }
+        });
+        dropBugElements.forEach(bug => {
             if (detectCollision(bug, fireball)) {
                 state.score += state.killScore;
                 bug.remove();
@@ -198,7 +236,7 @@ function gameLoop(state, game, timestamp) {
     if(state.level > state.previousLevel){ 
         isBlink = true; 
         counter--; 
-        scoreScreenBlink("#1ae41ae0"); 
+        scoreScreenBlink("#1ae41ae0", game.scoreScreen); 
     }else{
         if(!isBlink){
             counter = 100;
@@ -208,10 +246,10 @@ function gameLoop(state, game, timestamp) {
     if(healthInterval >= 0){
         isBlink = true;       
         counter--;
-        scoreScreenBlink("#e61a1ac9");
+        scoreScreenBlink("#e61a1ac9", game.healthScreen);
         wizardBlink(wizardElement);
     }else{
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
         if(!isBlink){
             counter = 100;
         }       
@@ -220,78 +258,60 @@ function gameLoop(state, game, timestamp) {
 
 function wizardBlink(wizardElement){
     if(healthInterval > 190){
-        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
     if(healthInterval > 180 && healthInterval <= 190){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
     if(healthInterval > 170 && healthInterval <= 180){
-        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
     if(healthInterval > 160 && healthInterval <= 170){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
     if(healthInterval > 150 && healthInterval <= 160){
-        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
     if(healthInterval > 140 && healthInterval <= 150){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
     if(healthInterval > 130 && healthInterval <= 140){
-        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
     if(healthInterval > 120 && healthInterval <= 130){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
     if(healthInterval > 110 && healthInterval <= 120){
-        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
+        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
     if(healthInterval > 100 && healthInterval <= 110){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";
-    }
-    if(healthInterval > 90 && healthInterval <= 100){
-        wizardElement.style.backgroundImage = "url('../src/images/1Red.png')";
-    }
-    if(healthInterval > 80 && healthInterval <= 90){
-        wizardElement.style.backgroundImage = "url('../src/images/1.png')";        
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
 }
 
-function scoreScreenBlink(color){
+function scoreScreenBlink(color, screen){
       
     if(counter >= 0){
         if(counter < 100 && counter >= 95){
-            game1.scoreScreen.style.backgroundColor = color;
+            screen.style.backgroundColor = color;
         }else if(counter < 95 && counter >= 90){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
+            screen.style.backgroundColor = "#0942093b";
         }else if(counter < 90 && counter >= 85){
-            game1.scoreScreen.style.backgroundColor = color;
+            screen.style.backgroundColor = color;
         }else if(counter < 85 && counter >= 80){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
+            screen.style.backgroundColor = "#0942093b";
         }else if(counter < 80 && counter >= 75){
-            game1.scoreScreen.style.backgroundColor = color;
+            screen.style.backgroundColor = color;
         }else if(counter < 75 && counter >= 70){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
+            screen.style.backgroundColor = "#0942093b";
         }else if(counter < 70 && counter >= 65){
-            game1.scoreScreen.style.backgroundColor = color;
+            screen.style.backgroundColor = color;
         }else if(counter < 65 && counter >= 60){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
+            screen.style.backgroundColor = "#0942093b";
         }else if(counter < 60 && counter >= 55){
-            game1.scoreScreen.style.backgroundColor = color;
+            screen.style.backgroundColor = color;
         }else if(counter < 55 && counter >= 50){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
-        }else if(counter < 50 && counter >= 45){
-            game1.scoreScreen.style.backgroundColor = color;
-        }else if(counter < 45 && counter >= 40){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
-        }else if(counter < 40 && counter >= 35){
-            game1.scoreScreen.style.backgroundColor = color;
-        }else if(counter < 35 && counter >= 30){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
-        }else if(counter < 30 && counter >= 25){
-            game1.scoreScreen.style.backgroundColor = color;
-        }else if(counter < 25 && counter >= 20){
-            game1.scoreScreen.style.backgroundColor = "#0942093b";
+            screen.style.backgroundColor = "#0942093b";
         }
     }else{
         state.previousLevel = state.level;   

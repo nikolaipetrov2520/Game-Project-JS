@@ -2,11 +2,17 @@ function initGameObject() {
     const startScreen = document.querySelector('.start-screen');
     const gameScreen = document.querySelector('.game-screen');
     const scoreScreen = document.querySelector('.score');
+    const healthScreen = document.querySelector('.health');
+    const player = document.getElementById('name');
+    const inputScrean = document.getElementById('input');
 
     return {
         startScreen,
         gameScreen,
         scoreScreen,
+        player,
+        inputScrean,
+        healthScreen,
         createLevelProgress(initialState){
             let levelProgress = document.createElement('div');
             levelProgress.classList.add('progress-red');
@@ -39,37 +45,36 @@ function initGameObject() {
 
             return emptyProgress
         },
-        createHiroProgress(initialState){
-            let hiroProgress = document.createElement('div');
-            hiroProgress.classList.add('progress-red');
+        createHealthProgress(initialState){
+            let healthProgress = document.createElement('div');
+            healthProgress.classList.add('progress-red');
+            healthProgress.style.width = initialState.width + 'px';
+            healthProgress.style.height = initialState.height + 'px';
 
-            hiroProgress.style.width = initialState.width + 'px';
-            hiroProgress.style.height = initialState.height + 'px';
+            healthProgress.style.left = initialState.posX + '%';
+            healthProgress.style.top = (initialState.posY + 50) + 'px';
 
-            hiroProgress.style.left = initialState.posX + '%';
-            hiroProgress.style.top = (initialState.posY + 50) + 'px';
+            this.healthProgress = healthProgress;
 
-            this.hiroProgress = hiroProgress;
+            gameScreen.appendChild(healthProgress);
 
-            gameScreen.appendChild(hiroProgress);
-
-            return hiroProgress
+            return healthProgress
         },
-        createEmptyHiroProgress(initialState){
-            let emptyHiroProgress = document.createElement('div');
-            emptyHiroProgress.classList.add('progress-empty');
+        createEmptyHealthProgress(initialState){
+            let emptyHealthProgress = document.createElement('div');
+            emptyHealthProgress.classList.add('progress-empty');
 
-            emptyHiroProgress.style.width = initialState.width + 'px';
-            emptyHiroProgress.style.height = initialState.height + 'px';
+            emptyHealthProgress.style.width = initialState.width + 'px';
+            emptyHealthProgress.style.height = initialState.height + 'px';
 
-            emptyHiroProgress.style.left = initialState.posX + '%';
-            emptyHiroProgress.style.top = (initialState.posY + 50) + 'px';
+            emptyHealthProgress.style.left = initialState.posX + '%';
+            emptyHealthProgress.style.top = (initialState.posY + 50) + 'px';
 
-            this.emptyHiroProgress = emptyHiroProgress;
+            this.emptyHealthProgress = emptyHealthProgress;
 
-            gameScreen.appendChild(emptyHiroProgress);
+            gameScreen.appendChild(emptyHealthProgress);
 
-            return emptyHiroProgress
+            return emptyHealthProgress
         },
         createWizard(initialState) {
             let wizardElement = document.createElement('div');
@@ -102,17 +107,47 @@ function initGameObject() {
             bugElement.classList.add('bug');
             bugElement.style.width = stats.width + 'px';
             bugElement.style.height = stats.height + 'px';
-            bugElement.style.left = gameScreen.offsetWidth - stats.width + 'px';
+            bugElement.style.left = gameScreen.offsetWidth + 'px';
             bugElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight - stats.height)) + 'px';
 
             gameScreen.appendChild(bugElement);
+        },
+        createDropBug(stats) {
+            const bugDropElement = document.createElement('div');
+            bugDropElement.classList.add('dropBug');
+            bugDropElement.style.width = stats.width + 'px';
+            bugDropElement.style.height = stats.height + 'px';
+            bugDropElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
+            bugDropElement.style.top = 0 - stats.height + 'px';
+            
+            gameScreen.appendChild(bugDropElement);
+        },
+        createHeart(stats) {
+            const heartElement = document.createElement('div');
+            heartElement.classList.add('dropBug');
+            heartElement.style.width = stats.width + 'px';
+            heartElement.style.height = stats.height + 'px';
+            heartElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
+            heartElement.style.top = 0 - stats.height + 'px';
+            
+            gameScreen.appendChild(heartElement);
+        },
+        createDiamond(stats) {
+            const diamondElement = document.createElement('div');
+            diamondElement.classList.add('dropBug');
+            diamondElement.style.width = stats.width + 'px';
+            diamondElement.style.height = stats.height + 'px';
+            diamondElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
+            diamondElement.style.top = 0 - stats.height + 'px';
+            
+            gameScreen.appendChild(diamondElement);
         },
         createCloud(stats) {
             const cloudElement = document.createElement('div');
             cloudElement.classList.add('cloud');
             cloudElement.style.width = stats.width + 'px';
             cloudElement.style.height = stats.height + 'px';
-            cloudElement.style.left = gameScreen.offsetWidth - stats.width + 'px';
+            cloudElement.style.left = gameScreen.offsetWidth + 'px';
             cloudElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight / 3 - stats.height)) + 'px';
 
             gameScreen.appendChild(cloudElement);
@@ -122,7 +157,7 @@ function initGameObject() {
             tree1Element.classList.add('tree1');
             tree1Element.style.width = stats.width + 'px';
             tree1Element.style.height = stats.height + 'px';
-            tree1Element.style.left = gameScreen.offsetWidth - stats.width + 'px';
+            tree1Element.style.left = gameScreen.offsetWidth + 'px';
             tree1Element.style.top = gameScreen.offsetHeight - stats.height + 'px';
 
             gameScreen.appendChild(tree1Element);
@@ -132,7 +167,7 @@ function initGameObject() {
             tree2Element.classList.add('tree2');
             tree2Element.style.width = stats.width + 'px';
             tree2Element.style.height = stats.height + 'px';
-            tree2Element.style.left = gameScreen.offsetWidth - stats.width + 'px';
+            tree2Element.style.left = gameScreen.offsetWidth + 'px';
             tree2Element.style.top = gameScreen.offsetHeight - stats.height + 'px';
 
             gameScreen.appendChild(tree2Element);
