@@ -166,31 +166,84 @@ function gameLoop(state, game, timestamp) {
             bug.remove();
         }
     });
-     // Spawn DropBugs
-     if (timestamp > state.bugDropStats.nextSpawnTimestamp) {
-        game.createDropBug(state.bugDropStats);
-        state.bugDropStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugDropStats.maxSpawnInterval;
+     // Spawn Spider
+     if (timestamp > state.spiderStats.nextSpawnTimestamp) {
+        game.createSpider(state.spiderStats);
+        state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
     }   
-    // Render DropBugs
-    let dropBugElements = document.querySelectorAll('.dropBug');
-    dropBugElements.forEach(bug => {
-        let posY = parseInt(bug.style.top);
+    // Render Spider
+    let spiderElements = document.querySelectorAll('.spider');
+    spiderElements.forEach(spider => {
+        let posY = parseInt(spider.style.top);
 
         // Detect collsion with wizard
-        if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
-            state.wizard.health-=10;
+        if (detectCollision(wizardElement, spider) && healthInterval <= 0) {
+            state.wizard.health-=5;
             healthInterval = 200;
-            bug.remove();
+            spider.remove();
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
             }
         }
-        if (posY < game.gameScreen.offsetHeight) {
-            bug.style.top = posY + state.bugDropStats.speed + 'px';
-        } else {
-            bug.remove();
+        
+        if (posY + state.spiderStats.height < game.gameScreen.offsetHeight / 2 && state.spiderStats.isDown) {
+            spider.style.top = posY + state.spiderStats.speed + 'px';
+        } else { 
+            state.spiderStats.isDown = false;         
+            if(posY + state.spiderStats.height > 0){
+                spider.style.top = posY - state.spiderStats.speed + 'px';
+            }else{
+                spider.remove();
+            }
         }
     });
+
+    // Spown Heart
+    if (timestamp > state.heartStats.nextSpawnTimestamp) {
+        game.createHeart(state.heartStats);
+        state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
+    }   
+    // Render Heart
+    let heartElements = document.querySelectorAll('.heart');
+    heartElements.forEach(heart => {
+        let posY = parseInt(heart.style.top);
+
+        // Detect collsion with heart
+        if (detectCollision(wizardElement, heart)) {
+            state.wizard.health+=state.heartStats.addHealth;
+            heart.remove();
+            if (state.wizard.health > 100) {
+                state.wizard.health= 100;
+            }
+        }
+        if (posY > 0) {
+            heart.style.top = posY - state.heartStats.speed + 'px';
+        } else {
+            heart.remove();
+        }
+    });
+
+        // Spown Diamond
+        if (timestamp > state.diamondStats.nextSpawnTimestamp) {
+            game.createDiamond(state.diamondStats);
+            state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
+        }   
+        // Render Diamond
+        let diamondElements = document.querySelectorAll('.diamond');
+        diamondElements.forEach(diamond => {
+            let posY = parseInt(diamond.style.top);
+    
+            // Detect collsion with heart
+            if (detectCollision(wizardElement, diamond)) {
+               // state.wizard.health+=state.heartStats.addHealth;
+                diamond.remove();
+            }
+            if (posY > 0) {
+                diamond.style.top = posY - state.diamondStats.speed + 'px';
+            } else {
+                diamond.remove();
+            }
+        });
 
     // Render fireballs
     document.querySelectorAll('.fireball').forEach(fireball => {
@@ -205,10 +258,10 @@ function gameLoop(state, game, timestamp) {
                 countKill++;
             }
         });
-        dropBugElements.forEach(bug => {
-            if (detectCollision(bug, fireball)) {
+        spiderElements.forEach(spider => {
+            if (detectCollision(spider, fireball)) {
                 state.score += state.killScore;
-                bug.remove();
+                spider.remove();
                 fireball.remove();
                 countKill++;
             }

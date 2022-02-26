@@ -96,17 +96,20 @@ h3 span{
     background-size: cover;
     z-index: 1;
 }
-.dropBug{
+.spider{
     position: absolute;
-    background-image: url("../images/man.png");
+    background-image: url("../images/spider.png");
     background-size: cover;
     z-index: 1;
 }
+
 .heart{
     position: absolute;
     background-image: url("../images/heart.png");
     background-size: cover;
     z-index: 1;
+    font-size: 50px;
+    color: yellow;
 }
 .diamond{
     position: absolute;

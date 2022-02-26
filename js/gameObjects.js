@@ -112,33 +112,36 @@ function initGameObject() {
 
             gameScreen.appendChild(bugElement);
         },
-        createDropBug(stats) {
-            const bugDropElement = document.createElement('div');
-            bugDropElement.classList.add('dropBug');
-            bugDropElement.style.width = stats.width + 'px';
-            bugDropElement.style.height = stats.height + 'px';
-            bugDropElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
-            bugDropElement.style.top = 0 - stats.height + 'px';
+        createSpider(stats) {
+            stats.isDown = true;
+            const spiderElement = document.createElement('div');
+            spiderElement.classList.add('spider');
+            spiderElement.style.width = stats.width + 'px';
+            spiderElement.style.height = stats.height + 'px';
+            spiderElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
+            spiderElement.style.top = 0 - stats.height + 'px';
             
-            gameScreen.appendChild(bugDropElement);
+            gameScreen.appendChild(spiderElement);
         },
         createHeart(stats) {
             const heartElement = document.createElement('div');
-            heartElement.classList.add('dropBug');
+            heartElement.classList.add('heart');
+            stats.addHealth = Math.ceil(Math.random() * 5);
+            heartElement.textContent = `+${stats.addHealth}`;
             heartElement.style.width = stats.width + 'px';
             heartElement.style.height = stats.height + 'px';
             heartElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
-            heartElement.style.top = 0 - stats.height + 'px';
+            heartElement.style.top = gameScreen.offsetHeight+ 'px';
             
             gameScreen.appendChild(heartElement);
         },
         createDiamond(stats) {
             const diamondElement = document.createElement('div');
-            diamondElement.classList.add('dropBug');
+            diamondElement.classList.add('diamond');
             diamondElement.style.width = stats.width + 'px';
             diamondElement.style.height = stats.height + 'px';
             diamondElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
-            diamondElement.style.top = 0 - stats.height + 'px';
+            diamondElement.style.top = gameScreen.offsetHeight + 'px';
             
             gameScreen.appendChild(diamondElement);
         },

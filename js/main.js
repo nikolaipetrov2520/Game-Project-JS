@@ -28,13 +28,13 @@ document.addEventListener('keyup', (e) => {
 
 
 game.startScreen.addEventListener('click', (e) => {
-   // if(game.player.value != ''){
+    if(game.player.value != ''){
         game.startScreen.classList.add('hidden');
         game.inputScrean.classList.add('hidden');
         game.gameScreen.classList.remove('hidden');
         // Start game
         start(state, game);
-   // }
+    }
     
 });
 

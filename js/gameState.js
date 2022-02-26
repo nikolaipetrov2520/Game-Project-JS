@@ -32,12 +32,13 @@ function initState() {
             speed: 2,
         },
         heartStats: {
-            width: 80,
-            height: 70,
-            nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 20000,
-            startInterval: 20000,
+            width: 62,
+            height: 54,
+            nextSpawnTimestamp: 50000,
+            maxSpawnInterval: 50000,
+            startInterval: 50000,
             speed: 2,
+            addHealth: 0,
         },
         diamondStats: {
             width: 80,
@@ -47,13 +48,14 @@ function initState() {
             startInterval: 20000,
             speed: 2,
         },
-        bugDropStats: {
+        spiderStats: {
             width: 90,
-            height: 80,
-            nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 20000,
-            startInterval: 20000,
+            height: 600,
+            nextSpawnTimestamp: 20000,
+            maxSpawnInterval: 30000,
+            startInterval: 30000,
             speed: 2,
+            isDown: true,
         },
         fireball: {
             width: 20,
