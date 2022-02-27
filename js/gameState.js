@@ -34,9 +34,9 @@ function initState() {
         heartStats: {
             width: 54,
             height: 47,
-            nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 25000,
-            startInterval: 25000,
+            nextSpawnTimestamp: 20000,
+            maxSpawnInterval: 35000,
+            startInterval: 35000,
             speed: 2,
             addHealth: 0,
         },
@@ -44,8 +44,8 @@ function initState() {
             width: 80,
             height: 70,
             nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 25000,
-            startInterval: 25000,
+            maxSpawnInterval: 30000,
+            startInterval: 30000,
             speed: 2,
         },
         spiderStats: {
