@@ -184,7 +184,7 @@ function gameLoop(state, game, timestamp) {
         }
     });
     // Spawn Spider
-    if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 100) {
+    if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 150) {
         game.createSpider(state.spiderStats);
         state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
         spiderTime = 0;
@@ -437,7 +437,26 @@ function gameOver() {
     const startBtn = document.createElement('h3');
     startBtn.classList.add('start-btn');
     startBtn.textContent = 'Start again'
-    gameOver.innerHTML = `<span>Game Over!</span><br/> Your Score is: ${state.score.toFixed(0)} points<br/> Level ${state.level}<br> You Killed ${countKill} enemies`
+    gameOver.innerHTML = `<span>Game Over!</span><br/> Score: ${state.score.toFixed(0)}<br/> Level ${state.level}<br> Killed enemies: ${countKill}`;
+    game.gameScreen.innerHTML = '';
+    game.gameScreen.appendChild(gameOver);
+    game.gameScreen.appendChild(startBtn);
+    startBtn.addEventListener('click', () => {
+        document.location.reload(true);
+    });
+    let body = document.getElementsByTagName('body')[0];
+    body.addEventListener('keydown', (e) => {
+        if (e.code == 'Enter' || e.code == 'NumpadEnter') {
+            document.location.reload(true);
+        }
+    });
+}
+function gameWin() {
+    const gameOver = document.createElement('h3');
+    const startBtn = document.createElement('h3');
+    startBtn.classList.add('start-btn');
+    startBtn.textContent = 'Start again'
+    gameOver.innerHTML = `<span>You Win!</span><br/> Score: ${state.score.toFixed(0)}<br/> Level ${state.level}<br> Killed enemies: ${countKill}`;
     game.gameScreen.innerHTML = '';
     game.gameScreen.appendChild(gameOver);
     game.gameScreen.appendChild(startBtn);
@@ -486,6 +505,7 @@ function upLevel(state) {
         state.bugStats.maxSpawnInterval = 2800;
         state.bugStats.width = 82;
         state.bugStats.height = 70;
+        state.heartStats.speed = 4;
     }
     if (state.score > 8000) {
         state.level = 6;
@@ -526,6 +546,7 @@ function upLevel(state) {
         state.bugStats.maxSpawnInterval = 1300;
         state.bugStats.width = 72;
         state.bugStats.height = 58;
+        state.heartStats.speed = 6;
     }
     if (state.score > 35000) {
         state.level = 11;
@@ -551,10 +572,40 @@ function upLevel(state) {
         state.level = 15;
         state.toNextLevel = 100000 - 75000;
         state.neededScore = state.score - 75000;
+        state.heartStats.speed = 8;
     }
-    state.bugStats.speed = state.level * 1.3;
-    state.scoreRate = state.startScoreRate * (state.level / 2);
-
+    if (state.score > 100000) {
+        state.level = 16;
+        state.toNextLevel = 120000 - 100000;
+        state.neededScore = state.score - 100000;
+    }
+    if (state.score > 120000) {
+        state.level = 17;
+        state.toNextLevel = 140000 - 120000;
+        state.neededScore = state.score - 120000;
+    }
+    if (state.score > 140000) {
+        state.level = 18;
+        state.toNextLevel = 160000 - 140000;
+        state.neededScore = state.score - 140000;
+    }
+    if (state.score > 160000) {
+        state.level = 19;
+        state.toNextLevel = 180000 - 160000;
+        state.neededScore = state.score - 160000;
+    }
+    if (state.score > 180000) {
+        state.level = 20;
+        state.toNextLevel = 200000 - 180000;
+        state.neededScore = state.score - 180000;
+    }
+    if (state.score > 200000) {
+        gameWin();
+    }
+    if(state.level < 16){
+        state.bugStats.speed = state.level * 1.3;
+        state.scoreRate = state.startScoreRate * (state.level / 2);
+    }
 }
 
 function modifyWizardPosition(state, game) {

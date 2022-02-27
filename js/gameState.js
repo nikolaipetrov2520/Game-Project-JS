@@ -35,8 +35,8 @@ function initState() {
             width: 62,
             height: 54,
             nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 20000,
-            startInterval: 20000,
+            maxSpawnInterval: 25000,
+            startInterval: 25000,
             speed: 2,
             addHealth: 0,
         },
@@ -44,8 +44,8 @@ function initState() {
             width: 80,
             height: 70,
             nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 20000,
-            startInterval: 20000,
+            maxSpawnInterval: 25000,
+            startInterval: 25000,
             speed: 2,
         },
         spiderStats: {
@@ -122,6 +122,5 @@ function initState() {
             posY: 144,
         },
     }
-
     return state;
 }
