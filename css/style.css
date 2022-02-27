@@ -271,16 +271,16 @@ h3 span{
     background-size: auto;
     text-align: right;
     width: 200px;
-    height: 45px;
+    height: 47px;
 }
-.spiderCount{
+.heartCount{
     margin: 10px;
-    background-image: url("../images/spider1.png");
+    background-image: url("../images/heart.png");
     background-repeat: no-repeat;
     background-size: auto;
     text-align: right;
     width: 200px;
-    height: 45px;
+    height: 47px;
 }
 h3{
     text-align: center;

@@ -13,6 +13,7 @@ let pointTimer = 0;
 let isPoint = false;
 let spiderCount = 0;
 let diamondCount = 0;
+let heartCount = 0;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -36,7 +37,7 @@ function gameLoop(state, game, timestamp) {
     const { healthProgress } = game;
     const { emptyHealthProgress } = game;
     const { diamondCountElement } = game;
-    const { spiderCountElement } = game;
+    const { heartCountElement } = game;
     const { collectables } = game;
     
 
@@ -55,12 +56,12 @@ function gameLoop(state, game, timestamp) {
 
     diamondCountElement.classList.add('diamondCount');
     diamondCountElement.textContent = diamondCount;
-    spiderCountElement.classList.add('spiderCount');
-    spiderCountElement.textContent = spiderCount;
+    heartCountElement.classList.add('heartCount');
+    heartCountElement.textContent = heartCount;
     collectables.textContent = 'Collected'
 
     collectables.appendChild(diamondCountElement);
-    collectables.appendChild(spiderCountElement);
+    collectables.appendChild(heartCountElement);
 
     // Render Level Progress
     levelProgress.style.left = progressBar.posX + '%';
@@ -301,6 +302,7 @@ function gameLoop(state, game, timestamp) {
             state.wizard.health += state.heartStats.addHealth;
             isPoint = true;
             heart.remove();
+            heartCount++;
             if (state.wizard.health > 100) {
                 state.wizard.health = 100;
             }

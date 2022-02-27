@@ -32,8 +32,8 @@ function initState() {
             speed: 2,
         },
         heartStats: {
-            width: 62,
-            height: 54,
+            width: 54,
+            height: 47,
             nextSpawnTimestamp: 10000,
             maxSpawnInterval: 25000,
             startInterval: 25000,

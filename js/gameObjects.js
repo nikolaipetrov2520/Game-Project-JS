@@ -7,7 +7,7 @@ function initGameObject() {
     const inputScrean = document.getElementById('input');
     const collectables = document.querySelector('.collectables')
     const diamondCountElement = document.createElement('div');
-    const spiderCountElement = document.createElement('div');
+    const heartCountElement = document.createElement('div');
 
     return {
         startScreen,
@@ -18,7 +18,7 @@ function initGameObject() {
         healthScreen,
         collectables,
         diamondCountElement,
-        spiderCountElement,
+        heartCountElement,
         createLevelProgress(initialState){
             let levelProgress = document.createElement('div');
             levelProgress.classList.add('progress-red');
