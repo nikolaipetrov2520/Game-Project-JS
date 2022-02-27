@@ -48,13 +48,16 @@ game.player.addEventListener('keydown', (e) => {
             start(state, game);
         }
     }
- }, { once: true });
+ });
 
 // body.addEventListener('keydown', (e) => {
 //    if(e.code == 'Enter' || e.code == 'NumpadEnter'){
+//     if(game.player.value != ''){
 //         game.startScreen.classList.add('hidden');
-//         game.gameScreen.classList.remove('hidden');    
+//         game.gameScreen.classList.remove('hidden'); 
+//         game.inputScrean.classList.add('hidden');   
 //         // Start game
 //         start(state, game);
+//     }
 //    }
 // }, { once: true });

@@ -5,6 +5,9 @@ function initGameObject() {
     const healthScreen = document.querySelector('.health');
     const player = document.getElementById('name');
     const inputScrean = document.getElementById('input');
+    const collectables = document.querySelector('.collectables')
+    const diamondCountElement = document.createElement('div');
+    const spiderCountElement = document.createElement('div');
 
     return {
         startScreen,
@@ -13,6 +16,9 @@ function initGameObject() {
         player,
         inputScrean,
         healthScreen,
+        collectables,
+        diamondCountElement,
+        spiderCountElement,
         createLevelProgress(initialState){
             let levelProgress = document.createElement('div');
             levelProgress.classList.add('progress-red');
@@ -153,7 +159,7 @@ function initGameObject() {
             cloudElement.style.height = stats.height + 'px';
             cloudElement.style.left = gameScreen.offsetWidth + 'px';
             cloudElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight / 3 - stats.height)) + 'px';
-            
+
 
             gameScreen.appendChild(cloudElement);
         },

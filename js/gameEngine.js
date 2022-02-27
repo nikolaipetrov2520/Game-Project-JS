@@ -11,6 +11,8 @@ let tree1Time = 0;
 let tree2Time = 0;
 let pointTimer = 0;
 let isPoint = false;
+let spiderCount = 0;
+let diamondCount = 0;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -33,6 +35,10 @@ function gameLoop(state, game, timestamp) {
     const { emptyProgress } = game;
     const { healthProgress } = game;
     const { emptyHealthProgress } = game;
+    const { diamondCountElement } = game;
+    const { spiderCountElement } = game;
+    const { collectables } = game;
+    
 
     upLevel(state);
 
@@ -46,6 +52,15 @@ function gameLoop(state, game, timestamp) {
         playerName = playerName.substring(0, 7) + '...';
     }
     game.healthScreen.innerText = `${playerName} \r\n Health \r\n ${state.wizard.health} %`;
+
+    diamondCountElement.classList.add('diamondCount');
+    diamondCountElement.textContent = diamondCount;
+    spiderCountElement.classList.add('spiderCount');
+    spiderCountElement.textContent = spiderCount;
+    collectables.textContent = 'Collected'
+
+    collectables.appendChild(diamondCountElement);
+    collectables.appendChild(spiderCountElement);
 
     // Render Level Progress
     levelProgress.style.left = progressBar.posX + '%';
@@ -246,7 +261,6 @@ function gameLoop(state, game, timestamp) {
         });
         spiderElements.forEach(spider => {
             if (detectCollision(spider, fireball) && !spider.isDed) {
-                debugger
                 state.score += state.killScore * 0.5;
                 spider.style.backgroundImage = "url('../images/spider1.png')";
                 spider.style.width = '90px';
@@ -258,6 +272,7 @@ function gameLoop(state, game, timestamp) {
                 spider.isDed = true;            
                 fireball.remove();
                 countKill++;
+                spiderCount++;
             }
         });
 
@@ -311,6 +326,7 @@ function gameLoop(state, game, timestamp) {
         if (detectCollision(wizardElement, diamond)) {
             // state.wizard.health+=state.heartStats.addHealth;
             diamond.remove();
+            diamondCount++;
         }
         if (posY > 0) {
             diamond.style.top = posY - state.diamondStats.speed + 'px';
