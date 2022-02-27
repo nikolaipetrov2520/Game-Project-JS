@@ -108,9 +108,70 @@ h3 span{
     background-image: url("../images/heart.png");
     background-size: cover;
     z-index: 1;
-    font-size: 50px;
+    font-size: 30px;
+    text-align: center;
     color: yellow;
+    animation: zoom-in-zoom-out 0.8s ease infinite;
 }
+@keyframes zoom-in-zoom-out {
+    0% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1.05, 1.05);
+    }
+    100% {
+      transform: scale(0.95, 0.95);
+    }
+  }
+
+  .points{
+    position: absolute;
+    background-image: url("../images/1Red.png");
+    background-size: cover;
+    z-index: 1;
+    font-size: 30px;
+    text-align: center;
+    color: yellow;
+    animation: zoom-in 1s ease infinite;
+  }
+
+  @keyframes zoom-in {
+    0% {
+      transform: scale(1, 1);
+    }
+    10% {
+      transform: scale(1.4, 1.2);
+    }
+    20% {
+      transform: scale(1.8, 1.4);
+    }
+    30% {
+        transform: scale(2.2, 1.6);
+      }
+    40% {
+        transform: scale(2.6, 1.8);
+      }
+    50% {
+        transform: scale(3, 2);
+      }
+    60% {
+        transform: scale(3.4, 2.2);
+      }
+    70% {
+        transform: scale(3.8, 2.4);
+      }
+    80% {
+        transform: scale(4.2, 2.6);
+      }
+    90% {
+          transform: scale(4.6, 2.8);
+        }
+    1000% {
+          transform: scale(5, 3);
+        }
+  }
+
 .diamond{
     position: absolute;
     background-image: url("../images/diamond.png");

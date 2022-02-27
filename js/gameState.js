@@ -26,7 +26,7 @@ function initState() {
         bugStats: {
             width: 90,
             height: 80,
-            nextSpawnTimestamp: 0,
+            nextSpawnTimestamp: 400,
             maxSpawnInterval: 4000,
             startInterval: 4000,
             speed: 2,
@@ -34,9 +34,9 @@ function initState() {
         heartStats: {
             width: 62,
             height: 54,
-            nextSpawnTimestamp: 50000,
-            maxSpawnInterval: 50000,
-            startInterval: 50000,
+            nextSpawnTimestamp: 10000,
+            maxSpawnInterval: 20000,
+            startInterval: 20000,
             speed: 2,
             addHealth: 0,
         },
@@ -51,11 +51,12 @@ function initState() {
         spiderStats: {
             width: 90,
             height: 600,
-            nextSpawnTimestamp: 20000,
-            maxSpawnInterval: 30000,
-            startInterval: 30000,
+            nextSpawnTimestamp: 10000,
+            maxSpawnInterval: 20000,
+            startInterval: 20000,
             speed: 2,
             isDown: true,
+            isDed: false,
         },
         fireball: {
             width: 20,
@@ -80,7 +81,7 @@ function initState() {
             height: 200,
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 8000,
-            speed: 2, 
+            speed: 2,
         },
         tree1Stats: {
             width: 90,
@@ -90,7 +91,7 @@ function initState() {
             speed: 1, 
         },
         tree2Stats: {
-            width: 100,
+            width: 116,
             height: 150,
             nextSpawnTimestamp: 0,
             maxSpawnInterval: 4000,

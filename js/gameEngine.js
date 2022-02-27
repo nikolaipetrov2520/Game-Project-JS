@@ -4,6 +4,13 @@ let counter = 100;
 let countKill = 0;
 let healthInterval = 0;
 let isBlink = false;
+let isBreakRope = false;
+let spiderTime = 0;
+let cloudTime = 0;
+let tree1Time = 0;
+let tree2Time = 0;
+let pointTimer = 0;
+let isPoint = false;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -12,7 +19,7 @@ function start(state, game) {
     game.createHealthProgress(state.healthBar);
     game.createEmptyHealthProgress(state.healthEmpty);
     window.requestAnimationFrame(gameLoop.bind(null, state, game));
-    
+
 }
 
 function gameLoop(state, game, timestamp) {
@@ -30,15 +37,16 @@ function gameLoop(state, game, timestamp) {
     upLevel(state);
 
     modifyWizardPosition(state, game);
-    if(state.wizard.health >= 100){
+    if (state.wizard.health >= 100) {
         state.wizard.health = 100;
     }
     game.scoreScreen.innerText = `Points \r\n  ${state.score.toFixed(0)}\r\n Level: ${state.level}`;
     let playerName = game.player.value;
-    if(playerName.length > 7){
-        playerName = playerName.substring(0,7) + '...';
+    if (playerName.length > 7) {
+        playerName = playerName.substring(0, 7) + '...';
     }
     game.healthScreen.innerText = `${playerName} \r\n Health \r\n ${state.wizard.health} %`;
+
     // Render Level Progress
     levelProgress.style.left = progressBar.posX + '%';
     levelProgress.style.top = progressBar.posY + 'px';
@@ -74,7 +82,7 @@ function gameLoop(state, game, timestamp) {
     } else {
         healthProgress.className = '';
         healthProgress.classList.add('progress-green');
-    }   
+    }
 
     if (state.keys.Space) {
         game.wizardElement.style.backgroundImage = 'url("../images/2.png")';
@@ -88,9 +96,12 @@ function gameLoop(state, game, timestamp) {
     }
 
     // Spawn cloud
-    if (timestamp > state.cloudStats.nextSpawnTimestamp) {
+    if (timestamp > state.cloudStats.nextSpawnTimestamp && cloudTime > 30) {
         game.createCloud(state.cloudStats);
         state.cloudStats.nextSpawnTimestamp = timestamp + Math.random() * state.cloudStats.maxSpawnInterval;
+        cloudTime = 0;
+    }else{
+        cloudTime++;
     }
 
     // Render cloud
@@ -98,7 +109,7 @@ function gameLoop(state, game, timestamp) {
     cloudElement.forEach(cloud => {
         let posX = parseInt(cloud.style.left);
 
-        if (posX > 0) {
+        if (posX + state.cloudStats.width > 0) {
             cloud.style.left = posX - state.cloudStats.speed + 'px';
         } else {
             cloud.remove();
@@ -106,9 +117,12 @@ function gameLoop(state, game, timestamp) {
     });
 
     // Spawn tree1
-    if (timestamp > state.tree1Stats.nextSpawnTimestamp) {
+    if (timestamp > state.tree1Stats.nextSpawnTimestamp && tree1Time > 10) {
         game.createTree1(state.tree1Stats);
         state.tree1Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree1Stats.maxSpawnInterval;
+        tree1Time = 0;
+    }else{
+        tree1Time++;
     }
 
     // Render tree1
@@ -116,7 +130,7 @@ function gameLoop(state, game, timestamp) {
     tree1Element.forEach(tree1 => {
         let posX = parseInt(tree1.style.left);
 
-        if (posX > 0) {
+        if (posX + state.tree1Stats.width > 0) {
             tree1.style.left = posX - state.tree1Stats.speed + 'px';
         } else {
             tree1.remove();
@@ -124,9 +138,12 @@ function gameLoop(state, game, timestamp) {
     });
 
     //Spawn tree2
-    if (timestamp > state.tree2Stats.nextSpawnTimestamp) {
+    if (timestamp > state.tree2Stats.nextSpawnTimestamp && tree2Time > 10) {
         game.createTree2(state.tree2Stats);
         state.tree2Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree2Stats.maxSpawnInterval;
+        tree2Time = 0;
+    }else{
+        tree2Time++;
     }
 
     // Render tree2
@@ -134,7 +151,7 @@ function gameLoop(state, game, timestamp) {
     tree2Element.forEach(tree2 => {
         let posX = parseInt(tree2.style.left);
 
-        if (posX > 0) {
+        if (posX + state.tree2Stats.width > 0) {
             tree2.style.left = posX - state.tree2Stats.speed + 'px';
         } else {
             tree2.remove();
@@ -145,7 +162,7 @@ function gameLoop(state, game, timestamp) {
     if (timestamp > state.bugStats.nextSpawnTimestamp) {
         game.createBug(state.bugStats);
         state.bugStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugStats.maxSpawnInterval;
-    }   
+    }
     // Render bugs
     let bugElements = document.querySelectorAll('.bug');
     bugElements.forEach(bug => {
@@ -153,7 +170,7 @@ function gameLoop(state, game, timestamp) {
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
-            state.wizard.health-=10;
+            state.wizard.health -= 10;
             healthInterval = 200;
             bug.remove();
             if (state.wizard.health <= 0) {
@@ -166,84 +183,53 @@ function gameLoop(state, game, timestamp) {
             bug.remove();
         }
     });
-     // Spawn Spider
-     if (timestamp > state.spiderStats.nextSpawnTimestamp) {
+    // Spawn Spider
+    if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 100) {
         game.createSpider(state.spiderStats);
         state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
-    }   
+        spiderTime = 0;
+    }else{
+        spiderTime++;
+    }
     // Render Spider
     let spiderElements = document.querySelectorAll('.spider');
     spiderElements.forEach(spider => {
         let posY = parseInt(spider.style.top);
 
         // Detect collsion with wizard
-        if (detectCollision(wizardElement, spider) && healthInterval <= 0) {
-            state.wizard.health-=5;
+        if (detectCollision(wizardElement, spider) && healthInterval <= 0 && !spider.isDed) {
+            state.wizard.health -= 15;
             healthInterval = 200;
             spider.remove();
+            spiderTime = 0;
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
             }
         }
-        
-        if (posY + state.spiderStats.height < game.gameScreen.offsetHeight / 2 && state.spiderStats.isDown) {
-            spider.style.top = posY + state.spiderStats.speed + 'px';
-        } else { 
-            state.spiderStats.isDown = false;         
-            if(posY + state.spiderStats.height > 0){
-                spider.style.top = posY - state.spiderStats.speed + 'px';
-            }else{
-                spider.remove();
-            }
-        }
-    });
-
-    // Spown Heart
-    if (timestamp > state.heartStats.nextSpawnTimestamp) {
-        game.createHeart(state.heartStats);
-        state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
-    }   
-    // Render Heart
-    let heartElements = document.querySelectorAll('.heart');
-    heartElements.forEach(heart => {
-        let posY = parseInt(heart.style.top);
-
-        // Detect collsion with heart
-        if (detectCollision(wizardElement, heart)) {
-            state.wizard.health+=state.heartStats.addHealth;
-            heart.remove();
-            if (state.wizard.health > 100) {
-                state.wizard.health= 100;
-            }
-        }
-        if (posY > 0) {
-            heart.style.top = posY - state.heartStats.speed + 'px';
-        } else {
-            heart.remove();
-        }
-    });
-
-        // Spown Diamond
-        if (timestamp > state.diamondStats.nextSpawnTimestamp) {
-            game.createDiamond(state.diamondStats);
-            state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
-        }   
-        // Render Diamond
-        let diamondElements = document.querySelectorAll('.diamond');
-        diamondElements.forEach(diamond => {
-            let posY = parseInt(diamond.style.top);
-    
-            // Detect collsion with heart
-            if (detectCollision(wizardElement, diamond)) {
-               // state.wizard.health+=state.heartStats.addHealth;
-                diamond.remove();
-            }
-            if (posY > 0) {
-                diamond.style.top = posY - state.diamondStats.speed + 'px';
+        if(!isBreakRope){
+            if (posY + state.spiderStats.height < game.gameScreen.offsetHeight / 2 && state.spiderStats.isDown) {
+                spider.style.top = posY + state.spiderStats.speed * 4 + 'px';
             } else {
-                diamond.remove();
+                state.spiderStats.isDown = false;
+                if (posY + state.spiderStats.height > 0) {
+                    spider.style.top = posY - state.spiderStats.speed * 2 + 'px';
+                } else {
+                    spider.remove();
+                    spiderTime = 0;
+                }
             }
-        });
+        }else{
+            if(posY < game.gameScreen.offsetHeight){
+                spider.style.top = posY + state.spiderStats.speed * 9 + 'px';
+            }
+            else{
+                spider.remove();
+                spiderTime = 0;
+                isBreakRope = false;
+            }
+        }
+    });
+
 
     // Render fireballs
     document.querySelectorAll('.fireball').forEach(fireball => {
@@ -259,9 +245,17 @@ function gameLoop(state, game, timestamp) {
             }
         });
         spiderElements.forEach(spider => {
-            if (detectCollision(spider, fireball)) {
-                state.score += state.killScore;
-                spider.remove();
+            if (detectCollision(spider, fireball) && !spider.isDed) {
+                debugger
+                state.score += state.killScore * 0.5;
+                spider.style.backgroundImage = "url('../images/spider1.png')";
+                spider.style.width = '90px';
+                spider.style.height = '90px';
+                let top = parseInt(spider.style.top);
+                top += 510;
+                spider.style.top = top + 'px';
+                isBreakRope = true; 
+                spider.isDed = true;            
                 fireball.remove();
                 countKill++;
             }
@@ -274,105 +268,171 @@ function gameLoop(state, game, timestamp) {
         }
     });
 
+    
+    // Spown Heart
+    if (timestamp > state.heartStats.nextSpawnTimestamp) {
+        game.createHeart(state.heartStats, state.level);
+        state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
+    }
+    // Render Heart
+    let heartElements = document.querySelectorAll('.heart');
+    heartElements.forEach(heart => {
+        let posY = parseInt(heart.style.top);
+        // if(isPoint){
+        //     pointAdd(heart, state.heartStats.addHealth);
+        // }
+        // Detect collsion with heart
+        if (detectCollision(wizardElement, heart)) {
+            state.wizard.health += state.heartStats.addHealth;
+            isPoint = true;
+            heart.remove();
+            if (state.wizard.health > 100) {
+                state.wizard.health = 100;
+            }
+        }
+        if (posY > 0) {
+            heart.style.top = posY - state.heartStats.speed + 'px';
+        } else {
+            heart.remove();
+        }
+    });
+
+    // Spown Diamond
+    if (timestamp > state.diamondStats.nextSpawnTimestamp) {
+        game.createDiamond(state.diamondStats);
+        state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
+    }
+    // Render Diamond
+    let diamondElements = document.querySelectorAll('.diamond');
+    diamondElements.forEach(diamond => {
+        let posY = parseInt(diamond.style.top);
+
+        // Detect collsion with heart
+        if (detectCollision(wizardElement, diamond)) {
+            // state.wizard.health+=state.heartStats.addHealth;
+            diamond.remove();
+        }
+        if (posY > 0) {
+            diamond.style.top = posY - state.diamondStats.speed + 'px';
+        } else {
+            diamond.remove();
+        }
+    });
+
     // Render wizard
     wizardElement.style.left = wizard.posX + 'px';
     wizardElement.style.top = wizard.posY + 'px';
 
 
     if (state.gameOver) {
-       gameOver();
+        gameOver();
     } else {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
     }
-    
-    if(state.level > state.previousLevel){ 
-        isBlink = true; 
-        counter--; 
-        scoreScreenBlink("#1ae41ae0", game.scoreScreen); 
-    }else{
-        if(!isBlink){
+
+    if (state.level > state.previousLevel) {
+        isBlink = true;
+        counter--;
+        scoreScreenBlink("#1ae41ae0", game.scoreScreen);
+    } else {
+        if (!isBlink) {
             counter = 100;
-        }       
+        }
     }
     healthInterval--;
-    if(healthInterval >= 0){
-        isBlink = true;       
+    if (healthInterval >= 0) {
+        isBlink = true;
         counter--;
         scoreScreenBlink("#e61a1ac9", game.healthScreen);
         wizardBlink(wizardElement);
-    }else{
+    } else {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
-        if(!isBlink){
+        if (!isBlink) {
             counter = 100;
-        }       
+        }
     }
 }
 
-function wizardBlink(wizardElement){
-    if(healthInterval > 190){
+function pointAdd(obj, point){
+    if(pointTimer < 5){
+        obj.classList.remove(...obj.classList);
+        obj.classList.add('points');
+        obj.textContent = '+' + point;
+        pointTimer ++;
+    }else{
+        obj.remove();
+        pointTimer = 0;
+        isPoint = false;
+    }
+    
+    
+}
+
+function wizardBlink(wizardElement) {
+    if (healthInterval > 190) {
         wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
-    if(healthInterval > 180 && healthInterval <= 190){
+    if (healthInterval > 180 && healthInterval <= 190) {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
-    if(healthInterval > 170 && healthInterval <= 180){
+    if (healthInterval > 170 && healthInterval <= 180) {
         wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
-    if(healthInterval > 160 && healthInterval <= 170){
+    if (healthInterval > 160 && healthInterval <= 170) {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
-    if(healthInterval > 150 && healthInterval <= 160){
+    if (healthInterval > 150 && healthInterval <= 160) {
         wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
-    if(healthInterval > 140 && healthInterval <= 150){
+    if (healthInterval > 140 && healthInterval <= 150) {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
-    if(healthInterval > 130 && healthInterval <= 140){
+    if (healthInterval > 130 && healthInterval <= 140) {
         wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
-    if(healthInterval > 120 && healthInterval <= 130){
+    if (healthInterval > 120 && healthInterval <= 130) {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
-    if(healthInterval > 110 && healthInterval <= 120){
+    if (healthInterval > 110 && healthInterval <= 120) {
         wizardElement.style.backgroundImage = "url('../images/1Red.png')";
     }
-    if(healthInterval > 100 && healthInterval <= 110){
+    if (healthInterval > 100 && healthInterval <= 110) {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
 }
 
-function scoreScreenBlink(color, screen){
-      
-    if(counter >= 0){
-        if(counter < 100 && counter >= 95){
+function scoreScreenBlink(color, screen) {
+
+    if (counter >= 0) {
+        if (counter < 100 && counter >= 95) {
             screen.style.backgroundColor = color;
-        }else if(counter < 95 && counter >= 90){
+        } else if (counter < 95 && counter >= 90) {
             screen.style.backgroundColor = "#0942093b";
-        }else if(counter < 90 && counter >= 85){
+        } else if (counter < 90 && counter >= 85) {
             screen.style.backgroundColor = color;
-        }else if(counter < 85 && counter >= 80){
+        } else if (counter < 85 && counter >= 80) {
             screen.style.backgroundColor = "#0942093b";
-        }else if(counter < 80 && counter >= 75){
+        } else if (counter < 80 && counter >= 75) {
             screen.style.backgroundColor = color;
-        }else if(counter < 75 && counter >= 70){
+        } else if (counter < 75 && counter >= 70) {
             screen.style.backgroundColor = "#0942093b";
-        }else if(counter < 70 && counter >= 65){
+        } else if (counter < 70 && counter >= 65) {
             screen.style.backgroundColor = color;
-        }else if(counter < 65 && counter >= 60){
+        } else if (counter < 65 && counter >= 60) {
             screen.style.backgroundColor = "#0942093b";
-        }else if(counter < 60 && counter >= 55){
+        } else if (counter < 60 && counter >= 55) {
             screen.style.backgroundColor = color;
-        }else if(counter < 55 && counter >= 50){
+        } else if (counter < 55 && counter >= 50) {
             screen.style.backgroundColor = "#0942093b";
         }
-    }else{
-        state.previousLevel = state.level;   
-        isBlink = false;        
+    } else {
+        state.previousLevel = state.level;
+        isBlink = false;
     }
 }
 
-function gameOver(){
+function gameOver() {
     const gameOver = document.createElement('h3');
     const startBtn = document.createElement('h3');
     startBtn.classList.add('start-btn');

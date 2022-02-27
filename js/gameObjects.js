@@ -123,15 +123,16 @@ function initGameObject() {
             
             gameScreen.appendChild(spiderElement);
         },
-        createHeart(stats) {
+        createHeart(stats, level) {
             const heartElement = document.createElement('div');
             heartElement.classList.add('heart');
-            stats.addHealth = Math.ceil(Math.random() * 5);
+            stats.addHealth = Math.ceil(Math.random() * (level + 3));
             heartElement.textContent = `+${stats.addHealth}`;
             heartElement.style.width = stats.width + 'px';
             heartElement.style.height = stats.height + 'px';
             heartElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
             heartElement.style.top = gameScreen.offsetHeight+ 'px';
+            heartElement.style.opacity = stats.opacity+'';
             
             gameScreen.appendChild(heartElement);
         },
@@ -152,6 +153,7 @@ function initGameObject() {
             cloudElement.style.height = stats.height + 'px';
             cloudElement.style.left = gameScreen.offsetWidth + 'px';
             cloudElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight / 3 - stats.height)) + 'px';
+            
 
             gameScreen.appendChild(cloudElement);
         },
