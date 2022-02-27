@@ -565,13 +565,13 @@ function upLevel(state) {
     }
     if (state.score > 65000) {
         state.level = 14;
-        state.toNextLevel = 75000 - 65000;
+        state.toNextLevel = 80000 - 65000;
         state.neededScore = state.score - 65000;
     }
-    if (state.score > 75000) {
+    if (state.score > 80000) {
         state.level = 15;
-        state.toNextLevel = 100000 - 75000;
-        state.neededScore = state.score - 75000;
+        state.toNextLevel = 100000 - 80000;
+        state.neededScore = state.score - 80000;
         state.heartStats.speed = 8;
     }
     if (state.score > 100000) {
