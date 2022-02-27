@@ -600,6 +600,7 @@ function upLevel(state) {
         state.neededScore = state.score - 180000;
     }
     if (state.score > 200000) {
+        state.gameOver = true;
         gameWin();
     }
     if(state.level < 16){
