@@ -67,6 +67,7 @@ function initState() {
             up: false,
             left: false,
             right: false,
+            health: 20,
         },
         fireball: {
             width: 20,

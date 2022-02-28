@@ -19,6 +19,7 @@ let diamondCount = 0;
 let heartCount = 0;
 let capDirection = '';
 let haveCaptan = false;
+let haveCaptan2 = true;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -210,9 +211,11 @@ function gameLoop(state, game, timestamp) {
     });
 
     // Spawn captan
-    if (spiderCount % 2 == 0 && spiderCount > 1 && !haveCaptan) {
+    if (spiderCount % 2 == 0 && !haveCaptan2 && !haveCaptan) {
+        
         game.createCaptan(state.captanStats);
         haveCaptan = true;
+        haveCaptan2 = true;
         
     }
     // Render captan
@@ -223,11 +226,8 @@ function gameLoop(state, game, timestamp) {
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, cap) && healthInterval <= 0) {
-            debugger
             state.wizard.health -= 10;
             healthInterval = 200;
-            cap.remove();
-            haveCaptan = false;
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
             }
@@ -283,12 +283,6 @@ function gameLoop(state, game, timestamp) {
                 cap.style.top = posY + state.captanStats.speed + 'px';
             break;
         }
-
-        // if (posX > 0) {
-        //     cap.style.left = posX - state.captanStats.speed + 'px';
-        // } else {
-        //     cap.remove();
-        // }
     });
     // Spawn Spider
     if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
@@ -362,9 +356,25 @@ function gameLoop(state, game, timestamp) {
                 spider.style.top = top + 'px';
                 isBreakRope = true;
                 spider.isDed = true;
+                haveCaptan2 = false;
                 fireball.remove();
                 countKill++;
                 spiderCount++;
+            }
+        });
+        captanElement.forEach(cap => {
+            if (detectCollision(cap, fireball)) {  
+                fireball.remove();           
+                state.captanStats.health --;
+                               
+                if(state.captanStats.health <= 0){
+                    state.score += state.killScore * 5;
+                    countKill++;
+                    haveCaptan = false;
+                    state.captanStats.health = 20;
+                    cap.remove();
+                }
+
             }
         });
 
@@ -448,7 +458,7 @@ function gameLoop(state, game, timestamp) {
         isBlink = true;
         levelCounter--;
         scoreScreenBlink("#1ae41ae0", game.scoreScreen, levelCounter);
-        if (counter == 0) {
+        if (levelCounter == 0) {
             state.previousLevel = state.level;
         }
     } else {
