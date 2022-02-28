@@ -8,6 +8,7 @@ function initGameObject() {
     const collectables = document.querySelector('.collectables')
     const diamondCountElement = document.createElement('div');
     const heartCountElement = document.createElement('div');
+    const spiderCountElement = document.createElement('div');
 
     return {
         startScreen,
@@ -19,6 +20,7 @@ function initGameObject() {
         collectables,
         diamondCountElement,
         heartCountElement,
+        spiderCountElement,
         createLevelProgress(initialState){
             let levelProgress = document.createElement('div');
             levelProgress.classList.add('progress-red');
@@ -148,7 +150,7 @@ function initGameObject() {
             diamondElement.style.width = stats.width + 'px';
             diamondElement.style.height = stats.height + 'px';
             diamondElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
-            diamondElement.style.top = gameScreen.offsetHeight + 'px';
+            diamondElement.style.top = 0 - stats.height + 'px';
             
             gameScreen.appendChild(diamondElement);
         },

@@ -41,11 +41,11 @@ function initState() {
             addHealth: 0,
         },
         diamondStats: {
-            width: 80,
-            height: 70,
+            width: 54,
+            height: 43,
             nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 30000,
-            startInterval: 30000,
+            maxSpawnInterval: 20000,
+            startInterval: 20000,
             speed: 2,
         },
         spiderStats: {
@@ -110,7 +110,7 @@ function initState() {
             posY: 144,
         },
         healthBar: {
-            width: 228,
+            width: 230,
             height: 15,
             posX: 67,
             posY: 145,

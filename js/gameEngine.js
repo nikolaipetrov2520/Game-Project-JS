@@ -40,6 +40,7 @@ function gameLoop(state, game, timestamp) {
         const { diamondCountElement } = game;
         const { heartCountElement } = game;
         const { collectables } = game;
+        const { spiderCountElement } = game;
     
         upLevel(state);
     
@@ -59,9 +60,12 @@ function gameLoop(state, game, timestamp) {
         game.heartCountElement.classList.add('heartCount');
         game.heartCountElement.textContent = heartCount;
         game.collectables.textContent = 'Collected'
+        game.spiderCountElement.classList.add('spiderCount');
+        game.spiderCountElement.textContent = spiderCount;
     
-        game.collectables.appendChild(diamondCountElement);
-        game.collectables.appendChild(heartCountElement);
+        game.collectables.appendChild(game.diamondCountElement);
+        game.collectables.appendChild(game.heartCountElement);
+        game.collectables.appendChild(game.spiderCountElement);
     
         // Render Level Progress
         levelProgress.style.left = progressBar.posX + '%';
@@ -200,7 +204,7 @@ function gameLoop(state, game, timestamp) {
             }
         });
         // Spawn Spider
-        if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 150) {
+        if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
             game.createSpider(state.spiderStats);
             state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
             spiderTime = 0;
@@ -331,8 +335,8 @@ function gameLoop(state, game, timestamp) {
                 diamond.remove();
                 diamondCount++;
             }
-            if (posY > 0) {
-                diamond.style.top = posY - state.diamondStats.speed + 'px';
+            if (posY < game.gameScreen.offsetHeight) {
+                diamond.style.top = posY + state.diamondStats.speed + 'px';
             } else {
                 diamond.remove();
             }
@@ -510,7 +514,7 @@ function upLevel(state) {
         state.toNextLevel = 2000 - 1000;
         state.neededScore = state.score - 1000;
         state.bugStats.maxSpawnInterval = 3700;
-        state.diamondStats.maxSpawnInterval = 26000;
+        state.diamondStats.maxSpawnInterval = 20000;
         state.bugStats.width = 88;
         state.bugStats.height = 78;
     }
@@ -528,7 +532,7 @@ function upLevel(state) {
         state.neededScore = state.score - 4000;
         state.bugStats.maxSpawnInterval = 3100;
         state.heartStats.maxSpawnInterval = 30000;
-        state.diamondStats.maxSpawnInterval = 22000;
+        state.diamondStats.maxSpawnInterval = 18000;
         state.bugStats.width = 84;
         state.bugStats.height = 73;
     }
@@ -546,7 +550,7 @@ function upLevel(state) {
         state.toNextLevel = 10000 - 8000;
         state.neededScore = state.score - 8000;
         state.bugStats.maxSpawnInterval = 2500;
-        state.diamondStats.maxSpawnInterval = 18000;
+        state.diamondStats.maxSpawnInterval =16000;
         state.bugStats.width = 80;
         state.bugStats.height = 68;
     }
@@ -581,7 +585,7 @@ function upLevel(state) {
         state.toNextLevel = 35000 - 25000;
         state.neededScore = state.score - 25000;
         state.bugStats.maxSpawnInterval = 1300;
-        state.diamondStats.maxSpawnInterval = 10000;
+        state.diamondStats.maxSpawnInterval = 12000;
         state.bugStats.width = 72;
         state.bugStats.height = 58;
         state.heartStats.speed = 6;
@@ -596,7 +600,7 @@ function upLevel(state) {
         state.toNextLevel = 55000 - 45000;
         state.neededScore = state.score - 45000;
         state.heartStats.maxSpawnInterval = 20000;
-        state.diamondStats.maxSpawnInterval = 8000;
+        state.diamondStats.maxSpawnInterval = 10000;
     }
     if (state.score > 55000) {
         state.level = 13;
@@ -607,7 +611,7 @@ function upLevel(state) {
         state.level = 14;
         state.toNextLevel = 80000 - 65000;
         state.neededScore = state.score - 65000;
-        state.diamondStats.maxSpawnInterval = 6000;
+        state.diamondStats.maxSpawnInterval = 8000;
     }
     if (state.score > 80000) {
         state.level = 15;
@@ -620,6 +624,7 @@ function upLevel(state) {
         state.toNextLevel = 120000 - 100000;
         state.neededScore = state.score - 100000;
         state.heartStats.maxSpawnInterval = 15000;
+        state.diamondStats.maxSpawnInterval = 6000;
     }
     if (state.score > 120000) {
         state.level = 17;

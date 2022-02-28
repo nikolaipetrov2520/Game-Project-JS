@@ -256,8 +256,8 @@ h3 span{
     transform: translate(-50%);
     text-align: center;
     font-size: 35px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
     width: 226px;
     height: 174px;
     background-color: #0942093b;
@@ -270,17 +270,37 @@ h3 span{
     background-repeat: no-repeat;
     background-size: auto;
     text-align: right;
-    width: 200px;
+    width: 80px;
     height: 47px;
-}
+    position: absolute;
+    top: 25%;
+    left: 10%;
+
+ }
 .heartCount{
     margin: 10px;
     background-image: url("../images/heart.png");
     background-repeat: no-repeat;
     background-size: auto;
     text-align: right;
-    width: 200px;
+    width: 80px;
     height: 47px;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+}
+.spiderCount{
+    margin: 10px;
+    background-image: url("../images/spider2.png");
+    background-repeat: no-repeat;
+    background-size: auto;
+    text-align: right;
+    width: 80px;
+    height: 47px;
+    position: absolute;
+    top: 55%;
+    left:  10%; 
+
 }
 h3{
     text-align: center;
