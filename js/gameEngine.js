@@ -18,6 +18,7 @@ let spiderCount = 0;
 let diamondCount = 0;
 let heartCount = 0;
 let capDirection = '';
+let haveCaptan = false;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -209,9 +210,10 @@ function gameLoop(state, game, timestamp) {
     });
 
     // Spawn captan
-    if (timestamp > state.captanStats.nextSpawnTimestamp) {
+    if (spiderCount % 2 == 0 && spiderCount > 1 && !haveCaptan) {
         game.createCaptan(state.captanStats);
-        state.captanStats.nextSpawnTimestamp = timestamp + Math.random() * state.captanStats.maxSpawnInterval;
+        haveCaptan = true;
+        
     }
     // Render captan
     let captanElement = document.querySelectorAll('.captan');
@@ -221,22 +223,24 @@ function gameLoop(state, game, timestamp) {
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, cap) && healthInterval <= 0) {
+            debugger
             state.wizard.health -= 10;
             healthInterval = 200;
             cap.remove();
+            haveCaptan = false;
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
             }
         }
         
-        if(timestamp > 2000){
-            if(posX < gameScreen.offsetWidth / 3){
+        if(timestamp > 5000){
+            if(posX < gameScreen.offsetWidth * 3 / 4){
                 state.captanStats.left = true;
             }else if(posX >= gameScreen.offsetWidth - state.captanStats.width){
                 state.captanStats.right = true;
             }else if(posY <= 0){
                 state.captanStats.up = true;
-            }else if(posY > gameScreen.offsetHeight + state.captanStats.height){
+            }else if(posY >= gameScreen.offsetHeight - state.captanStats.height){
                 state.captanStats.down = true;
             }else{
                 cap.style.left = posX - state.captanStats.speed + 'px'; 
@@ -254,13 +258,13 @@ function gameLoop(state, game, timestamp) {
         }
 
         switch(capDirection){
-            case 'left': cap.style.left = posX - state.captanStats.speed + 'px';
+            case 'left': cap.style.left = posX - state.captanStats.speed * 3 + 'px';
             break;
-            case 'right': cap.style.left = posX + state.captanStats.speed + 'px';
+            case 'right': cap.style.left = posX + state.captanStats.speed * 3 + 'px';
             break;
-            case 'up': cap.style.top = posY - state.captanStats.speed + 'px';
+            case 'up': cap.style.top = posY - state.captanStats.speed * 3 + 'px';
             break;
-            case 'down': cap.style.top = posY + state.captanStats.speed + 'px';
+            case 'down': cap.style.top = posY + state.captanStats.speed * 3 + 'px';
             break;
             case 'leftUp':
                 cap.style.left = posX - state.captanStats.speed + 'px';
@@ -497,16 +501,16 @@ function captanDirection(){
     case 7:dir = 'rightDown';
         break;
     }
-    if(state.captanStats.up && dir == 'up'){
+    if(state.captanStats.up && (dir == 'up' || dir == 'leftUp' || dir == 'rightUp')){
         dir = captanDirection();
     }
-    if(state.captanStats.down && dir == 'down'){
+    if(state.captanStats.down && (dir == 'down' || dir == 'leftDown' || dir == 'rightDown')){
         dir = captanDirection();
     }
-    if(state.captanStats.left && dir == 'left'){
+    if(state.captanStats.left && (dir == 'left' || dir == 'leftUp' || dir == 'leftDown')){
         dir = captanDirection();
     }
-    if(state.captanStats.right && dir == 'right'){
+    if(state.captanStats.right && (dir == 'right' || dir == 'rightUp' || dir == 'rightDown')){
         dir = captanDirection();
     }
     return dir;

@@ -67,10 +67,6 @@ function initState() {
             up: false,
             left: false,
             right: false,
-            directionTime: 200,
-            nextSpawnTimestamp: 400,
-            maxSpawnInterval: 40000,
-            startInterval: 40000,
         },
         fireball: {
             width: 20,
