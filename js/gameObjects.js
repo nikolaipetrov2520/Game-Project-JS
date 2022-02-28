@@ -131,6 +131,16 @@ function initGameObject() {
             
             gameScreen.appendChild(spiderElement);
         },
+        createCaptan(stats) {
+            const captanElement = document.createElement('div');
+            captanElement.classList.add('captan');
+            captanElement.style.width = stats.width + 'px';
+            captanElement.style.height = stats.height + 'px';
+            captanElement.style.left = gameScreen.offsetWidth + 'px';
+            captanElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight - stats.height)) + 'px';
+            
+            gameScreen.appendChild(captanElement);
+        },
         createHeart(stats, level) {
             const heartElement = document.createElement('div');
             heartElement.classList.add('heart');

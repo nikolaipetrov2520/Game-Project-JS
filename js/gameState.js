@@ -59,6 +59,18 @@ function initState() {
             isDown: true,
             isDed: false,
         },
+        captanStats: {
+            width: 90,
+            height: 73,
+            speed: 2,
+            down: false,
+            up: false,
+            left: false,
+            right: false,
+            nextSpawnTimestamp: 400,
+            maxSpawnInterval: 4000,
+            startInterval: 4000,
+        },
         fireball: {
             width: 20,
             height: 20,

@@ -25,389 +25,415 @@ function start(state, game) {
     game.createHealthProgress(state.healthBar);
     game.createEmptyHealthProgress(state.healthEmpty);
     window.requestAnimationFrame(gameLoop.bind(null, state, game));
-    
+
 }
 
 function gameLoop(state, game, timestamp) {
-        const { wizard } = state;
-        const { progressBar } = state;
-        const { progressEmpty } = state;
-        const { healthBar } = state;
-        const { healthEmpty } = state;
-        const { wizardElement } = game;
-        const { levelProgress } = game;
-        const { emptyProgress } = game;
-        const { healthProgress } = game;
-        const { emptyHealthProgress } = game;
-        const { diamondCountElement } = game;
-        const { heartCountElement } = game;
-        const { collectables } = game;
-        const { spiderCountElement } = game;
-    
-        upLevel(state);
-    
-        modifyWizardPosition(state, game);
-        if (state.wizard.health >= 100) {
-            state.wizard.health = 100;
+    const { wizard } = state;
+    const { progressBar } = state;
+    const { progressEmpty } = state;
+    const { healthBar } = state;
+    const { healthEmpty } = state;
+    const { wizardElement } = game;
+    const { levelProgress } = game;
+    const { emptyProgress } = game;
+    const { healthProgress } = game;
+    const { emptyHealthProgress } = game;
+    const { diamondCountElement } = game;
+    const { heartCountElement } = game;
+    const { collectables } = game;
+    const { spiderCountElement } = game;
+
+    upLevel(state);
+
+    modifyWizardPosition(state, game);
+    if (state.wizard.health >= 100) {
+        state.wizard.health = 100;
+    }
+    game.scoreScreen.innerText = `Points \r\n  ${state.score.toFixed(0)}\r\n Level: ${state.level}`;
+    let playerName = game.player.value;
+    if (playerName.length > 7) {
+        playerName = playerName.substring(0, 7) + '...';
+    }
+    game.healthScreen.innerText = `${playerName} \r\n Health \r\n ${state.wizard.health} %`;
+
+    game.diamondCountElement.classList.add('diamondCount');
+    game.diamondCountElement.textContent = diamondCount;
+    game.heartCountElement.classList.add('heartCount');
+    game.heartCountElement.textContent = heartCount;
+    game.collectables.textContent = 'Collected'
+    game.spiderCountElement.classList.add('spiderCount');
+    game.spiderCountElement.textContent = spiderCount;
+
+    game.collectables.appendChild(game.diamondCountElement);
+    game.collectables.appendChild(game.heartCountElement);
+    game.collectables.appendChild(game.spiderCountElement);
+
+    // Render Level Progress
+    levelProgress.style.left = progressBar.posX + '%';
+    levelProgress.style.top = progressBar.posY + 'px';
+
+    emptyProgress.style.left = progressEmpty.posX + '%';
+    emptyProgress.style.top = progressEmpty.posY + 'px';
+
+    levelProgress.style.width = progressBar.width / state.toNextLevel * state.neededScore + 'px';
+    if (parseInt(levelProgress.style.width) <= 50) {
+        levelProgress.className = '';
+        levelProgress.classList.add('progress-red');
+    } else if (parseInt(levelProgress.style.width) <= 180) {
+        levelProgress.className = '';
+        levelProgress.classList.add('progress-yello');
+    } else {
+        levelProgress.className = '';
+        levelProgress.classList.add('progress-green');
+    }
+
+    //render Health Progress
+    healthProgress.style.left = healthBar.posX + '%';
+    healthProgress.style.top = healthBar.posY + 'px';
+    emptyHealthProgress.style.left = healthEmpty.posX + '%';
+    emptyHealthProgress.style.top = healthEmpty.posY + 'px';
+
+    healthProgress.style.width = healthBar.width / state.wizard.maxHealth * state.wizard.health + 'px';
+    if (parseInt(healthProgress.style.width) <= 50) {
+        healthProgress.className = '';
+        healthProgress.classList.add('progress-red');
+    } else if (parseInt(healthProgress.style.width) <= 180) {
+        healthProgress.className = '';
+        healthProgress.classList.add('progress-yello');
+    } else {
+        healthProgress.className = '';
+        healthProgress.classList.add('progress-green');
+    }
+
+    if (state.keys.Space) {
+        game.wizardElement.style.backgroundImage = 'url("../images/2.png")';
+
+        if (timestamp > state.fireball.nextSpawnTimestamp) {
+            game.createFireball(wizard, state.fireball);
+            state.fireball.nextSpawnTimestamp = timestamp + state.fireball.fireRate;
         }
-        game.scoreScreen.innerText = `Points \r\n  ${state.score.toFixed(0)}\r\n Level: ${state.level}`;
-        let playerName = game.player.value;
-        if (playerName.length > 7) {
-            playerName = playerName.substring(0, 7) + '...';
-        }
-        game.healthScreen.innerText = `${playerName} \r\n Health \r\n ${state.wizard.health} %`;
-    
-        game.diamondCountElement.classList.add('diamondCount');
-        game.diamondCountElement.textContent = diamondCount;
-        game.heartCountElement.classList.add('heartCount');
-        game.heartCountElement.textContent = heartCount;
-        game.collectables.textContent = 'Collected'
-        game.spiderCountElement.classList.add('spiderCount');
-        game.spiderCountElement.textContent = spiderCount;
-    
-        game.collectables.appendChild(game.diamondCountElement);
-        game.collectables.appendChild(game.heartCountElement);
-        game.collectables.appendChild(game.spiderCountElement);
-    
-        // Render Level Progress
-        levelProgress.style.left = progressBar.posX + '%';
-        levelProgress.style.top = progressBar.posY + 'px';
-    
-        emptyProgress.style.left = progressEmpty.posX + '%';
-        emptyProgress.style.top = progressEmpty.posY + 'px';
-    
-        levelProgress.style.width = progressBar.width / state.toNextLevel * state.neededScore + 'px';
-        if (parseInt(levelProgress.style.width) <= 50) {
-            levelProgress.className = '';
-            levelProgress.classList.add('progress-red');
-        } else if (parseInt(levelProgress.style.width) <= 180) {
-            levelProgress.className = '';
-            levelProgress.classList.add('progress-yello');
+    } else {
+        game.wizardElement.style.backgroundImage = 'url("../images/1.png")';
+    }
+
+    // Spawn cloud
+    if (timestamp > state.cloudStats.nextSpawnTimestamp && cloudTime > 30) {
+        game.createCloud(state.cloudStats);
+        state.cloudStats.nextSpawnTimestamp = timestamp + Math.random() * state.cloudStats.maxSpawnInterval;
+        cloudTime = 0;
+    } else {
+        cloudTime++;
+    }
+
+    // Render cloud
+    let cloudElement = document.querySelectorAll('.cloud');
+    cloudElement.forEach(cloud => {
+        let posX = parseInt(cloud.style.left);
+
+        if (posX + state.cloudStats.width > 0) {
+            cloud.style.left = posX - state.cloudStats.speed + 'px';
         } else {
-            levelProgress.className = '';
-            levelProgress.classList.add('progress-green');
+            cloud.remove();
         }
-    
-        //render Health Progress
-        healthProgress.style.left = healthBar.posX + '%';
-        healthProgress.style.top = healthBar.posY + 'px';
-        emptyHealthProgress.style.left = healthEmpty.posX + '%';
-        emptyHealthProgress.style.top = healthEmpty.posY + 'px';
-    
-        healthProgress.style.width = healthBar.width / state.wizard.maxHealth * state.wizard.health + 'px';
-        if (parseInt(healthProgress.style.width) <= 50) {
-            healthProgress.className = '';
-            healthProgress.classList.add('progress-red');
-        } else if (parseInt(healthProgress.style.width) <= 180) {
-            healthProgress.className = '';
-            healthProgress.classList.add('progress-yello');
+    });
+
+    // Spawn tree1
+    if (timestamp > state.tree1Stats.nextSpawnTimestamp && tree1Time > 10) {
+        game.createTree1(state.tree1Stats);
+        state.tree1Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree1Stats.maxSpawnInterval;
+        tree1Time = 0;
+    } else {
+        tree1Time++;
+    }
+
+    // Render tree1
+    let tree1Element = document.querySelectorAll('.tree1');
+    tree1Element.forEach(tree1 => {
+        let posX = parseInt(tree1.style.left);
+
+        if (posX + state.tree1Stats.width > 0) {
+            tree1.style.left = posX - state.tree1Stats.speed + 'px';
         } else {
-            healthProgress.className = '';
-            healthProgress.classList.add('progress-green');
+            tree1.remove();
         }
-    
-        if (state.keys.Space) {
-            game.wizardElement.style.backgroundImage = 'url("../images/2.png")';
-    
-            if (timestamp > state.fireball.nextSpawnTimestamp) {
-                game.createFireball(wizard, state.fireball);
-                state.fireball.nextSpawnTimestamp = timestamp + state.fireball.fireRate;
-            }
+    });
+
+    //Spawn tree2
+    if (timestamp > state.tree2Stats.nextSpawnTimestamp && tree2Time > 10) {
+        game.createTree2(state.tree2Stats);
+        state.tree2Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree2Stats.maxSpawnInterval;
+        tree2Time = 0;
+    } else {
+        tree2Time++;
+    }
+
+    // Render tree2
+    let tree2Element = document.querySelectorAll('.tree2');
+    tree2Element.forEach(tree2 => {
+        let posX = parseInt(tree2.style.left);
+
+        if (posX + state.tree2Stats.width > 0) {
+            tree2.style.left = posX - state.tree2Stats.speed + 'px';
         } else {
-            game.wizardElement.style.backgroundImage = 'url("../images/1.png")';
+            tree2.remove();
         }
-    
-        // Spawn cloud
-        if (timestamp > state.cloudStats.nextSpawnTimestamp && cloudTime > 30) {
-            game.createCloud(state.cloudStats);
-            state.cloudStats.nextSpawnTimestamp = timestamp + Math.random() * state.cloudStats.maxSpawnInterval;
-            cloudTime = 0;
-        }else{
-            cloudTime++;
+    });
+
+    // Spawn bugs
+    if (timestamp > state.bugStats.nextSpawnTimestamp) {
+        game.createBug(state.bugStats);
+        state.bugStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugStats.maxSpawnInterval;
+    }
+    // Render bugs
+    let bugElements = document.querySelectorAll('.bug');
+    bugElements.forEach(bug => {
+        let posX = parseInt(bug.style.left);
+
+        // Detect collsion with wizard
+        if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
+            state.wizard.health -= 10;
+            healthInterval = 200;
+            bug.remove();
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
+            }
         }
-    
-        // Render cloud
-        let cloudElement = document.querySelectorAll('.cloud');
-        cloudElement.forEach(cloud => {
-            let posX = parseInt(cloud.style.left);
-    
-            if (posX + state.cloudStats.width > 0) {
-                cloud.style.left = posX - state.cloudStats.speed + 'px';
-            } else {
-                cloud.remove();
-            }
-        });
-    
-        // Spawn tree1
-        if (timestamp > state.tree1Stats.nextSpawnTimestamp && tree1Time > 10) {
-            game.createTree1(state.tree1Stats);
-            state.tree1Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree1Stats.maxSpawnInterval;
-            tree1Time = 0;
-        }else{
-            tree1Time++;
+        if (posX > 0) {
+            bug.style.left = posX - state.bugStats.speed + 'px';
+        } else {
+            bug.remove();
         }
-    
-        // Render tree1
-        let tree1Element = document.querySelectorAll('.tree1');
-        tree1Element.forEach(tree1 => {
-            let posX = parseInt(tree1.style.left);
-    
-            if (posX + state.tree1Stats.width > 0) {
-                tree1.style.left = posX - state.tree1Stats.speed + 'px';
-            } else {
-                tree1.remove();
+    });
+
+    // Spawn captan
+    if (timestamp > state.captanStats.nextSpawnTimestamp) {
+        game.createCaptan(state.captanStats);
+        state.captanStats.nextSpawnTimestamp = timestamp + Math.random() * state.captanStats.maxSpawnInterval;
+    }
+    // Render captan
+    let captanElement = document.querySelectorAll('.captan');
+    captanElement.forEach(cap => {
+        let posX = parseInt(cap.style.left);
+
+        // Detect collsion with wizard
+        if (detectCollision(wizardElement, cap) && healthInterval <= 0) {
+            state.wizard.health -= 10;
+            healthInterval = 200;
+            cap.remove();
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
             }
-        });
-    
-        //Spawn tree2
-        if (timestamp > state.tree2Stats.nextSpawnTimestamp && tree2Time > 10) {
-            game.createTree2(state.tree2Stats);
-            state.tree2Stats.nextSpawnTimestamp = timestamp + Math.random() * state.tree2Stats.maxSpawnInterval;
-            tree2Time = 0;
-        }else{
-            tree2Time++;
         }
-    
-        // Render tree2
-        let tree2Element = document.querySelectorAll('.tree2');
-        tree2Element.forEach(tree2 => {
-            let posX = parseInt(tree2.style.left);
-    
-            if (posX + state.tree2Stats.width > 0) {
-                tree2.style.left = posX - state.tree2Stats.speed + 'px';
-            } else {
-                tree2.remove();
-            }
-        });
-    
-        // Spawn bugs
-        if (timestamp > state.bugStats.nextSpawnTimestamp) {
-            game.createBug(state.bugStats);
-            state.bugStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugStats.maxSpawnInterval;
+        if (posX > 0) {
+            cap.style.left = posX - state.captanStats.speed + 'px';
+        } else {
+            cap.remove();
         }
-        // Render bugs
-        let bugElements = document.querySelectorAll('.bug');
-        bugElements.forEach(bug => {
-            let posX = parseInt(bug.style.left);
-    
-            // Detect collsion with wizard
-            if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
-                state.wizard.health -= 10;
-                healthInterval = 200;
-                bug.remove();
-                if (state.wizard.health <= 0) {
-                    state.gameOver = true;
-                }
-            }
-            if (posX > 0) {
-                bug.style.left = posX - state.bugStats.speed + 'px';
-            } else {
-                bug.remove();
-            }
-        });
-        // Spawn Spider
-        if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
-            game.createSpider(state.spiderStats);
-            state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
+    });
+    // Spawn Spider
+    if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
+        game.createSpider(state.spiderStats);
+        state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
+        spiderTime = 0;
+    } else {
+        spiderTime++;
+    }
+    // Render Spider
+    let spiderElements = document.querySelectorAll('.spider');
+    spiderElements.forEach(spider => {
+        let posY = parseInt(spider.style.top);
+
+        // Detect collsion with wizard
+        if (detectCollision(wizardElement, spider) && healthInterval <= 0 && !spider.isDed) {
+            state.wizard.health -= 15;
+            healthInterval = 200;
+            spider.remove();
             spiderTime = 0;
-        }else{
-            spiderTime++;
-        }
-        // Render Spider
-        let spiderElements = document.querySelectorAll('.spider');
-        spiderElements.forEach(spider => {
-            let posY = parseInt(spider.style.top);
-    
-            // Detect collsion with wizard
-            if (detectCollision(wizardElement, spider) && healthInterval <= 0 && !spider.isDed) {
-                state.wizard.health -= 15;
-                healthInterval = 200;
-                spider.remove();
-                spiderTime = 0;
-                if (state.wizard.health <= 0) {
-                    state.gameOver = true;
-                }
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
             }
-            if(!isBreakRope){
-                if (posY + state.spiderStats.height < game.gameScreen.offsetHeight / 2 && state.spiderStats.isDown) {
-                    spider.style.top = posY + state.spiderStats.speed * 4 + 'px';
+        }
+        if (!isBreakRope) {
+            if (posY + state.spiderStats.height < game.gameScreen.offsetHeight / 2 && state.spiderStats.isDown) {
+                spider.style.top = posY + state.spiderStats.speed * 4 + 'px';
+            } else {
+                state.spiderStats.isDown = false;
+                if (posY + state.spiderStats.height > 0) {
+                    spider.style.top = posY - state.spiderStats.speed * 2 + 'px';
                 } else {
-                    state.spiderStats.isDown = false;
-                    if (posY + state.spiderStats.height > 0) {
-                        spider.style.top = posY - state.spiderStats.speed * 2 + 'px';
-                    } else {
-                        spider.remove();
-                        spiderTime = 0;
-                    }
-                }
-            }else{
-                if(posY < game.gameScreen.offsetHeight){
-                    spider.style.top = posY + state.spiderStats.speed * 9 + 'px';
-                }
-                else{
                     spider.remove();
                     spiderTime = 0;
-                    isBreakRope = false;
                 }
             }
-        });
-    
-    
-        // Render fireballs
-        document.querySelectorAll('.fireball').forEach(fireball => {
-            let posX = parseInt(fireball.style.left);
-    
-            // Detect collision
-            bugElements.forEach(bug => {
-                if (detectCollision(bug, fireball)) {
-                    state.score += state.killScore;
-                    bug.remove();
-                    fireball.remove();
-                    countKill++;
-                }
-            });
-            spiderElements.forEach(spider => {
-                if (detectCollision(spider, fireball) && !spider.isDed) {
-                    state.score += state.killScore * 0.5;
-                    spider.style.backgroundImage = "url('../images/spider1.png')";
-                    spider.style.width = '90px';
-                    spider.style.height = '90px';
-                    let top = parseInt(spider.style.top);
-                    top += 510;
-                    spider.style.top = top + 'px';
-                    isBreakRope = true; 
-                    spider.isDed = true;            
-                    fireball.remove();
-                    countKill++;
-                    spiderCount++;
-                }
-            });
-    
-            if (posX > game.gameScreen.offsetWidth) {
-                fireball.remove();
-            } else {
-                fireball.style.left = posX + state.fireball.speed + 'px';
-            }
-        });
-    
-        
-        // Spown Heart
-        if (timestamp > state.heartStats.nextSpawnTimestamp) {
-            game.createHeart(state.heartStats, state.level);
-            state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
-        }
-        // Render Heart
-        let heartElements = document.querySelectorAll('.heart');
-        heartElements.forEach(heart => {
-            let posY = parseInt(heart.style.top);
-            // if(isPoint){
-            //     pointAdd(heart, state.heartStats.addHealth);
-            // }
-            // Detect collsion with heart
-            if (detectCollision(wizardElement, heart)) {
-                state.wizard.health += state.heartStats.addHealth;
-                isPoint = true;
-                heart.remove();
-                heartCount++;
-                isGetHearth = true;
-                if (state.wizard.health > 100) {
-                    state.wizard.health = 100;
-                }
-            }
-            if (posY > 0) {
-                heart.style.top = posY - state.heartStats.speed + 'px';
-            } else {
-                heart.remove();
-            }
-        });
-    
-        // Spown Diamond
-        if (timestamp > state.diamondStats.nextSpawnTimestamp) {
-            game.createDiamond(state.diamondStats);
-            state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
-        }
-        // Render Diamond
-        let diamondElements = document.querySelectorAll('.diamond');
-        diamondElements.forEach(diamond => {
-            let posY = parseInt(diamond.style.top);
-    
-            // Detect collsion with heart
-            if (detectCollision(wizardElement, diamond)) {
-                // state.wizard.health+=state.heartStats.addHealth;
-                diamond.remove();
-                diamondCount++;
-            }
+        } else {
             if (posY < game.gameScreen.offsetHeight) {
-                diamond.style.top = posY + state.diamondStats.speed + 'px';
-            } else {
-                diamond.remove();
+                spider.style.top = posY + state.spiderStats.speed * 9 + 'px';
+            }
+            else {
+                spider.remove();
+                spiderTime = 0;
+                isBreakRope = false;
+            }
+        }
+    });
+
+
+    // Render fireballs
+    document.querySelectorAll('.fireball').forEach(fireball => {
+        let posX = parseInt(fireball.style.left);
+
+        // Detect collision
+        bugElements.forEach(bug => {
+            if (detectCollision(bug, fireball)) {
+                state.score += state.killScore;
+                bug.remove();
+                fireball.remove();
+                countKill++;
             }
         });
-    
-        // Render wizard
-        wizardElement.style.left = wizard.posX + 'px';
-        wizardElement.style.top = wizard.posY + 'px';
-    
-    
-        if (state.gameOver) {
-            gameOver();
-        }
-        else if(state.gameWin){
-            gameWin();
+        spiderElements.forEach(spider => {
+            if (detectCollision(spider, fireball) && !spider.isDed) {
+                state.score += state.killScore * 0.5;
+                spider.style.backgroundImage = "url('../images/spider1.png')";
+                spider.style.width = '90px';
+                spider.style.height = '90px';
+                let top = parseInt(spider.style.top);
+                top += 510;
+                spider.style.top = top + 'px';
+                isBreakRope = true;
+                spider.isDed = true;
+                fireball.remove();
+                countKill++;
+                spiderCount++;
+            }
+        });
+
+        if (posX > game.gameScreen.offsetWidth) {
+            fireball.remove();
         } else {
-            state.score += state.scoreRate;
-            window.requestAnimationFrame(gameLoop.bind(null, state, game));
+            fireball.style.left = posX + state.fireball.speed + 'px';
         }
-    
-        if (state.level > state.previousLevel) {
-            isBlink = true;
-            levelCounter--;
-            scoreScreenBlink("#1ae41ae0", game.scoreScreen, levelCounter);
-            if(counter == 0){
-                state.previousLevel = state.level;
+    });
+
+
+    // Spown Heart
+    if (timestamp > state.heartStats.nextSpawnTimestamp) {
+        game.createHeart(state.heartStats, state.level);
+        state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
+    }
+    // Render Heart
+    let heartElements = document.querySelectorAll('.heart');
+    heartElements.forEach(heart => {
+        let posY = parseInt(heart.style.top);
+        // if(isPoint){
+        //     pointAdd(heart, state.heartStats.addHealth);
+        // }
+        // Detect collsion with heart
+        if (detectCollision(wizardElement, heart)) {
+            state.wizard.health += state.heartStats.addHealth;
+            isPoint = true;
+            heart.remove();
+            heartCount++;
+            isGetHearth = true;
+            if (state.wizard.health > 100) {
+                state.wizard.health = 100;
             }
+        }
+        if (posY > 0) {
+            heart.style.top = posY - state.heartStats.speed + 'px';
         } else {
-            if (!isBlink) {
-                levelCounter = 100;
-            }
+            heart.remove();
         }
-        healthInterval--;
-        if (healthInterval >= 100) {
-            isBlink = true;
-            healthCounter--;
-            scoreScreenBlink("#e61a1ac9", game.healthScreen, healthCounter);
-            wizardBlink(wizardElement);
+    });
+
+    // Spown Diamond
+    if (timestamp > state.diamondStats.nextSpawnTimestamp) {
+        game.createDiamond(state.diamondStats);
+        state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
+    }
+    // Render Diamond
+    let diamondElements = document.querySelectorAll('.diamond');
+    diamondElements.forEach(diamond => {
+        let posY = parseInt(diamond.style.top);
+
+        // Detect collsion with heart
+        if (detectCollision(wizardElement, diamond)) {
+            // state.wizard.health+=state.heartStats.addHealth;
+            diamond.remove();
+            diamondCount++;
+        }
+        if (posY < game.gameScreen.offsetHeight) {
+            diamond.style.top = posY + state.diamondStats.speed + 'px';
         } else {
-            wizardElement.style.backgroundImage = "url('../images/1.png')";
-            if (!isBlink) {
-                healthCounter = 100;
-            }
+            diamond.remove();
         }
-        if(isGetHearth){
-            isBlink = true;
-            heartHealthcCounter--;
-            scoreScreenBlink('#1ae41ae0', game.healthScreen, heartHealthcCounter);
-        }else {
-            if (!isBlink) {
-                heartHealthcCounter = 100;
-            }
+    });
+
+    // Render wizard
+    wizardElement.style.left = wizard.posX + 'px';
+    wizardElement.style.top = wizard.posY + 'px';
+
+
+    if (state.gameOver) {
+        gameOver();
+    }
+    else if (state.gameWin) {
+        gameWin();
+    } else {
+        state.score += state.scoreRate;
+        window.requestAnimationFrame(gameLoop.bind(null, state, game));
+    }
+
+    if (state.level > state.previousLevel) {
+        isBlink = true;
+        levelCounter--;
+        scoreScreenBlink("#1ae41ae0", game.scoreScreen, levelCounter);
+        if (counter == 0) {
+            state.previousLevel = state.level;
         }
-    
+    } else {
+        if (!isBlink) {
+            levelCounter = 100;
+        }
+    }
+    healthInterval--;
+    if (healthInterval >= 100) {
+        isBlink = true;
+        healthCounter--;
+        scoreScreenBlink("#e61a1ac9", game.healthScreen, healthCounter);
+        wizardBlink(wizardElement);
+    } else {
+        wizardElement.style.backgroundImage = "url('../images/1.png')";
+        if (!isBlink) {
+            healthCounter = 100;
+        }
+    }
+    if (isGetHearth) {
+        isBlink = true;
+        heartHealthcCounter--;
+        scoreScreenBlink('#1ae41ae0', game.healthScreen, heartHealthcCounter);
+    } else {
+        if (!isBlink) {
+            heartHealthcCounter = 100;
+        }
+    }
+
 }
 
-function pointAdd(obj, point){
-    if(pointTimer < 5){
+function pointAdd(obj, point) {
+    if (pointTimer < 5) {
         obj.classList.remove(...obj.classList);
         obj.classList.add('points');
         obj.textContent = '+' + point;
-        pointTimer ++;
-    }else{
+        pointTimer++;
+    } else {
         obj.remove();
         pointTimer = 0;
         isPoint = false;
     }
-    
-    
+
+
 }
 
 function wizardBlink(wizardElement) {
@@ -555,7 +581,7 @@ function upLevel(state) {
         state.toNextLevel = 21000 - 15000;
         state.neededScore = state.score - 15000;
         state.bugStats.maxSpawnInterval = 2500;
-        state.diamondStats.maxSpawnInterval =16000;
+        state.diamondStats.maxSpawnInterval = 16000;
         state.bugStats.width = 80;
         state.bugStats.height = 68;
     }
@@ -655,7 +681,7 @@ function upLevel(state) {
     if (state.score > 200000) {
         state.gameWin = true;
     }
-    if(state.level < 16){
+    if (state.level < 16) {
         state.bugStats.speed = state.level * 1.3;
         state.scoreRate = state.startScoreRate * (state.level / 2);
     }
