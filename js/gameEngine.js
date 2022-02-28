@@ -1,6 +1,8 @@
 let state1 = initState();
 let game1 = initGameObject();
-let counter = 100;
+let levelCounter = 100;
+let heartHealthcCounter = 100;
+let healthCounter = 100;
 let countKill = 0;
 let healthInterval = 0;
 let isBlink = false;
@@ -359,35 +361,35 @@ function gameLoop(state, game, timestamp) {
     
         if (state.level > state.previousLevel) {
             isBlink = true;
-            counter--;
-            scoreScreenBlink("#1ae41ae0", game.scoreScreen);
+            levelCounter--;
+            scoreScreenBlink("#1ae41ae0", game.scoreScreen, levelCounter);
             if(counter == 0){
                 state.previousLevel = state.level;
             }
         } else {
             if (!isBlink) {
-                counter = 100;
+                levelCounter = 100;
             }
         }
         healthInterval--;
         if (healthInterval >= 100) {
             isBlink = true;
-            counter--;
-            scoreScreenBlink("#e61a1ac9", game.healthScreen);
+            healthCounter--;
+            scoreScreenBlink("#e61a1ac9", game.healthScreen, healthCounter);
             wizardBlink(wizardElement);
         } else {
             wizardElement.style.backgroundImage = "url('../images/1.png')";
             if (!isBlink) {
-                counter = 100;
+                healthCounter = 100;
             }
         }
         if(isGetHearth){
             isBlink = true;
-                counter--;
-                scoreScreenBlink('1ae41ae0', game.collectables) 
+            heartHealthcCounter--;
+            scoreScreenBlink('#1ae41ae0', game.healthScreen, heartHealthcCounter);
         }else {
             if (!isBlink) {
-                counter = 100;
+                heartHealthcCounter = 100;
             }
         }
     
@@ -441,7 +443,7 @@ function wizardBlink(wizardElement) {
     }
 }
 
-function scoreScreenBlink(color, screen) {
+function scoreScreenBlink(color, screen, counter) {
     if (counter >= 0) {
         if (counter < 100 && counter >= 95) {
             screen.style.backgroundColor = color;
@@ -510,116 +512,116 @@ function gameWin() {
 }
 
 function upLevel(state) {
-    state.toNextLevel = 1000;
+    state.toNextLevel = 3000;
     state.neededScore = state.score;
-    if (state.score > 1000) {
+    if (state.score > 3000) {
         state.level = 2;
-        state.toNextLevel = 2000 - 1000;
-        state.neededScore = state.score - 1000;
+        state.toNextLevel = 6000 - 3000;
+        state.neededScore = state.score - 3000;
         state.bugStats.maxSpawnInterval = 3700;
         state.diamondStats.maxSpawnInterval = 20000;
         state.bugStats.width = 88;
         state.bugStats.height = 78;
     }
-    if (state.score > 2000) {
+    if (state.score > 6000) {
         state.level = 3;
-        state.toNextLevel = 4000 - 2000;
-        state.neededScore = state.score - 2000;
+        state.toNextLevel = 9000 - 6000;
+        state.neededScore = state.score - 6000;
         state.bugStats.maxSpawnInterval = 3400;
         state.bugStats.width = 86;
         state.bugStats.height = 75;
     }
-    if (state.score > 4000) {
+    if (state.score > 9000) {
         state.level = 4;
-        state.toNextLevel = 6000 - 4000;
-        state.neededScore = state.score - 4000;
+        state.toNextLevel = 12000 - 9000;
+        state.neededScore = state.score - 9000;
         state.bugStats.maxSpawnInterval = 3100;
         state.heartStats.maxSpawnInterval = 30000;
         state.diamondStats.maxSpawnInterval = 18000;
         state.bugStats.width = 84;
         state.bugStats.height = 73;
     }
-    if (state.score > 6000) {
+    if (state.score > 12000) {
         state.level = 5;
-        state.toNextLevel = 8000 - 6000;
-        state.neededScore = state.score - 6000;
+        state.toNextLevel = 15000 - 12000;
+        state.neededScore = state.score - 12000;
         state.bugStats.maxSpawnInterval = 2800;
         state.bugStats.width = 82;
         state.bugStats.height = 70;
         state.heartStats.speed = 4;
     }
-    if (state.score > 8000) {
+    if (state.score > 15000) {
         state.level = 6;
-        state.toNextLevel = 10000 - 8000;
-        state.neededScore = state.score - 8000;
+        state.toNextLevel = 21000 - 15000;
+        state.neededScore = state.score - 15000;
         state.bugStats.maxSpawnInterval = 2500;
         state.diamondStats.maxSpawnInterval =16000;
         state.bugStats.width = 80;
         state.bugStats.height = 68;
     }
-    if (state.score > 10000) {
+    if (state.score > 21000) {
         state.level = 7;
-        state.toNextLevel = 15000 - 10000;
-        state.neededScore = state.score - 10000;
+        state.toNextLevel = 27000 - 21000;
+        state.neededScore = state.score - 21000;
         state.bugStats.maxSpawnInterval = 2200;
         state.bugStats.width = 78;
         state.bugStats.height = 65;
     }
     if (state.score > 15000) {
         state.level = 8;
-        state.toNextLevel = 20000 - 15000;
-        state.neededScore = state.score - 15000;
+        state.toNextLevel = 33000 - 27000;
+        state.neededScore = state.score - 27000;
         state.bugStats.maxSpawnInterval = 1900;
         state.heartStats.maxSpawnInterval = 25000;
         state.diamondStats.maxSpawnInterval = 14000;
         state.bugStats.width = 76;
         state.bugStats.height = 63;
     }
-    if (state.score > 20000) {
+    if (state.score > 33000) {
         state.level = 9;
-        state.toNextLevel = 25000 - 20000;
-        state.neededScore = state.score - 20000;
+        state.toNextLevel = 39000 - 33000;
+        state.neededScore = state.score - 33000;
         state.bugStats.maxSpawnInterval = 1600;
         state.bugStats.width = 74;
         state.bugStats.height = 60;
     }
-    if (state.score > 25000) {
+    if (state.score > 39000) {
         state.level = 10;
-        state.toNextLevel = 35000 - 25000;
-        state.neededScore = state.score - 25000;
+        state.toNextLevel = 45000 - 39000;
+        state.neededScore = state.score - 39000;
         state.bugStats.maxSpawnInterval = 1300;
         state.diamondStats.maxSpawnInterval = 12000;
         state.bugStats.width = 72;
         state.bugStats.height = 58;
         state.heartStats.speed = 6;
     }
-    if (state.score > 35000) {
-        state.level = 11;
-        state.toNextLevel = 45000 - 35000;
-        state.neededScore = state.score - 35000;
-    }
     if (state.score > 45000) {
-        state.level = 12;
+        state.level = 11;
         state.toNextLevel = 55000 - 45000;
         state.neededScore = state.score - 45000;
+    }
+    if (state.score > 55000) {
+        state.level = 12;
+        state.toNextLevel = 65000 - 55000;
+        state.neededScore = state.score - 55000;
         state.heartStats.maxSpawnInterval = 20000;
         state.diamondStats.maxSpawnInterval = 10000;
     }
-    if (state.score > 55000) {
-        state.level = 13;
-        state.toNextLevel = 65000 - 55000;
-        state.neededScore = state.score - 55000;
-    }
     if (state.score > 65000) {
-        state.level = 14;
-        state.toNextLevel = 80000 - 65000;
+        state.level = 13;
+        state.toNextLevel = 75000 - 65000;
         state.neededScore = state.score - 65000;
+    }
+    if (state.score > 75000) {
+        state.level = 14;
+        state.toNextLevel = 85000 - 75000;
+        state.neededScore = state.score - 75000;
         state.diamondStats.maxSpawnInterval = 8000;
     }
-    if (state.score > 80000) {
+    if (state.score > 85000) {
         state.level = 15;
-        state.toNextLevel = 100000 - 80000;
-        state.neededScore = state.score - 80000;
+        state.toNextLevel = 100000 - 85000;
+        state.neededScore = state.score - 85000;
         state.heartStats.speed = 8;
     }
     if (state.score > 100000) {
