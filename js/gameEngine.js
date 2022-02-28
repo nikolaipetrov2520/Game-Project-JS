@@ -349,6 +349,9 @@ function gameLoop(state, game, timestamp) {
     
         if (state.gameOver) {
             gameOver();
+        }
+        else if(state.gameWin){
+            gameWin();
         } else {
             state.score += state.scoreRate;
             window.requestAnimationFrame(gameLoop.bind(null, state, game));
@@ -491,7 +494,7 @@ function gameWin() {
     const startBtn = document.createElement('h3');
     startBtn.classList.add('start-btn');
     startBtn.textContent = 'Start again'
-    gameOver.innerHTML = `<span>You Win!</span><br/> Score: ${state.score.toFixed(0)}<br/> Level ${state.level}<br> Killed enemies: ${countKill}`;
+    gameOver.innerHTML = `<span1>You Win!</span1><br/> Score: ${state.score.toFixed(0)}<br/> Level ${state.level}<br> Killed enemies: ${countKill}`;
     game.gameScreen.innerHTML = '';
     game.gameScreen.appendChild(gameOver);
     game.gameScreen.appendChild(startBtn);
@@ -648,8 +651,7 @@ function upLevel(state) {
         state.heartStats.maxSpawnInterval = 10000;
     }
     if (state.score > 200000) {
-        state.gameOver = true;
-        gameWin();
+        state.gameWin = true;
     }
     if(state.level < 16){
         state.bugStats.speed = state.level * 1.3;

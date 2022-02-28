@@ -5,6 +5,7 @@ function initState() {
     const state = {
         player: '',
         gameOver: false,
+        gameWin: false,
         score: 1,
         scoreRate: 0.02,
         startScoreRate: 0.02,

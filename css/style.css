@@ -36,6 +36,11 @@ body {
 }
 h3 span{
     color: rgb(179, 16, 16);
+    font-size: 120px;
+}
+h3 span1{
+    color: rgb(103, 255, 2);
+    font-size: 120px;
 }
 
 .start-screen {
