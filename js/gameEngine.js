@@ -17,6 +17,7 @@ let isGetHearth = false;
 let spiderCount = 0;
 let diamondCount = 0;
 let heartCount = 0;
+let capDirection = '';
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -43,6 +44,7 @@ function gameLoop(state, game, timestamp) {
     const { heartCountElement } = game;
     const { collectables } = game;
     const { spiderCountElement } = game;
+    const { gameScreen } = game;
 
     upLevel(state);
 
@@ -215,6 +217,7 @@ function gameLoop(state, game, timestamp) {
     let captanElement = document.querySelectorAll('.captan');
     captanElement.forEach(cap => {
         let posX = parseInt(cap.style.left);
+        let posY = parseInt(cap.style.top);
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, cap) && healthInterval <= 0) {
@@ -225,11 +228,63 @@ function gameLoop(state, game, timestamp) {
                 state.gameOver = true;
             }
         }
-        if (posX > 0) {
+        
+        if(timestamp > 2000){
+            if(posX < gameScreen.offsetWidth / 3){
+                state.captanStats.left = true;
+            }else if(posX >= gameScreen.offsetWidth - state.captanStats.width){
+                state.captanStats.right = true;
+            }else if(posY <= 0){
+                state.captanStats.up = true;
+            }else if(posY > gameScreen.offsetHeight + state.captanStats.height){
+                state.captanStats.down = true;
+            }else{
+                cap.style.left = posX - state.captanStats.speed + 'px'; 
+            }
+        }else{
             cap.style.left = posX - state.captanStats.speed + 'px';
-        } else {
-            cap.remove();
         }
+        if(state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down){
+            capDirection = captanDirection();
+            state.captanStats.right = false; 
+            state.captanStats.left = false;
+            state.captanStats.up = false;
+            state.captanStats.down = false;
+
+        }
+
+        switch(capDirection){
+            case 'left': cap.style.left = posX - state.captanStats.speed + 'px';
+            break;
+            case 'right': cap.style.left = posX + state.captanStats.speed + 'px';
+            break;
+            case 'up': cap.style.top = posY - state.captanStats.speed + 'px';
+            break;
+            case 'down': cap.style.top = posY + state.captanStats.speed + 'px';
+            break;
+            case 'leftUp':
+                cap.style.left = posX - state.captanStats.speed + 'px';
+                cap.style.top = posY - state.captanStats.speed + 'px';
+            break;
+            case 'leftDown':
+                cap.style.left = posX - state.captanStats.speed + 'px';
+                cap.style.top = posY + state.captanStats.speed + 'px';
+            break;
+            case 'rightUp':
+                cap.style.left = posX + state.captanStats.speed + 'px';
+                cap.style.top = posY - state.captanStats.speed + 'px';
+            break;
+            case 'rightDown':
+                cap.style.left = posX + state.captanStats.speed + 'px';
+                cap.style.top = posY + state.captanStats.speed + 'px';
+            break;
+        }
+
+        // if (posX > 0) {
+        //     cap.style.left = posX - state.captanStats.speed + 'px';
+        // } else {
+        //     cap.remove();
+        // }
     });
     // Spawn Spider
     if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
@@ -419,6 +474,42 @@ function gameLoop(state, game, timestamp) {
         }
     }
 
+}
+
+function captanDirection(){
+    let direction = Math.round(Math.random() * 7);
+    let dir = '';
+    switch(direction){
+    case 0: dir = 'left';
+        break;
+    case 1:dir = 'right';
+        break;
+    case 2:dir = 'up';
+        break;
+    case 3:dir = 'down';
+        break;
+    case 4:dir = 'leftUp';
+        break;
+    case 5:dir = 'leftDown';
+        break;
+    case 6:dir = 'rightUp';
+        break;
+    case 7:dir = 'rightDown';
+        break;
+    }
+    if(state.captanStats.up && dir == 'up'){
+        dir = captanDirection();
+    }
+    if(state.captanStats.down && dir == 'down'){
+        dir = captanDirection();
+    }
+    if(state.captanStats.left && dir == 'left'){
+        dir = captanDirection();
+    }
+    if(state.captanStats.right && dir == 'right'){
+        dir = captanDirection();
+    }
+    return dir;
 }
 
 function pointAdd(obj, point) {
