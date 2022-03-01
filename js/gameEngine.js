@@ -23,6 +23,8 @@ let haveCaptan = false;
 let haveCaptan2 = true;
 let haveIronBig = false;
 let haveIronBig2 = true;
+let irChangeDirTime = 0;
+let caChangeDirTime = 0;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -215,6 +217,7 @@ function gameLoop(state, game, timestamp) {
 
     // Spawn captan
     if (spiderCount % 2 == 0 && !haveCaptan2 && !haveCaptan) {
+        caChangeDirTime = 70;
         game.createCaptan(state.captanStats);
         haveCaptan = true;
         haveCaptan2 = true;
@@ -235,7 +238,7 @@ function gameLoop(state, game, timestamp) {
             }
         }
         
-        if(timestamp > 5000){
+        if(caChangeDirTime < 0){
             if(posX < gameScreen.offsetWidth * 3 / 4){
                 state.captanStats.left = true;
             }else if(posX >= gameScreen.offsetWidth - state.captanStats.width){
@@ -249,6 +252,7 @@ function gameLoop(state, game, timestamp) {
             }
         }else{
             cap.style.left = posX - state.captanStats.speed + 'px';
+            caChangeDirTime--;
         }
         if(state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down){
             capDirection = elementDirection('captan');
@@ -260,13 +264,13 @@ function gameLoop(state, game, timestamp) {
         }
 
         switch(capDirection){
-            case 'left': cap.style.left = posX - state.captanStats.speed * 3 + 'px';
+            case 'left': cap.style.left = posX - state.captanStats.speed * 5 + 'px';
             break;
-            case 'right': cap.style.left = posX + state.captanStats.speed * 3 + 'px';
+            case 'right': cap.style.left = posX + state.captanStats.speed * 5 + 'px';
             break;
-            case 'up': cap.style.top = posY - state.captanStats.speed * 3 + 'px';
+            case 'up': cap.style.top = posY - state.captanStats.speed * 5 + 'px';
             break;
-            case 'down': cap.style.top = posY + state.captanStats.speed * 3 + 'px';
+            case 'down': cap.style.top = posY + state.captanStats.speed * 5 + 'px';
             break;
             case 'leftUp':
                 cap.style.left = posX - state.captanStats.speed + 'px';
@@ -288,8 +292,8 @@ function gameLoop(state, game, timestamp) {
     });
     
     // Spawn captan
-    if (spiderCount % 5 == 0 && !haveIronBig2 && !haveIronBig) {
-        
+    if (spiderCount % 3 == 0 && !haveIronBig2 && !haveIronBig) {
+        irChangeDirTime = 70;
         game.createIronBig(state.ironBigStats);
         haveIronBig = true;
         haveIronBig2 = true;
@@ -310,7 +314,7 @@ function gameLoop(state, game, timestamp) {
             }
         }
         
-        if(timestamp > 100000){
+        if(irChangeDirTime < 0){
             if(posX < gameScreen.offsetWidth * 3 / 4){
                 state.ironBigStats.left = true;
             }else if(posX >= gameScreen.offsetWidth - state.ironBigStats.width){
@@ -324,8 +328,10 @@ function gameLoop(state, game, timestamp) {
             }
         }else{
             ir.style.left = posX - state.ironBigStats.speed + 'px';
+            irChangeDirTime--;
         }
         if(state.ironBigStats.right || state.ironBigStats.left || state.ironBigStats.up || state.ironBigStats.down){
+          
             irDirection = elementDirection('ironBig');
             state.ironBigStats.right = false; 
             state.ironBigStats.left = false;
@@ -335,13 +341,13 @@ function gameLoop(state, game, timestamp) {
         }
 
         switch(irDirection){
-            case 'left': ir.style.left = posX - state.ironBigStats.speed * 3 + 'px';
+            case 'left': ir.style.left = posX - state.ironBigStats.speed * 5 + 'px';
             break;
-            case 'right': ir.style.left = posX + state.ironBigStats.speed * 3 + 'px';
+            case 'right': ir.style.left = posX + state.ironBigStats.speed * 5 + 'px';
             break;
-            case 'up': ir.style.top = posY - state.ironBigStats.speed * 3 + 'px';
+            case 'up': ir.style.top = posY - state.ironBigStats.speed * 5 + 'px';
             break;
-            case 'down': ir.style.top = posY + state.ironBigStats.speed * 3 + 'px';
+            case 'down': ir.style.top = posY + state.ironBigStats.speed * 5 + 'px';
             break;
             case 'leftUp':
                 ir.style.left = posX - state.ironBigStats.speed + 'px';
@@ -573,9 +579,10 @@ function elementDirection(elementState){
     let direction = Math.round(Math.random() * 7);
     let dir = '';
     let states = '';
-    if(elementState = 'captan'){
+    if(elementState == 'captan'){
         states = state.captanStats;
-    }else if('ironBig'){
+    }else if(elementState == 'ironBig'){
+     
         states = state.ironBigStats;
     }
     switch(direction){
@@ -597,16 +604,16 @@ function elementDirection(elementState){
         break;
     }
     if(states.up && (dir == 'up' || dir == 'leftUp' || dir == 'rightUp')){
-        dir = elementDirection();
+        dir = elementDirection(elementState);
     }
     if(states.down && (dir == 'down' || dir == 'leftDown' || dir == 'rightDown')){
-        dir = elementDirection();
+        dir = elementDirection(elementState);
     }
     if(states.left && (dir == 'left' || dir == 'leftUp' || dir == 'leftDown')){
-        dir = elementDirection();
+        dir = elementDirection(elementState);
     }
     if(states.right && (dir == 'right' || dir == 'rightUp' || dir == 'rightDown')){
-        dir = elementDirection();
+        dir = elementDirection(elementState);
     }
     return dir;
 }
