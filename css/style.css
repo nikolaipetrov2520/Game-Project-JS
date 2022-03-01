@@ -106,9 +106,16 @@ h3 span1{
     background-image: url("../images/spider.png");
     background-size: cover;
     z-index: 1;
-}.captan{
+}
+.captan{
     position: absolute;
     background-image: url("../images/CA.png");
+    background-size: cover;
+    z-index: 1;
+}
+.ironBig{
+    position: absolute;
+    background-image: url("../images/ironBig.png");
     background-size: cover;
     z-index: 1;
 }

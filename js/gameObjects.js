@@ -141,6 +141,16 @@ function initGameObject() {
             
             gameScreen.appendChild(captanElement);
         },
+        createIronBig(stats) {
+            const ironBigElement = document.createElement('div');
+            ironBigElement.classList.add('ironBig');
+            ironBigElement.style.width = stats.width + 'px';
+            ironBigElement.style.height = stats.height + 'px';
+            ironBigElement.style.left = gameScreen.offsetWidth + 'px';
+            ironBigElement.style.top = Math.floor(Math.random() * (gameScreen.offsetHeight - stats.height)) + 'px';
+            
+            gameScreen.appendChild(ironBigElement);
+        },
         createHeart(stats, level) {
             const heartElement = document.createElement('div');
             heartElement.classList.add('heart');

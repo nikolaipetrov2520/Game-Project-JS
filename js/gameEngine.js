@@ -18,8 +18,11 @@ let spiderCount = 0;
 let diamondCount = 0;
 let heartCount = 0;
 let capDirection = '';
+let irDirection = '';
 let haveCaptan = false;
 let haveCaptan2 = true;
+let haveIronBig = false;
+let haveIronBig2 = true;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -212,7 +215,6 @@ function gameLoop(state, game, timestamp) {
 
     // Spawn captan
     if (spiderCount % 2 == 0 && !haveCaptan2 && !haveCaptan) {
-        
         game.createCaptan(state.captanStats);
         haveCaptan = true;
         haveCaptan2 = true;
@@ -249,7 +251,7 @@ function gameLoop(state, game, timestamp) {
             cap.style.left = posX - state.captanStats.speed + 'px';
         }
         if(state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down){
-            capDirection = captanDirection();
+            capDirection = elementDirection('captan');
             state.captanStats.right = false; 
             state.captanStats.left = false;
             state.captanStats.up = false;
@@ -284,6 +286,82 @@ function gameLoop(state, game, timestamp) {
             break;
         }
     });
+    
+    // Spawn captan
+    if (spiderCount % 5 == 0 && !haveIronBig2 && !haveIronBig) {
+        
+        game.createIronBig(state.ironBigStats);
+        haveIronBig = true;
+        haveIronBig2 = true;
+        
+    }
+    // Render captan
+    let ironBigElement = document.querySelectorAll('.ironBig');
+    ironBigElement.forEach(ir => {
+        let posX = parseInt(ir.style.left);
+        let posY = parseInt(ir.style.top);
+
+        // Detect collsion with wizard
+        if (detectCollision(wizardElement, ir) && healthInterval <= 0) {
+            state.wizard.health -= 10;
+            healthInterval = 200;
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
+            }
+        }
+        
+        if(timestamp > 100000){
+            if(posX < gameScreen.offsetWidth * 3 / 4){
+                state.ironBigStats.left = true;
+            }else if(posX >= gameScreen.offsetWidth - state.ironBigStats.width){
+                state.ironBigStats.right = true;
+            }else if(posY <= 0){
+                state.ironBigStats.up = true;
+            }else if(posY >= gameScreen.offsetHeight - state.ironBigStats.height){
+                state.ironBigStats.down = true;
+            }else{
+                ir.style.left = posX - state.ironBigStats.speed + 'px'; 
+            }
+        }else{
+            ir.style.left = posX - state.ironBigStats.speed + 'px';
+        }
+        if(state.ironBigStats.right || state.ironBigStats.left || state.ironBigStats.up || state.ironBigStats.down){
+            irDirection = elementDirection('ironBig');
+            state.ironBigStats.right = false; 
+            state.ironBigStats.left = false;
+            state.ironBigStats.up = false;
+            state.ironBigStats.down = false;
+
+        }
+
+        switch(irDirection){
+            case 'left': ir.style.left = posX - state.ironBigStats.speed * 3 + 'px';
+            break;
+            case 'right': ir.style.left = posX + state.ironBigStats.speed * 3 + 'px';
+            break;
+            case 'up': ir.style.top = posY - state.ironBigStats.speed * 3 + 'px';
+            break;
+            case 'down': ir.style.top = posY + state.ironBigStats.speed * 3 + 'px';
+            break;
+            case 'leftUp':
+                ir.style.left = posX - state.ironBigStats.speed + 'px';
+                ir.style.top = posY - state.ironBigStats.speed + 'px';
+            break;
+            case 'leftDown':
+                ir.style.left = posX - state.ironBigStats.speed + 'px';
+                ir.style.top = posY + state.ironBigStats.speed + 'px';
+            break;
+            case 'rightUp':
+                ir.style.left = posX + state.ironBigStats.speed + 'px';
+                ir.style.top = posY - state.ironBigStats.speed + 'px';
+            break;
+            case 'rightDown':
+                ir.style.left = posX + state.ironBigStats.speed + 'px';
+                ir.style.top = posY + state.ironBigStats.speed + 'px';
+            break;
+        }
+    });
+
     // Spawn Spider
     if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
         game.createSpider(state.spiderStats);
@@ -357,6 +435,7 @@ function gameLoop(state, game, timestamp) {
                 isBreakRope = true;
                 spider.isDed = true;
                 haveCaptan2 = false;
+                haveIronBig2 = false
                 fireball.remove();
                 countKill++;
                 spiderCount++;
@@ -366,7 +445,7 @@ function gameLoop(state, game, timestamp) {
             if (detectCollision(cap, fireball)) {  
                 fireball.remove();           
                 state.captanStats.health --;
-                               
+                                
                 if(state.captanStats.health <= 0){
                     state.score += state.killScore * 5;
                     countKill++;
@@ -490,9 +569,15 @@ function gameLoop(state, game, timestamp) {
 
 }
 
-function captanDirection(){
+function elementDirection(elementState){
     let direction = Math.round(Math.random() * 7);
     let dir = '';
+    let states = '';
+    if(elementState = 'captan'){
+        states = state.captanStats;
+    }else if('ironBig'){
+        states = state.ironBigStats;
+    }
     switch(direction){
     case 0: dir = 'left';
         break;
@@ -511,17 +596,17 @@ function captanDirection(){
     case 7:dir = 'rightDown';
         break;
     }
-    if(state.captanStats.up && (dir == 'up' || dir == 'leftUp' || dir == 'rightUp')){
-        dir = captanDirection();
+    if(states.up && (dir == 'up' || dir == 'leftUp' || dir == 'rightUp')){
+        dir = elementDirection();
     }
-    if(state.captanStats.down && (dir == 'down' || dir == 'leftDown' || dir == 'rightDown')){
-        dir = captanDirection();
+    if(states.down && (dir == 'down' || dir == 'leftDown' || dir == 'rightDown')){
+        dir = elementDirection();
     }
-    if(state.captanStats.left && (dir == 'left' || dir == 'leftUp' || dir == 'leftDown')){
-        dir = captanDirection();
+    if(states.left && (dir == 'left' || dir == 'leftUp' || dir == 'leftDown')){
+        dir = elementDirection();
     }
-    if(state.captanStats.right && (dir == 'right' || dir == 'rightUp' || dir == 'rightDown')){
-        dir = captanDirection();
+    if(states.right && (dir == 'right' || dir == 'rightUp' || dir == 'rightDown')){
+        dir = elementDirection();
     }
     return dir;
 }
