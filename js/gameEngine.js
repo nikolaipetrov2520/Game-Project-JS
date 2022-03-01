@@ -248,10 +248,10 @@ function gameLoop(state, game, timestamp) {
             }else if(posY >= gameScreen.offsetHeight - state.captanStats.height){
                 state.captanStats.down = true;
             }else{
-                cap.style.left = posX - state.captanStats.speed + 'px'; 
+                cap.style.left = posX - state.captanStats.speed * 3 + 'px'; 
             }
         }else{
-            cap.style.left = posX - state.captanStats.speed + 'px';
+            cap.style.left = posX - state.captanStats.speed * 3 + 'px';
             caChangeDirTime--;
         }
         if(state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down){
@@ -264,13 +264,13 @@ function gameLoop(state, game, timestamp) {
         }
 
         switch(capDirection){
-            case 'left': cap.style.left = posX - state.captanStats.speed * 5 + 'px';
+            case 'left': cap.style.left = posX - state.captanStats.speed * 3 + 'px';
             break;
-            case 'right': cap.style.left = posX + state.captanStats.speed * 5 + 'px';
+            case 'right': cap.style.left = posX + state.captanStats.speed * 3 + 'px';
             break;
-            case 'up': cap.style.top = posY - state.captanStats.speed * 5 + 'px';
+            case 'up': cap.style.top = posY - state.captanStats.speed * 3 + 'px';
             break;
-            case 'down': cap.style.top = posY + state.captanStats.speed * 5 + 'px';
+            case 'down': cap.style.top = posY + state.captanStats.speed * 3 + 'px';
             break;
             case 'leftUp':
                 cap.style.left = posX - state.captanStats.speed + 'px';
@@ -324,10 +324,10 @@ function gameLoop(state, game, timestamp) {
             }else if(posY >= gameScreen.offsetHeight - state.ironBigStats.height){
                 state.ironBigStats.down = true;
             }else{
-                ir.style.left = posX - state.ironBigStats.speed + 'px'; 
+                ir.style.left = posX - state.ironBigStats.speed * 3 + 'px'; 
             }
         }else{
-            ir.style.left = posX - state.ironBigStats.speed + 'px';
+            ir.style.left = posX - state.ironBigStats.speed * 3 + 'px';
             irChangeDirTime--;
         }
         if(state.ironBigStats.right || state.ironBigStats.left || state.ironBigStats.up || state.ironBigStats.down){
@@ -341,13 +341,13 @@ function gameLoop(state, game, timestamp) {
         }
 
         switch(irDirection){
-            case 'left': ir.style.left = posX - state.ironBigStats.speed * 5 + 'px';
+            case 'left': ir.style.left = posX - state.ironBigStats.speed * 3 + 'px';
             break;
-            case 'right': ir.style.left = posX + state.ironBigStats.speed * 5 + 'px';
+            case 'right': ir.style.left = posX + state.ironBigStats.speed * 3 + 'px';
             break;
-            case 'up': ir.style.top = posY - state.ironBigStats.speed * 5 + 'px';
+            case 'up': ir.style.top = posY - state.ironBigStats.speed * 3 + 'px';
             break;
-            case 'down': ir.style.top = posY + state.ironBigStats.speed * 5 + 'px';
+            case 'down': ir.style.top = posY + state.ironBigStats.speed * 3 + 'px';
             break;
             case 'leftUp':
                 ir.style.left = posX - state.ironBigStats.speed + 'px';
