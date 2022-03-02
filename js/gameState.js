@@ -60,8 +60,8 @@ function initState() {
             isDed: false,
         },
         captanStats: {
-            width: 110,
-            height: 90,
+            width: 130,
+            height: 107,
             speed: 2,
             down: false,
             up: false,
@@ -70,8 +70,8 @@ function initState() {
             health: 10,
         },
         ironBigStats: {
-            width: 45,
-            height: 130,
+            width: 125,
+            height: 150,
             speed: 2,
             down: false,
             up: false,

@@ -463,6 +463,22 @@ function gameLoop(state, game, timestamp) {
             }
         });
 
+        ironBigElement.forEach(ir => {
+            if (detectCollision(ir, fireball)) {  
+                fireball.remove();           
+                state.ironBigStats.health --;
+                                
+                if(state.ironBigStats.health <= 0){
+                    state.score += state.killScore * 5;
+                    countKill++;
+                    haveIronBig = false;
+                    state.ironBigStats.health = 20;
+                    ir.remove();
+                }
+
+            }
+        });
+
         if (posX > game.gameScreen.offsetWidth) {
             fireball.remove();
         } else {
