@@ -199,7 +199,7 @@ function gameLoop(state, game, timestamp) {
     bugElements.forEach(bug => {
         let posX = parseInt(bug.style.left);
 
-        // Detect collsion with wizard
+        // Detect collision with wizard
         if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
             state.wizard.health -= 10;
             healthInterval = 200;
