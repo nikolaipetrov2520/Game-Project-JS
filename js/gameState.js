@@ -86,6 +86,13 @@ function initState() {
             nextSpawnTimestamp: 0,
             fireRate: 300,
         },
+        ironFireball: {
+            width: 30,
+            height: 30,
+            speed: 12,
+            nextSpawnTimestamp: 0,
+            fireRate: 2000,
+        },
         keys: {
             KeyA: false,
             KeyS: false,
