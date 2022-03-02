@@ -38,6 +38,7 @@ function start(state, game) {
 
 function gameLoop(state, game, timestamp) {
     const { wizard } = state;
+    const { ironBigStats } = state;
     const { progressBar } = state;
     const { progressEmpty } = state;
     const { healthBar } = state;
@@ -113,17 +114,6 @@ function gameLoop(state, game, timestamp) {
     } else {
         healthProgress.className = '';
         healthProgress.classList.add('progress-green');
-    }
-
-    if (state.keys.Space) {
-        game.wizardElement.style.backgroundImage = 'url("../images/2.png")';
-
-        if (timestamp > state.fireball.nextSpawnTimestamp) {
-            game.createFireball(wizard, state.fireball);
-            state.fireball.nextSpawnTimestamp = timestamp + state.fireball.fireRate;
-        }
-    } else {
-        game.wizardElement.style.backgroundImage = 'url("../images/1.png")';
     }
 
     // Spawn cloud
@@ -415,6 +405,17 @@ function gameLoop(state, game, timestamp) {
         }
     });
 
+    //spawn fire
+    if (state.keys.Space) {
+        game.wizardElement.style.backgroundImage = 'url("../images/2.png")';
+
+        if (timestamp > state.fireball.nextSpawnTimestamp) {
+            game.createFireball(wizard, state.fireball);
+            state.fireball.nextSpawnTimestamp = timestamp + state.fireball.fireRate;
+        }
+    } else {
+        game.wizardElement.style.backgroundImage = 'url("../images/1.png")';
+    }
 
     // Render fireballs
     document.querySelectorAll('.fireball').forEach(fireball => {
@@ -484,6 +485,25 @@ function gameLoop(state, game, timestamp) {
         } else {
             fireball.style.left = posX + state.fireball.speed + 'px';
         }
+    });
+    
+    //spawn ironFire
+    if (timestamp > state.ironFireball.nextSpawnTimestamp) {
+        game.createIronFireball(ironBigStats, state.ironFireball);
+        state.ironFireball.nextSpawnTimestamp = timestamp + state.ironFireball.fireRate;
+    }
+    
+    document.querySelectorAll('.ironFireball').forEach(irFire => {
+        let posX = parseInt(irFire.style.left);
+        let posY = parseInt(irFire.style.top);
+
+        if (posX < 0) {
+            irFire.remove();
+        } else {
+            irFire.style.left = posX - state.ironFireball.speed * 2 + 'px';
+            irFire.style.left = posY + state.ironFireball.speed + 'px';
+        }
+    
     });
 
 
