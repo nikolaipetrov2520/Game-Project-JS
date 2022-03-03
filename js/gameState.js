@@ -1,5 +1,5 @@
 function initState() {
-    let startX = Math.floor(Math.random() * 1000);
+    let startX = Math.floor(Math.random() * 500);
     let startY = Math.floor(Math.random() * 500);
 
     const state = {
@@ -44,9 +44,9 @@ function initState() {
         diamondStats: {
             width: 54,
             height: 43,
-            nextSpawnTimestamp: 10000,
-            maxSpawnInterval: 20000,
-            startInterval: 20000,
+            nextSpawnTimestamp: 15000,
+            maxSpawnInterval: 15000,
+            startInterval: 15000,
             speed: 2,
         },
         spiderStats: {
@@ -77,7 +77,9 @@ function initState() {
             up: false,
             left: false,
             right: false,
-            health: 10,
+            health: 15,
+            posX: 2000,
+            posY: 2000,
         },
         fireball: {
             width: 20,
@@ -89,9 +91,9 @@ function initState() {
         ironFireball: {
             width: 30,
             height: 30,
-            speed: 12,
+            speed: 5,
             nextSpawnTimestamp: 0,
-            fireRate: 2000,
+            fireRate: 2500,
         },
         keys: {
             KeyA: false,

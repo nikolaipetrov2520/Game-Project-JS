@@ -112,13 +112,14 @@ function initGameObject() {
         },
         createIronFireball(ironBigStats, ironFireball) {
             let ironFireballElement = document.createElement('div');
-            ironFireballElement.classList.add('fireball');
-            ironFireballElement.style.left = ironBigStats.posX + ironBigStats.width + 'px';
+            ironFireballElement.classList.add('ironFireball');
+            ironFireballElement.style.left = ironBigStats.posX + 'px';
             ironFireballElement.style.top = ironBigStats.posY + ironBigStats.height / 3 - 10 + 'px';
             ironFireballElement.style.width = ironFireball.width + 'px';
             ironFireballElement.style.height = ironFireball.height + 'px';
 
             gameScreen.appendChild(ironFireballElement);
+            return ironFireballElement;
         },
         createBug(stats) {
             const bugElement = document.createElement('div');
