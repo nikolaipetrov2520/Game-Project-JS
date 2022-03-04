@@ -27,6 +27,8 @@ let irChangeDirTime = 0;
 let caChangeDirTime = 0;
 let irFireArr = [];
 let capFireArr = [];
+let capEmptiProgress;
+let capProgress;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -209,9 +211,12 @@ function gameLoop(state, game, timestamp) {
     });
 
     // Spawn captan
-    if (spiderCount % 5 == 0 && !haveCaptan2 && !haveCaptan) {
+    if (spiderCount % 1 == 0 && !haveCaptan2 && !haveCaptan) {
         caChangeDirTime = 70;
         game.createCaptan(state.captanStats);
+        capEmptiProgress = game.createCapEmptyHealthProgress(captanStats, state.capHealthEmpty);
+        capProgress = game.createCapHealthProgress(captanStats, state.capHealthBar);
+
         haveCaptan = true;
         haveCaptan2 = true;
         
@@ -282,6 +287,12 @@ function gameLoop(state, game, timestamp) {
                 cap.style.top = state.captanStats.posY + state.captanStats.speed + 'px';
             break;
         }
+        capEmptiProgress.style.left = parseInt(cap.style.left) + 'px';
+        capEmptiProgress.style.top = parseInt(cap.style.top) - 18 + 'px';    
+        capProgress.style.left = parseInt(cap.style.left) + 'px';
+        capProgress.style.top = parseInt(cap.style.top) - 17 + 'px';
+   
+        capProgress.style.width = state.capHealthEmpty.width / state.captanStats.maxHealth * state.captanStats.health+ 'px';
     });
     
     // Spawn ironBig
@@ -463,6 +474,8 @@ function gameLoop(state, game, timestamp) {
                     haveCaptan = false;
                     state.captanStats.health = 20;
                     cap.remove();
+                    capProgress.remove();
+                    capEmptiProgress.remove();
                 }
 
             }

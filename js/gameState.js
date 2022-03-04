@@ -68,6 +68,7 @@ function initState() {
             left: false,
             right: false,
             health: 10,
+            maxHealth: 10,
             posX: 2000,
             posY: 2000,
         },
@@ -159,6 +160,14 @@ function initState() {
             height: 15,
             posX: 67,
             posY: 144,
+        },
+        capHealthBar: {
+            width: 70,
+            height: 5,
+        },
+        capHealthEmpty: {
+            width: 70,
+            height: 5,
         },
     }
     return state;

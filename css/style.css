@@ -278,6 +278,13 @@ h3 span1{
     border-style: solid;
     border-radius: 6px;
 }
+.capHealth{
+    position: absolute;
+    transform: translate(-50%);
+    text-align: center;
+    width: 10px;
+    background-color: #09420900;
+}
 .collectables{
     position: absolute;
     top: 10px;

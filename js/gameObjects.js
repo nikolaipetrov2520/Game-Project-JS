@@ -84,6 +84,37 @@ function initGameObject() {
 
             return emptyHealthProgress
         },
+        createCapHealthProgress(captanStats, initialState, ){
+            let healthCapProgress = document.createElement('div');
+            healthCapProgress.classList.add('progress-red');
+            healthCapProgress.style.width = initialState.width + 'px';
+            healthCapProgress.style.height = initialState.height + 'px';
+
+            healthCapProgress.style.left = captanStats.posX + 'px';
+            healthCapProgress.style.top = captanStats.posY + 'px';
+
+            this.healthCapProgress = healthCapProgress;
+
+            gameScreen.appendChild(healthCapProgress);
+
+            return healthCapProgress
+        },
+        createCapEmptyHealthProgress(captanStats, initialState){
+            let emptyCapHealthProgress = document.createElement('div');
+            emptyCapHealthProgress.classList.add('progress-empty');
+
+            emptyCapHealthProgress.style.width = initialState.width + 'px';
+            emptyCapHealthProgress.style.height = initialState.height + 'px';
+
+            emptyCapHealthProgress.style.left = captanStats.posX + 'px';
+            emptyCapHealthProgress.style.top = captanStats.posY + 'px';
+
+            this.emptyCapHealthProgress = emptyCapHealthProgress;
+
+            gameScreen.appendChild(emptyCapHealthProgress);
+
+            return emptyCapHealthProgress
+        },
         createWizard(initialState) {
             let wizardElement = document.createElement('div');
             wizardElement.classList.add('wizard');
