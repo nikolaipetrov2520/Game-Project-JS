@@ -29,6 +29,8 @@ let irFireArr = [];
 let capFireArr = [];
 let capEmptiProgress;
 let capProgress;
+let irEmptiProgress;
+let irProgress;
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -211,8 +213,9 @@ function gameLoop(state, game, timestamp) {
     });
 
     // Spawn captan
-    if (spiderCount % 1 == 0 && !haveCaptan2 && !haveCaptan) {
-        caChangeDirTime = 70;
+    if (spiderCount % 6 == 0 && !haveCaptan2 && !haveCaptan) {
+        caChangeDirTime = 80;
+        state.captanStats.health = state.captanStats.maxHealth;
         game.createCaptan(state.captanStats);
         capEmptiProgress = game.createCapEmptyHealthProgress(captanStats, state.capHealthEmpty);
         capProgress = game.createCapHealthProgress(captanStats, state.capHealthBar);
@@ -291,14 +294,26 @@ function gameLoop(state, game, timestamp) {
         capEmptiProgress.style.top = parseInt(cap.style.top) - 18 + 'px';    
         capProgress.style.left = parseInt(cap.style.left) + 'px';
         capProgress.style.top = parseInt(cap.style.top) - 17 + 'px';
-   
-        capProgress.style.width = state.capHealthEmpty.width / state.captanStats.maxHealth * state.captanStats.health+ 'px';
+        capProgress.style.width = state.capHealthEmpty.width / state.captanStats.maxHealth * state.captanStats.health + 'px';
+        if(parseInt(capProgress.style.width) >= 50){
+            capProgress.className = '';
+            capProgress.classList.add('progress-green');
+        }else if(parseInt(capProgress.style.width) >= 20){
+            capProgress.className = '';
+            capProgress.classList.add('progress-yello');
+        }else{
+            capProgress.className = '';
+            capProgress.classList.add('progress-red');
+        }
     });
     
     // Spawn ironBig
-    if (spiderCount % 8 == 0 && !haveIronBig2 && !haveIronBig) {
-        irChangeDirTime = 70;
+    if (spiderCount % 1 == 0 && !haveIronBig2 && !haveIronBig) {
+        irChangeDirTime = 80;
+        state.ironBigStats.health = state.ironBigStats.maxHealth;
         game.createIronBig(state.ironBigStats);
+        irEmptiProgress = game.createIrEmptyHealthProgress(ironBigStats, state.irHealthEmpty);
+        irProgress = game.createIrHealthProgress(ironBigStats, state.irHealthBar);
         haveIronBig = true;
         haveIronBig2 = true;
         
@@ -369,6 +384,21 @@ function gameLoop(state, game, timestamp) {
                 ir.style.left = state.ironBigStats.posX + state.ironBigStats.speed + 'px';
                 ir.style.top = state.ironBigStats.posY + state.ironBigStats.speed + 'px';
             break;
+        }
+        irEmptiProgress.style.left = parseInt(ir.style.left) + 'px';
+        irEmptiProgress.style.top = parseInt(ir.style.top) - 18 + 'px';    
+        irProgress.style.left = parseInt(ir.style.left) + 'px';
+        irProgress.style.top = parseInt(ir.style.top) - 17 + 'px';
+        irProgress.style.width = state.irHealthEmpty.width / state.ironBigStats.maxHealth * state.ironBigStats.health + 'px';
+        if(parseInt(irProgress.style.width) >= 50){
+            irProgress.className = '';
+            irProgress.classList.add('progress-green');
+        }else if(parseInt(irProgress.style.width) >= 20){
+            irProgress.className = '';
+            irProgress.classList.add('progress-yello');
+        }else{
+            irProgress.className = '';
+            irProgress.classList.add('progress-red');
         }
     });
 
@@ -472,7 +502,7 @@ function gameLoop(state, game, timestamp) {
                     state.score += state.killScore * 5;
                     countKill++;
                     haveCaptan = false;
-                    state.captanStats.health = 20;
+                    state.captanStats.maxHealth += 2;
                     cap.remove();
                     capProgress.remove();
                     capEmptiProgress.remove();
@@ -490,8 +520,10 @@ function gameLoop(state, game, timestamp) {
                     state.score += state.killScore * 10;
                     countKill++;
                     haveIronBig = false;
-                    state.ironBigStats.health = 20;
+                    state.ironBigStats.maxHealth += 15;
                     ir.remove();
+                    irProgress.remove();
+                    irEmptiProgress.remove();
                 }
 
             }

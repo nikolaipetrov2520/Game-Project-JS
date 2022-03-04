@@ -115,6 +115,37 @@ function initGameObject() {
 
             return emptyCapHealthProgress
         },
+        createIrHealthProgress(ironBigStats, initialState, ){
+            let healthIrProgress = document.createElement('div');
+            healthIrProgress.classList.add('progress-red');
+            healthIrProgress.style.width = initialState.width + 'px';
+            healthIrProgress.style.height = initialState.height + 'px';
+
+            healthIrProgress.style.left = ironBigStats.posX + 'px';
+            healthIrProgress.style.top = ironBigStats.posY + 'px';
+
+            this.healthIrProgress = healthIrProgress;
+
+            gameScreen.appendChild(healthIrProgress);
+
+            return healthIrProgress
+        },
+        createIrEmptyHealthProgress(ironBigStats, initialState){
+            let emptyIrHealthProgress = document.createElement('div');
+            emptyIrHealthProgress.classList.add('progress-empty');
+
+            emptyIrHealthProgress.style.width = initialState.width + 'px';
+            emptyIrHealthProgress.style.height = initialState.height + 'px';
+
+            emptyIrHealthProgress.style.left = ironBigStats.posX + 'px';
+            emptyIrHealthProgress.style.top = ironBigStats.posY + 'px';
+
+            this.emptyIrHealthProgress = emptyIrHealthProgress;
+
+            gameScreen.appendChild(emptyIrHealthProgress);
+
+            return emptyIrHealthProgress
+        },
         createWizard(initialState) {
             let wizardElement = document.createElement('div');
             wizardElement.classList.add('wizard');
