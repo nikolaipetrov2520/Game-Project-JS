@@ -68,6 +68,8 @@ function initState() {
             left: false,
             right: false,
             health: 10,
+            posX: 2000,
+            posY: 2000,
         },
         ironBigStats: {
             width: 125,
@@ -89,11 +91,18 @@ function initState() {
             fireRate: 300,
         },
         ironFireball: {
-            width: 30,
-            height: 30,
+            width: 45,
+            height: 45,
             speed: 5,
             nextSpawnTimestamp: 0,
-            fireRate: 2500,
+            fireRate:1800,
+        },
+        captanFireball: {
+            width: 60,
+            height: 30,
+            speed: 2,
+            nextSpawnTimestamp: 0,
+            fireRate:2500,
         },
         keys: {
             KeyA: false,

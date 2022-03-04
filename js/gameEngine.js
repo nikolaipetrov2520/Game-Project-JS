@@ -26,6 +26,7 @@ let haveIronBig2 = true;
 let irChangeDirTime = 0;
 let caChangeDirTime = 0;
 let irFireArr = [];
+let capFireArr = [];
 
 function start(state, game) {
     game.createWizard(state.wizard);
@@ -40,6 +41,7 @@ function start(state, game) {
 function gameLoop(state, game, timestamp) {
     const { wizard } = state;
     const { ironBigStats } = state;
+    const { captanStats } = state;
     const { progressBar } = state;
     const { progressEmpty } = state;
     const { healthBar } = state;
@@ -207,7 +209,7 @@ function gameLoop(state, game, timestamp) {
     });
 
     // Spawn captan
-    if (spiderCount % 2 == 0 && !haveCaptan2 && !haveCaptan) {
+    if (spiderCount % 5 == 0 && !haveCaptan2 && !haveCaptan) {
         caChangeDirTime = 70;
         game.createCaptan(state.captanStats);
         haveCaptan = true;
@@ -217,8 +219,8 @@ function gameLoop(state, game, timestamp) {
     // Render captan
     let captanElement = document.querySelectorAll('.captan');
     captanElement.forEach(cap => {
-        let posX = parseInt(cap.style.left);
-        let posY = parseInt(cap.style.top);
+        state.captanStats.posX = parseInt(cap.style.left);
+        state.captanStats.posY = parseInt(cap.style.top);
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, cap) && healthInterval <= 0) {
@@ -230,19 +232,19 @@ function gameLoop(state, game, timestamp) {
         }
         
         if(caChangeDirTime < 0){
-            if(posX < gameScreen.offsetWidth * 3 / 4){
+            if(state.captanStats.posX < gameScreen.offsetWidth * 3 / 4){
                 state.captanStats.left = true;
-            }else if(posX >= gameScreen.offsetWidth - state.captanStats.width){
+            }else if(state.captanStats.posX >= gameScreen.offsetWidth - state.captanStats.width){
                 state.captanStats.right = true;
-            }else if(posY <= 0){
+            }else if(state.captanStats.posY <= 0){
                 state.captanStats.up = true;
-            }else if(posY >= gameScreen.offsetHeight - state.captanStats.height){
+            }else if(state.captanStats.posY >= gameScreen.offsetHeight - state.captanStats.height){
                 state.captanStats.down = true;
             }else{
-                cap.style.left = posX - state.captanStats.speed * 3 + 'px'; 
+                cap.style.left = state.captanStats.posX - state.captanStats.speed * 3 + 'px'; 
             }
         }else{
-            cap.style.left = posX - state.captanStats.speed * 3 + 'px';
+            cap.style.left = state.captanStats.posX - state.captanStats.speed * 3 + 'px';
             caChangeDirTime--;
         }
         if(state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down){
@@ -255,29 +257,29 @@ function gameLoop(state, game, timestamp) {
         }
 
         switch(capDirection){
-            case 'left': cap.style.left = posX - state.captanStats.speed * 3 + 'px';
+            case 'left': cap.style.left = state.captanStats.posX - state.captanStats.speed * 3 + 'px';
             break;
-            case 'right': cap.style.left = posX + state.captanStats.speed * 3 + 'px';
+            case 'right': cap.style.left = state.captanStats.posX + state.captanStats.speed * 3 + 'px';
             break;
-            case 'up': cap.style.top = posY - state.captanStats.speed * 3 + 'px';
+            case 'up': cap.style.top = state.captanStats.posY - state.captanStats.speed * 3 + 'px';
             break;
-            case 'down': cap.style.top = posY + state.captanStats.speed * 3 + 'px';
+            case 'down': cap.style.top = state.captanStats.posY + state.captanStats.speed * 3 + 'px';
             break;
             case 'leftUp':
-                cap.style.left = posX - state.captanStats.speed + 'px';
-                cap.style.top = posY - state.captanStats.speed + 'px';
+                cap.style.left = state.captanStats.posX - state.captanStats.speed + 'px';
+                cap.style.top = state.captanStats.posY - state.captanStats.speed + 'px';
             break;
             case 'leftDown':
-                cap.style.left = posX - state.captanStats.speed + 'px';
-                cap.style.top = posY + state.captanStats.speed + 'px';
+                cap.style.left = state.captanStats.posX - state.captanStats.speed + 'px';
+                cap.style.top = state.captanStats.posY + state.captanStats.speed + 'px';
             break;
             case 'rightUp':
-                cap.style.left = posX + state.captanStats.speed + 'px';
-                cap.style.top = posY - state.captanStats.speed + 'px';
+                cap.style.left = state.captanStats.posX + state.captanStats.speed + 'px';
+                cap.style.top = state.captanStats.posY - state.captanStats.speed + 'px';
             break;
             case 'rightDown':
-                cap.style.left = posX + state.captanStats.speed + 'px';
-                cap.style.top = posY + state.captanStats.speed + 'px';
+                cap.style.left = state.captanStats.posX + state.captanStats.speed + 'px';
+                cap.style.top = state.captanStats.posY + state.captanStats.speed + 'px';
             break;
         }
     });
@@ -306,7 +308,7 @@ function gameLoop(state, game, timestamp) {
         }
         
         if(irChangeDirTime < 0){
-            if(state.ironBigStats.posX < gameScreen.offsetWidth * 3 / 4){
+            if(state.ironBigStats.posX < gameScreen.offsetWidth * 3 / 5){
                 state.ironBigStats.left = true;
             }else if(state.ironBigStats.posX >= gameScreen.offsetWidth - state.ironBigStats.width){
                 state.ironBigStats.right = true;
@@ -513,7 +515,7 @@ function gameLoop(state, game, timestamp) {
         let irFIrePosX = parseInt(irFire.style.left);
         let irFIrePosY = parseInt(irFire.style.top);
 
-        if (detectCollision(wizardElement, irFire) && healthInterval <= 0) {
+        if (detectCollision(wizardElement, irFire) && healthInterval <= 100) {
             state.wizard.health -= 2;
             healthInterval = 200;
             irFire.remove();
@@ -540,6 +542,61 @@ function gameLoop(state, game, timestamp) {
         }
     
     });
+
+        //spawn captanFire
+
+        if(haveCaptan){
+
+            if (timestamp > state.captanFireball.nextSpawnTimestamp) {
+                let captanFireElement = game.createCaptanFireball(captanStats, state.captanFireball);
+                state.captanFireball.nextSpawnTimestamp = timestamp + state.captanFireball.fireRate;
+                let direction = Math.round(Math.random() * 1);
+                let obj = {
+                    captanFireElement: captanFireElement,
+                    direction:direction,
+                }
+                capFireArr.push(obj)
+            }
+            
+        }
+        
+        capFireArr.forEach(el => {
+            let index = capFireArr.indexOf(el);
+            let capFire = el.captanFireElement;
+            let direction = el.direction;
+            let capFIrePosX = parseInt(capFire.style.left);
+            let capFIrePosY = parseInt(capFire.style.top);
+
+            if(capFIrePosY <= 0){
+                el.direction = 1
+            }else if(capFIrePosY >= gameScreen.offsetHeight - state.captanFireball.height){
+                el.direction = 0
+            }
+    
+            if (detectCollision(wizardElement, capFire) && healthInterval <= 100) {
+                state.wizard.health -= 5;
+                healthInterval = 200;
+                capFire.remove();
+                capFireArr.splice(index, 1);
+                if (state.wizard.health <= 0) {
+                    state.gameOver = true;
+                }
+            }
+    
+            if (capFIrePosX < 0) {
+                capFire.remove();
+                capFireArr.splice(index, 1);
+            } else {
+                if(direction == 1){
+                    capFire.style.left = capFIrePosX - state.captanFireball.speed * 3 + 'px';
+                    capFire.style.top = capFIrePosY + state.captanFireball.speed * 2 + 'px';
+                }else if(direction == 0){
+                    capFire.style.left = capFIrePosX - state.captanFireball.speed * 3 + 'px';
+                    capFire.style.top = capFIrePosY - state.captanFireball.speed * 2 + 'px';
+                }
+            }
+        
+        });
 
 
     // Spown Heart

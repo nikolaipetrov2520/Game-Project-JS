@@ -121,6 +121,17 @@ function initGameObject() {
             gameScreen.appendChild(ironFireballElement);
             return ironFireballElement;
         },
+        createCaptanFireball(captanStats, captanFireball) {
+            let captanFireballElement = document.createElement('div');
+            captanFireballElement.classList.add('captanFireball');
+            captanFireballElement.style.left = captanStats.posX + 'px';
+            captanFireballElement.style.top = captanStats.posY + captanStats.height / 3 - 10 + 'px';
+            captanFireballElement.style.width = captanFireball.width + 'px';
+            captanFireballElement.style.height = captanFireball.height + 'px';
+
+            gameScreen.appendChild(captanFireballElement);
+            return captanFireballElement;
+        },
         createBug(stats) {
             const bugElement = document.createElement('div');
             bugElement.classList.add('bug');
