@@ -308,7 +308,7 @@ function gameLoop(state, game, timestamp) {
     });
     
     // Spawn ironBig
-    if (spiderCount % 1 == 0 && !haveIronBig2 && !haveIronBig) {
+    if (spiderCount % 10 == 0 && !haveIronBig2 && !haveIronBig) {
         irChangeDirTime = 80;
         state.ironBigStats.health = state.ironBigStats.maxHealth;
         game.createIronBig(state.ironBigStats);
