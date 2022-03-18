@@ -305,11 +305,11 @@ h3 span1{
     background-repeat: no-repeat;
     background-size: auto;
     text-align: right;
-    width: 80px;
+    width: 95px;
     height: 47px;
     position: absolute;
     top: 25%;
-    left: 10%;
+    left: 5%;
 
  }
 .heartCount{
@@ -318,11 +318,11 @@ h3 span1{
     background-repeat: no-repeat;
     background-size: auto;
     text-align: right;
-    width: 80px;
+    width: 95px;
     height: 47px;
     position: absolute;
     top: 25%;
-    left: 50%;
+    left: 55%;
 }
 .spiderCount{
     margin: 10px;
@@ -330,11 +330,11 @@ h3 span1{
     background-repeat: no-repeat;
     background-size: auto;
     text-align: right;
-    width: 80px;
+    width: 95px;
     height: 47px;
     position: absolute;
     top: 55%;
-    left:  10%; 
+    left:  5%; 
 
 }
 h3{
