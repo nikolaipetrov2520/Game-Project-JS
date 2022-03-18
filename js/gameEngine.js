@@ -1014,7 +1014,7 @@ function upLevel(state) {
         state.bugStats.width = 78;
         state.bugStats.height = 65;
     }
-    if (state.score > 15000) {
+    if (state.score > 27000) {
         state.level = 8;
         state.toNextLevel = 33000 - 27000;
         state.neededScore = state.score - 27000;
