@@ -7,7 +7,9 @@ let countKill = 0;
 let healthInterval = 0;
 let isBlink = false;
 let isBreakRope = false;
+let isSpareColision = false;
 let spiderTime = 0;
+let spearTime = 0;
 let cloudTime = 0;
 let tree1Time = 0;
 let tree2Time = 0;
@@ -445,6 +447,54 @@ function gameLoop(state, game, timestamp) {
                 spider.remove();
                 spiderTime = 0;
                 isBreakRope = false;
+            }
+        }
+    });
+
+    // Spawn Spear
+    if (timestamp > state.spearStats.nextSpawnTimestamp && spearTime > 100) {
+        game.createSpear(state.spearStats);
+        state.spearStats.nextSpawnTimestamp = timestamp + Math.random() * state.spearStats.maxSpawnInterval;
+        state.spearStats.isUp = false;
+        spearTime = 0;
+    } else {
+        spearTime++;
+    }
+    // Render Spear
+    let spearElements = document.querySelectorAll('.spear');
+    spearElements.forEach(spear => {
+        let posY = parseInt(spear.style.top);
+
+        // Detect collsion with wizard
+        if (detectCollision(wizardElement, spear) && healthInterval <= 0) {
+            state.wizard.health -= 7;
+            isSpareColision = true;
+            healthInterval = 200;
+            spear.remove();
+            spearTime = 0;
+            if (state.wizard.health <= 0) {
+                state.gameOver = true;
+            }     
+        }
+        if (!isSpareColision) {
+            if (posY > game.gameScreen.offsetHeight / 7 * 5 && !state.spearStats.isUp) {
+                spear.style.top = posY - state.spearStats.speed * 2 + 'px';
+            } else {
+                state.spearStats.isUp = true;
+                if (posY < game.gameScreen.offsetHeight) {
+                    spear.style.top = posY + state.spearStats.speed * 2 + 'px';
+                } else {
+                    spear.remove();
+                    spearTime = 0;
+                }
+            }
+        } else {
+            if (posY < game.gameScreen.offsetHeight) {
+                spear.style.top = posY + state.spearStats.speed * 2 + 'px';
+            }else {
+                spear.remove();
+                spearTime = 0;
+                isSpareColision = false;
             }
         }
     });

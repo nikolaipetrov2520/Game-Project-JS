@@ -215,6 +215,17 @@ function initGameObject() {
             
             gameScreen.appendChild(spiderElement);
         },
+        createSpear(stats) {
+            stats.isDown = true;
+            const spearElement = document.createElement('div');
+            spearElement.classList.add('spear');
+            spearElement.style.width = stats.width + 'px';
+            spearElement.style.height = stats.height + 'px';
+            spearElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
+            spearElement.style.top = gameScreen.offsetHeight + 'px';
+            
+            gameScreen.appendChild(spearElement);
+        },
         createCaptan(stats) {
             const captanElement = document.createElement('div');
             captanElement.classList.add('captan');

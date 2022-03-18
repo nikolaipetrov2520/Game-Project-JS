@@ -59,6 +59,15 @@ function initState() {
             isDown: true,
             isDed: false,
         },
+        spearStats: {
+            width: 10,
+            height: 350,
+            nextSpawnTimestamp: 40000,
+            maxSpawnInterval: 1500,
+            startInterval: 1500,
+            speed: 4,
+            isUp: false,
+        },
         captanStats: {
             width: 130,
             height: 107,

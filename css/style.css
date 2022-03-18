@@ -107,6 +107,12 @@ h3 span1{
     background-size: cover;
     z-index: 1;
 }
+.spear{
+    position: absolute;
+    background-image: url("../images/spear.png");
+    background-size: cover;
+    z-index: 1;
+}
 .captan{
     position: absolute;
     background-image: url("../images/CA.png");
