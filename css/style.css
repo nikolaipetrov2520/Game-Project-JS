@@ -101,6 +101,12 @@ h3 span1{
     background-size: cover;
     z-index: 1;
 }
+.bugExplosion {
+    position: absolute;
+    background-image: url("../images/Red_dot.png");
+    background-size: cover;
+    z-index: 1;
+}
 .spider{
     position: absolute;
     background-image: url("../images/spider.png");

@@ -204,6 +204,16 @@ function initGameObject() {
 
             gameScreen.appendChild(bugElement);
         },
+        createBugExploxion(stats, left, top) {
+            const bugExplosionElement = document.createElement('div');
+            bugExplosionElement.classList.add('bugExplosion');
+            bugExplosionElement.style.width = stats.width + 'px';
+            bugExplosionElement.style.height = stats.height + 'px';
+            bugExplosionElement.style.left = (left - stats.width / 2) + 'px';
+            bugExplosionElement.style.top = (top - stats.height / 2) + 'px';
+            bugExplosionElement.style.opacity = stats.opacity;
+            gameScreen.appendChild(bugExplosionElement);
+        },
         createSpider(stats) {
             stats.isDown = true;
             const spiderElement = document.createElement('div');

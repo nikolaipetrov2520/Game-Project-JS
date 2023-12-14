@@ -4,10 +4,8 @@ let levelCounter = 100;
 let heartHealthcCounter = 100;
 let healthCounter = 100;
 let countKill = 0;
-let healthInterval = 0;
 let isBlink = false;
 let isBreakRope = false;
-let isSpareColision = false;
 let spiderTime = 0;
 let spearTime = 0;
 let cloudTime = 0;
@@ -17,8 +15,6 @@ let pointTimer = 0;
 let isPoint = false;
 let isGetHearth = false;
 let spiderCount = 0;
-let diamondCount = 0;
-let heartCount = 0;
 let capDirection = '';
 let irDirection = '';
 let haveCaptan = false;
@@ -62,10 +58,12 @@ function gameLoop(state, game, timestamp) {
     const { collectables } = game;
     const { spiderCountElement } = game;
     const { gameScreen } = game;
+    const { bugExplosionElemant } = game;
 
     upLevel(state);
 
     modifyWizardPosition(state, game);
+
     if (state.wizard.health >= 100) {
         state.wizard.health = 100;
     }
@@ -77,9 +75,9 @@ function gameLoop(state, game, timestamp) {
     game.healthScreen.innerText = `${playerName} \r\n Health \r\n ${state.wizard.health} %`;
 
     game.diamondCountElement.classList.add('diamondCount');
-    game.diamondCountElement.textContent = diamondCount;
+    game.diamondCountElement.textContent = state.diamondCount;
     game.heartCountElement.classList.add('heartCount');
-    game.heartCountElement.textContent = heartCount;
+    game.heartCountElement.textContent = state.heartCount;
     game.collectables.textContent = 'Collected'
     game.spiderCountElement.classList.add('spiderCount');
     game.spiderCountElement.textContent = spiderCount;
@@ -134,18 +132,6 @@ function gameLoop(state, game, timestamp) {
         cloudTime++;
     }
 
-    // Render cloud
-    let cloudElement = document.querySelectorAll('.cloud');
-    cloudElement.forEach(cloud => {
-        let posX = parseInt(cloud.style.left);
-
-        if (posX + state.cloudStats.width > 0) {
-            cloud.style.left = posX - state.cloudStats.speed + 'px';
-        } else {
-            cloud.remove();
-        }
-    });
-
     // Spawn tree1
     if (timestamp > state.tree1Stats.nextSpawnTimestamp && tree1Time > 10) {
         game.createTree1(state.tree1Stats);
@@ -154,18 +140,6 @@ function gameLoop(state, game, timestamp) {
     } else {
         tree1Time++;
     }
-
-    // Render tree1
-    let tree1Element = document.querySelectorAll('.tree1');
-    tree1Element.forEach(tree1 => {
-        let posX = parseInt(tree1.style.left);
-
-        if (posX + state.tree1Stats.width > 0) {
-            tree1.style.left = posX - state.tree1Stats.speed + 'px';
-        } else {
-            tree1.remove();
-        }
-    });
 
     //Spawn tree2
     if (timestamp > state.tree2Stats.nextSpawnTimestamp && tree2Time > 10) {
@@ -176,43 +150,11 @@ function gameLoop(state, game, timestamp) {
         tree2Time++;
     }
 
-    // Render tree2
-    let tree2Element = document.querySelectorAll('.tree2');
-    tree2Element.forEach(tree2 => {
-        let posX = parseInt(tree2.style.left);
-
-        if (posX + state.tree2Stats.width > 0) {
-            tree2.style.left = posX - state.tree2Stats.speed + 'px';
-        } else {
-            tree2.remove();
-        }
-    });
-
     // Spawn bugs
     if (timestamp > state.bugStats.nextSpawnTimestamp) {
         game.createBug(state.bugStats);
         state.bugStats.nextSpawnTimestamp = timestamp + Math.random() * state.bugStats.maxSpawnInterval;
     }
-    // Render bugs
-    let bugElements = document.querySelectorAll('.bug');
-    bugElements.forEach(bug => {
-        let posX = parseInt(bug.style.left);
-
-        // Detect collision with wizard
-        if (detectCollision(wizardElement, bug) && healthInterval <= 0) {
-            state.wizard.health -= 10;
-            healthInterval = 200;
-            bug.remove();
-            if (state.wizard.health <= 0) {
-                state.gameOver = true;
-            }
-        }
-        if (posX > 0) {
-            bug.style.left = posX - state.bugStats.speed + 'px';
-        } else {
-            bug.remove();
-        }
-    });
 
     // Spawn captan
     if (spiderCount % 6 == 0 && !haveCaptan2 && !haveCaptan) {
@@ -233,9 +175,9 @@ function gameLoop(state, game, timestamp) {
         state.captanStats.posY = parseInt(cap.style.top);
 
         // Detect collsion with wizard
-        if (detectCollision(wizardElement, cap) && healthInterval <= 0) {
+        if (detectCollision(wizardElement, cap) && state.healthInterval <= 0) {
             state.wizard.health -= 10;
-            healthInterval = 200;
+            state.healthInterval = 200;
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
             }
@@ -258,7 +200,7 @@ function gameLoop(state, game, timestamp) {
             caChangeDirTime--;
         }
         if(state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down){
-            capDirection = elementDirection('captan');
+            capDirection = elementDirection(state, 'captan');
             state.captanStats.right = false; 
             state.captanStats.left = false;
             state.captanStats.up = false;
@@ -327,9 +269,9 @@ function gameLoop(state, game, timestamp) {
         state.ironBigStats.posY = parseInt(ir.style.top);
 
         // Detect collsion with wizard
-        if (detectCollision(wizardElement, ir) && healthInterval <= 0) {
+        if (detectCollision(wizardElement, ir) && state.healthInterval <= 0) {
             state.wizard.health -= 10;
-            healthInterval = 200;
+            state.healthInterval = 200;
             if (state.wizard.health <= 0) {
                 state.gameOver = true;
             }
@@ -353,7 +295,7 @@ function gameLoop(state, game, timestamp) {
         }
         if(state.ironBigStats.right || state.ironBigStats.left || state.ironBigStats.up || state.ironBigStats.down){
           
-            irDirection = elementDirection('ironBig');
+            irDirection = elementDirection(state, 'ironBig');
             state.ironBigStats.right = false; 
             state.ironBigStats.left = false;
             state.ironBigStats.up = false;
@@ -418,9 +360,9 @@ function gameLoop(state, game, timestamp) {
         let posY = parseInt(spider.style.top);
 
         // Detect collsion with wizard
-        if (detectCollision(wizardElement, spider) && healthInterval <= 0 && !spider.isDed) {
+        if (detectCollision(wizardElement, spider) && state.healthInterval <= 0 && !spider.isDed) {
             state.wizard.health -= 15;
-            healthInterval = 200;
+            state.healthInterval = 200;
             spider.remove();
             spiderTime = 0;
             if (state.wizard.health <= 0) {
@@ -460,44 +402,6 @@ function gameLoop(state, game, timestamp) {
     } else {
         spearTime++;
     }
-    // Render Spear
-    let spearElements = document.querySelectorAll('.spear');
-    spearElements.forEach(spear => {
-        let posY = parseInt(spear.style.top);
-
-        // Detect collsion with wizard
-        if (detectCollision(wizardElement, spear) && healthInterval <= 0) {
-            state.wizard.health -= 7;
-            isSpareColision = true;
-            healthInterval = 200;
-            spear.remove();
-            spearTime = 0;
-            if (state.wizard.health <= 0) {
-                state.gameOver = true;
-            }     
-        }
-        if (!isSpareColision) {
-            if (posY > game.gameScreen.offsetHeight / 7 * 5 && !state.spearStats.isUp) {
-                spear.style.top = posY - state.spearStats.speed * 2 + 'px';
-            } else {
-                state.spearStats.isUp = true;
-                if (posY < game.gameScreen.offsetHeight) {
-                    spear.style.top = posY + state.spearStats.speed * 2 + 'px';
-                } else {
-                    spear.remove();
-                    spearTime = 0;
-                }
-            }
-        } else {
-            if (posY < game.gameScreen.offsetHeight) {
-                spear.style.top = posY + state.spearStats.speed * 2 + 'px';
-            }else {
-                spear.remove();
-                spearTime = 0;
-                isSpareColision = false;
-            }
-        }
-    });
 
     //spawn fire
     if (state.keys.Space) {
@@ -513,6 +417,7 @@ function gameLoop(state, game, timestamp) {
     }
 
     // Render fireballs
+    let bugElements = document.querySelectorAll('.bug');
     document.querySelectorAll('.fireball').forEach(fireball => {
         let posX = parseInt(fireball.style.left);
 
@@ -520,7 +425,8 @@ function gameLoop(state, game, timestamp) {
         bugElements.forEach(bug => {
             if (detectCollision(bug, fireball)) {
                 state.score += state.killScore;
-                bug.remove();
+                animateExplosion(bug, game, state);
+                
                 fireball.remove();
                 countKill++;
             }
@@ -610,9 +516,9 @@ function gameLoop(state, game, timestamp) {
         let irFIrePosX = parseInt(irFire.style.left);
         let irFIrePosY = parseInt(irFire.style.top);
 
-        if (detectCollision(wizardElement, irFire) && healthInterval <= 100) {
+        if (detectCollision(wizardElement, irFire) && state.healthInterval <= 100) {
             state.wizard.health -= 2;
-            healthInterval = 200;
+            state.healthInterval = 200;
             irFire.remove();
             irFireArr.splice(index, 1);
             if (state.wizard.health <= 0) {
@@ -668,9 +574,9 @@ function gameLoop(state, game, timestamp) {
                 el.direction = 0
             }
     
-            if (detectCollision(wizardElement, capFire) && healthInterval <= 100) {
+            if (detectCollision(wizardElement, capFire) && state.healthInterval <= 100) {
                 state.wizard.health -= 5;
-                healthInterval = 200;
+                state.healthInterval = 200;
                 capFire.remove();
                 capFireArr.splice(index, 1);
                 if (state.wizard.health <= 0) {
@@ -699,53 +605,21 @@ function gameLoop(state, game, timestamp) {
         game.createHeart(state.heartStats, state.level);
         state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
     }
-    // Render Heart
-    let heartElements = document.querySelectorAll('.heart');
-    heartElements.forEach(heart => {
-        let posY = parseInt(heart.style.top);
-        // if(isPoint){
-        //     pointAdd(heart, state.heartStats.addHealth);
-        // }
-        // Detect collsion with heart
-        if (detectCollision(wizardElement, heart)) {
-            state.wizard.health += state.heartStats.addHealth;
-            isPoint = true;
-            heart.remove();
-            heartCount++;
-            isGetHearth = true;
-            if (state.wizard.health > 100) {
-                state.wizard.health = 100;
-            }
-        }
-        if (posY > 0) {
-            heart.style.top = posY - state.heartStats.speed + 'px';
-        } else {
-            heart.remove();
-        }
-    });
 
     // Spown Diamond
     if (timestamp > state.diamondStats.nextSpawnTimestamp) {
         game.createDiamond(state.diamondStats);
         state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
     }
-    // Render Diamond
-    let diamondElements = document.querySelectorAll('.diamond');
-    diamondElements.forEach(diamond => {
-        let posY = parseInt(diamond.style.top);
 
-        // Detect collsion with heart
-        if (detectCollision(wizardElement, diamond)) {
-            // state.wizard.health+=state.heartStats.addHealth;
-            diamond.remove();
-            diamondCount++;
-        }
-        if (posY < game.gameScreen.offsetHeight) {
-            diamond.style.top = posY + state.diamondStats.speed + 'px';
-        } else {
-            diamond.remove();
-        }
-    });
+    renderClouds();
+    renderTree1();
+    renderTree2();
+    renderSpear(state, wizardElement);
+    renderIronMen(state, wizardElement);
+    renderBugExplosions();
+    renderDiamond(state, wizardElement);
+    renderHeart(state, wizardElement);
 
     // Render wizard
     wizardElement.style.left = wizard.posX + 'px';
@@ -774,12 +648,12 @@ function gameLoop(state, game, timestamp) {
             levelCounter = 100;
         }
     }
-    healthInterval--;
-    if (healthInterval >= 100) {
+    state.healthInterval--;
+    if (state.healthInterval >= 100) {
         isBlink = true;
         healthCounter--;
         scoreScreenBlink("#e61a1ac9", game.healthScreen, healthCounter);
-        wizardBlink(wizardElement);
+        wizardBlink(state, wizardElement);
     } else {
         wizardElement.style.backgroundImage = "url('../images/1.png')";
         if (!isBlink) {
@@ -798,50 +672,6 @@ function gameLoop(state, game, timestamp) {
 
 }
 
-
-function elementDirection(elementState){
-    let direction = Math.round(Math.random() * 7);
-    let dir = '';
-    let states = '';
-    if(elementState == 'captan'){
-        states = state.captanStats;
-    }else if(elementState == 'ironBig'){
-     
-        states = state.ironBigStats;
-    }
-    switch(direction){
-    case 0: dir = 'left';
-        break;
-    case 1:dir = 'right';
-        break;
-    case 2:dir = 'up';
-        break;
-    case 3:dir = 'down';
-        break;
-    case 4:dir = 'leftUp';
-        break;
-    case 5:dir = 'leftDown';
-        break;
-    case 6:dir = 'rightUp';
-        break;
-    case 7:dir = 'rightDown';
-        break;
-    }
-    if(states.up && (dir == 'up' || dir == 'leftUp' || dir == 'rightUp')){
-        dir = elementDirection(elementState);
-    }
-    if(states.down && (dir == 'down' || dir == 'leftDown' || dir == 'rightDown')){
-        dir = elementDirection(elementState);
-    }
-    if(states.left && (dir == 'left' || dir == 'leftUp' || dir == 'leftDown')){
-        dir = elementDirection(elementState);
-    }
-    if(states.right && (dir == 'right' || dir == 'rightUp' || dir == 'rightDown')){
-        dir = elementDirection(elementState);
-    }
-    return dir;
-}
-
 function pointAdd(obj, point) {
     if (pointTimer < 5) {
         obj.classList.remove(...obj.classList);
@@ -852,41 +682,6 @@ function pointAdd(obj, point) {
         obj.remove();
         pointTimer = 0;
         isPoint = false;
-    }
-
-
-}
-
-function wizardBlink(wizardElement) {
-    if (healthInterval > 190) {
-        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
-    }
-    if (healthInterval > 180 && healthInterval <= 190) {
-        wizardElement.style.backgroundImage = "url('../images/1.png')";
-    }
-    if (healthInterval > 170 && healthInterval <= 180) {
-        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
-    }
-    if (healthInterval > 160 && healthInterval <= 170) {
-        wizardElement.style.backgroundImage = "url('../images/1.png')";
-    }
-    if (healthInterval > 150 && healthInterval <= 160) {
-        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
-    }
-    if (healthInterval > 140 && healthInterval <= 150) {
-        wizardElement.style.backgroundImage = "url('../images/1.png')";
-    }
-    if (healthInterval > 130 && healthInterval <= 140) {
-        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
-    }
-    if (healthInterval > 120 && healthInterval <= 130) {
-        wizardElement.style.backgroundImage = "url('../images/1.png')";
-    }
-    if (healthInterval > 110 && healthInterval <= 120) {
-        wizardElement.style.backgroundImage = "url('../images/1Red.png')";
-    }
-    if (healthInterval > 100 && healthInterval <= 110) {
-        wizardElement.style.backgroundImage = "url('../images/1.png')";
     }
 }
 
@@ -916,195 +711,6 @@ function scoreScreenBlink(color, screen, counter) {
     } else {
         isBlink = false;
         isGetHearth = false;
-    }
-}
-
-function gameOver() {
-    const gameOver = document.createElement('h3');
-    const startBtn = document.createElement('h3');
-    startBtn.classList.add('start-btn');
-    startBtn.textContent = 'Start again'
-    gameOver.innerHTML = `<span>Game Over!</span><br/> Score: ${state.score.toFixed(0)}<br/> Level ${state.level}<br> Killed enemies: ${countKill}`;
-    game.gameScreen.innerHTML = '';
-    game.gameScreen.appendChild(gameOver);
-    game.gameScreen.appendChild(startBtn);
-    startBtn.addEventListener('click', () => {
-        document.location.reload(true);
-    });
-    let body = document.getElementsByTagName('body')[0];
-    body.addEventListener('keydown', (e) => {
-        if (e.code == 'Enter' || e.code == 'NumpadEnter') {
-            document.location.reload(true);
-        }
-    });
-}
-function gameWin() {
-    const gameOver = document.createElement('h3');
-    const startBtn = document.createElement('h3');
-    startBtn.classList.add('start-btn');
-    startBtn.textContent = 'Start again'
-    gameOver.innerHTML = `<span1>You Win!</span1><br/> Score: ${state.score.toFixed(0)}<br/> Level ${state.level}<br> Killed enemies: ${countKill}`;
-    game.gameScreen.innerHTML = '';
-    game.gameScreen.appendChild(gameOver);
-    game.gameScreen.appendChild(startBtn);
-    startBtn.addEventListener('click', () => {
-        document.location.reload(true);
-    });
-    let body = document.getElementsByTagName('body')[0];
-    body.addEventListener('keydown', (e) => {
-        if (e.code == 'Enter' || e.code == 'NumpadEnter') {
-            document.location.reload(true);
-        }
-    });
-}
-
-function upLevel(state) {
-    state.toNextLevel = 3000;
-    state.neededScore = state.score;
-    if (state.score > 3000) {
-        state.level = 2;
-        state.toNextLevel = 6000 - 3000;
-        state.neededScore = state.score - 3000;
-        state.bugStats.maxSpawnInterval = 3700;
-        state.diamondStats.maxSpawnInterval = 13000;
-        state.bugStats.width = 88;
-        state.bugStats.height = 78;
-    }
-    if (state.score > 6000) {
-        state.level = 3;
-        state.toNextLevel = 9000 - 6000;
-        state.neededScore = state.score - 6000;
-        state.bugStats.maxSpawnInterval = 3400;
-        state.bugStats.width = 86;
-        state.bugStats.height = 75;
-    }
-    if (state.score > 9000) {
-        state.level = 4;
-        state.toNextLevel = 12000 - 9000;
-        state.neededScore = state.score - 9000;
-        state.bugStats.maxSpawnInterval = 3100;
-        state.heartStats.maxSpawnInterval = 30000;
-        state.diamondStats.maxSpawnInterval = 11000;
-        state.bugStats.width = 84;
-        state.bugStats.height = 73;
-    }
-    if (state.score > 12000) {
-        state.level = 5;
-        state.toNextLevel = 15000 - 12000;
-        state.neededScore = state.score - 12000;
-        state.bugStats.maxSpawnInterval = 2800;
-        state.bugStats.width = 82;
-        state.bugStats.height = 70;
-        state.heartStats.speed = 4;
-    }
-    if (state.score > 15000) {
-        state.level = 6;
-        state.toNextLevel = 21000 - 15000;
-        state.neededScore = state.score - 15000;
-        state.bugStats.maxSpawnInterval = 2500;
-        state.diamondStats.maxSpawnInterval = 10000;
-        state.bugStats.width = 80;
-        state.bugStats.height = 68;
-    }
-    if (state.score > 21000) {
-        state.level = 7;
-        state.toNextLevel = 27000 - 21000;
-        state.neededScore = state.score - 21000;
-        state.bugStats.maxSpawnInterval = 2200;
-        state.bugStats.width = 78;
-        state.bugStats.height = 65;
-    }
-    if (state.score > 27000) {
-        state.level = 8;
-        state.toNextLevel = 33000 - 27000;
-        state.neededScore = state.score - 27000;
-        state.bugStats.maxSpawnInterval = 1900;
-        state.heartStats.maxSpawnInterval = 25000;
-        state.diamondStats.maxSpawnInterval = 9000;
-        state.bugStats.width = 76;
-        state.bugStats.height = 63;
-    }
-    if (state.score > 33000) {
-        state.level = 9;
-        state.toNextLevel = 39000 - 33000;
-        state.neededScore = state.score - 33000;
-        state.bugStats.maxSpawnInterval = 1600;
-        state.bugStats.width = 74;
-        state.bugStats.height = 60;
-    }
-    if (state.score > 39000) {
-        state.level = 10;
-        state.toNextLevel = 45000 - 39000;
-        state.neededScore = state.score - 39000;
-        state.bugStats.maxSpawnInterval = 1300;
-        state.diamondStats.maxSpawnInterval = 8000;
-        state.bugStats.width = 72;
-        state.bugStats.height = 58;
-        state.heartStats.speed = 6;
-    }
-    if (state.score > 45000) {
-        state.level = 11;
-        state.toNextLevel = 55000 - 45000;
-        state.neededScore = state.score - 45000;
-    }
-    if (state.score > 55000) {
-        state.level = 12;
-        state.toNextLevel = 65000 - 55000;
-        state.neededScore = state.score - 55000;
-        state.heartStats.maxSpawnInterval = 20000;
-        state.diamondStats.maxSpawnInterval = 7000;
-    }
-    if (state.score > 65000) {
-        state.level = 13;
-        state.toNextLevel = 75000 - 65000;
-        state.neededScore = state.score - 65000;
-    }
-    if (state.score > 75000) {
-        state.level = 14;
-        state.toNextLevel = 85000 - 75000;
-        state.neededScore = state.score - 75000;
-        state.diamondStats.maxSpawnInterval = 6000;
-    }
-    if (state.score > 85000) {
-        state.level = 15;
-        state.toNextLevel = 100000 - 85000;
-        state.neededScore = state.score - 85000;
-        state.heartStats.speed = 8;
-    }
-    if (state.score > 100000) {
-        state.level = 16;
-        state.toNextLevel = 120000 - 100000;
-        state.neededScore = state.score - 100000;
-        state.heartStats.maxSpawnInterval = 15000;
-        state.diamondStats.maxSpawnInterval = 5000;
-    }
-    if (state.score > 120000) {
-        state.level = 17;
-        state.toNextLevel = 140000 - 120000;
-        state.neededScore = state.score - 120000;
-    }
-    if (state.score > 140000) {
-        state.level = 18;
-        state.toNextLevel = 160000 - 140000;
-        state.neededScore = state.score - 140000;
-    }
-    if (state.score > 160000) {
-        state.level = 19;
-        state.toNextLevel = 180000 - 160000;
-        state.neededScore = state.score - 160000;
-    }
-    if (state.score > 180000) {
-        state.level = 20;
-        state.toNextLevel = 200000 - 180000;
-        state.neededScore = state.score - 180000;
-        state.heartStats.maxSpawnInterval = 10000;
-    }
-    if (state.score > 200000) {
-        state.gameWin = true;
-    }
-    if (state.level < 16) {
-        state.bugStats.speed = state.level * 1.3;
-        state.scoreRate = state.startScoreRate * (state.level / 2);
     }
 }
 

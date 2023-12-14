@@ -14,6 +14,9 @@ function initState() {
         level: 1,
         toNextLevel: 1,
         neededScore: 1,
+        healthInterval: 0,
+        heartCount: 0,
+        diamondCount: 0,
         wizard: {
             
             width: 57,
@@ -31,6 +34,11 @@ function initState() {
             maxSpawnInterval: 4000,
             startInterval: 4000,
             speed: 2,
+        },
+        bugExplosionStats: {
+            width: 0,
+            height: 0,
+            opacity: 1,
         },
         heartStats: {
             width: 54,
