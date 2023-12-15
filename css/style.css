@@ -55,6 +55,8 @@ h3 span1{
     transform: translate(-50%);
     border-style: solid;
     border-radius: 6px;
+    color: #e5e5e5;
+    text-shadow: 3px 3px 10px #535353;
 }
 
 .start-screen:hover {
@@ -99,55 +101,61 @@ h3 span1{
     position: absolute;
     background-image: url("../images/man.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 6;
 }
 .bugExplosion {
     position: absolute;
     background-image: url("../images/Red_dot.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 5;
 }
 .bugPoints {
     position: absolute;
     color: green;
     background-size: cover;
-    z-index: 2;
+    z-index: 10;
+}
+.heartPoints{
+    position: absolute;
+    color: #ff881e;
+    background-size: cover;
+    z-index: 10;
 }
 .wizardExplosion {
     position: absolute;
     background-image: url("../images/Red_dot.png");
     background-size: cover;
-    z-index: 0;
+    z-index: 5;
 }
 .wizardHelthy {
     position: absolute;
     background-image: url("../images/Green_dot.png");
     background-size: cover;
-    z-index: 0;
+    z-index: 5;
 }
 .spider{
     position: absolute;
     background-image: url("../images/spider.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 10;
 }
 .spear{
     position: absolute;
     background-image: url("../images/spear.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 10;
 }
 .captan{
     position: absolute;
     background-image: url("../images/CA.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 10;
 }
 .ironBig{
     position: absolute;
     background-image: url("../images/ironBig.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 10;
 }
 
 .heart{
@@ -159,6 +167,7 @@ h3 span1{
     text-align: center;
     color: yellow;
     animation: zoom-in-zoom-out 0.8s ease infinite;
+    z-index: 5;
 }
 @keyframes zoom-in-zoom-out {
     0% {
@@ -223,26 +232,26 @@ h3 span1{
     position: absolute;
     background-image: url("../images/diamond.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 5;
 }
 
 .fireball {
     position: absolute;
     background-image: url("../images/fire-ball.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 5;
 }
 .ironFireball {
     position: absolute;
     background-image: url("../images/fireIron.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 5;
 }
 .captanFireball {
     position: absolute;
     background-image: url("../images/shield.png");
     background-size: cover;
-    z-index: 1;
+    z-index: 5;
 }
 
 .hidden {
@@ -261,8 +270,12 @@ h3 span1{
     font-size: 35px;
     width: 200px;
     background-color: #0942093b;
-    border-style: solid;
+    border: solid 1px #fae2b6;
+    box-shadow: 0px 0px 5px -1px #141414;
     border-radius: 6px;
+    color: #fae2b6;
+    text-shadow: 1px 1px 3px #181818;
+    z-index: 5;
 }
 
 .progress-red {
@@ -296,7 +309,7 @@ h3 span1{
 .health{
     position: absolute;
     top: 10px;
-    left: 73%;
+    left: 48%;
     transform: translate(-50%);
     text-align: center;
     padding-left: 45px;
@@ -305,8 +318,12 @@ h3 span1{
     font-size: 35px;
     width: 200px;
     background-color: #0942093b;
-    border-style: solid;
+    border: solid 1px #fae2b6;
+    box-shadow: 0px 0px 5px -1px #141414;
     border-radius: 6px;
+    color: #fae2b6;
+    text-shadow: 1px 1px 3px #181818;
+    z-index: 5;
 }
 .collectables{
     position: absolute;
@@ -320,8 +337,12 @@ h3 span1{
     width: 226px;
     height: 174px;
     background-color: #0942093b;
-    border-style: solid;
+    border: solid 1px #fae2b6;
+    box-shadow: 0px 0px 5px -1px #141414;
     border-radius: 6px;
+    color: #fae2b6;
+    text-shadow: 1px 1px 3px #181818;
+    z-index: 5;
 }
 .diamondCount{
     margin: 10px;

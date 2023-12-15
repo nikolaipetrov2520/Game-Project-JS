@@ -214,6 +214,16 @@ function initGameObject() {
             bugPointsElement.style.opacity = stats.opacity;
             gameScreen.appendChild(bugPointsElement);
         },
+        createWizardHealthyPoint(stats, left, top) {
+            const heartPointsElement = document.createElement('div');
+            heartPointsElement.classList.add('heartPoints');
+            heartPointsElement.textContent = `+${stats.heartStats.addHealth}`;
+            heartPointsElement.style.fontSize = stats.heartPointsStats.fontSize+ 'px';
+            heartPointsElement.style.left = (left - stats.heartPointsStats.width / 2) + 'px';
+            heartPointsElement.style.top = (top - stats.heartPointsStats.height / 2) + 'px';
+            heartPointsElement.style.opacity = stats.heartPointsStats.opacity;
+            gameScreen.appendChild(heartPointsElement);
+        },
         createBugExploxion(stats, left, top) {
             const bugExplosionElement = document.createElement('div');
             bugExplosionElement.classList.add('bugExplosion');
@@ -296,7 +306,7 @@ function initGameObject() {
             heartElement.style.left = Math.floor(Math.random() * (gameScreen.offsetWidth - stats.width)) + 'px';
             heartElement.style.top = gameScreen.offsetHeight+ 'px';
             heartElement.style.opacity = stats.opacity+'';
-            
+
             gameScreen.appendChild(heartElement);
         },
         createDiamond(stats) {

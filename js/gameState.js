@@ -46,7 +46,14 @@ function initState() {
             height: 35,
             opacity: 1,
             points: 100,
-            fontSize: 25,
+            fontSize: 28,
+        },
+        heartPointsStats: {
+            width: 80,
+            height: 35,
+            opacity: 1,
+            points: 0,
+            fontSize: 40,
         },
         heartStats: {
             width: 54,
@@ -178,13 +185,13 @@ function initState() {
         healthBar: {
             width: 230,
             height: 15,
-            posX: 67,
+            posX: 42,
             posY: 145,
         },
         healthEmpty: {
             width: 230,
             height: 15,
-            posX: 67,
+            posX: 42,
             posY: 144,
         },
         capHealthBar: {

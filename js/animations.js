@@ -49,4 +49,11 @@ function animateWizardHealthy(element, game, state){
     let height = element.getBoundingClientRect().top + element.getBoundingClientRect().height / 2;
     let width = element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2;
     game.createWizardHealthy(state.bugExplosionStats, width, height);
+    game.createWizardHealthyPoint(state, width, height);
+}
+
+function animateWizardDiamond(element, game, state){
+    let height = element.getBoundingClientRect().top + element.getBoundingClientRect().height / 2;
+    let width = element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2;
+    game.createWizardHealthy(state.bugExplosionStats, width, height);
 }

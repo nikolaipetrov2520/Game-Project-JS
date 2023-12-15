@@ -682,6 +682,7 @@ function gameLoop(state, game, timestamp) {
     renderBugPoints();
     renderWizardExplosion();
     renderWizardHelthy();
+    renderHeartPoints();
     renderDiamond(state, wizardElement);
     renderHeart(state, wizardElement);
 }

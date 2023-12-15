@@ -30,22 +30,42 @@ function renderBugPoints(){
     let bugExplosionElement = document.querySelectorAll('.bugPoints');
 
     bugExplosionElement.forEach(bugExplosion => {
-        let explosionSize = parseInt(bugExplosion.style.fontSize);
         let explosionTop = parseInt(bugExplosion.style.top);
         let explosionLeft = parseInt(bugExplosion.style.left);
         let opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
+
         if(opacity <= 0.01){
             bugExplosion.remove();          
         }
         else if(opacity <= 0.05){
             opacity = parseFloat(bugExplosion.style.opacity) - 0.008;
-
         }
         else if(opacity <= 0.2){
             opacity = parseFloat(bugExplosion.style.opacity) - 0.03;
         }
+        bugExplosion.style.top = explosionTop - 4 + 'px';
+        bugExplosion.style.left = explosionLeft - 1 + 'px';
+        bugExplosion.style.opacity = opacity.toString();
+    });
+}
 
-        //bugExplosion.style.fontSize = explosionSize + 1 + 'px';
+function renderHeartPoints(){
+    let bugExplosionElement = document.querySelectorAll('.heartPoints');
+
+    bugExplosionElement.forEach(bugExplosion => {
+        let explosionTop = parseInt(bugExplosion.style.top);
+        let explosionLeft = parseInt(bugExplosion.style.left);
+        let opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
+
+        if(opacity <= 0.01){
+            bugExplosion.remove();          
+        }
+        else if(opacity <= 0.05){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.008;
+        }
+        else if(opacity <= 0.2){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.03;
+        }
         bugExplosion.style.top = explosionTop - 4 + 'px';
         bugExplosion.style.left = explosionLeft - 1 + 'px';
         bugExplosion.style.opacity = opacity.toString();
@@ -249,7 +269,7 @@ function renderDiamond(state, wizardElement){
         // Detect collsion with heart
         if (detectCollision(wizardElement, diamond)) {
             // state.wizard.health+=state.heartStats.addHealth;
-            animateWizardHealthy(diamond, game, state);
+            animateWizardDiamond(diamond, game, state);
             diamond.remove();
             state.diamondCount++;
         }
