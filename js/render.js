@@ -7,14 +7,15 @@ function renderBugExplosions(){
         let explosionTop = parseInt(bugExplosion.style.top);
         let explosionLeft = parseInt(bugExplosion.style.left);
         let opacity = parseFloat(bugExplosion.style.opacity) - 0.1;
-        if(opacity < 0.2){
-            opacity = parseFloat(bugExplosion.style.opacity) - 0.03;
+        if(opacity <= 0.01){
+            bugExplosion.remove();          
         }
-        else if(opacity < 0.05){
+        else if(opacity <= 0.05){
             opacity = parseFloat(bugExplosion.style.opacity) - 0.01;
+
         }
-        else if(opacity < 0.01){
-            bugExplosion.remove();
+        else if(opacity <= 0.2){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.03;
         }
 
         bugExplosion.style.width = explosionWidth + 15 + 'px';
@@ -22,8 +23,90 @@ function renderBugExplosions(){
         bugExplosion.style.top = explosionTop - 7 + 'px';
         bugExplosion.style.left = explosionLeft - 7 + 'px';
         bugExplosion.style.opacity = opacity.toString();
+    });
+}
 
+function renderBugPoints(){
+    let bugExplosionElement = document.querySelectorAll('.bugPoints');
 
+    bugExplosionElement.forEach(bugExplosion => {
+        let explosionSize = parseInt(bugExplosion.style.fontSize);
+        let explosionTop = parseInt(bugExplosion.style.top);
+        let explosionLeft = parseInt(bugExplosion.style.left);
+        let opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
+        if(opacity <= 0.01){
+            bugExplosion.remove();          
+        }
+        else if(opacity <= 0.05){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.008;
+
+        }
+        else if(opacity <= 0.2){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.03;
+        }
+
+        //bugExplosion.style.fontSize = explosionSize + 1 + 'px';
+        bugExplosion.style.top = explosionTop - 4 + 'px';
+        bugExplosion.style.left = explosionLeft - 1 + 'px';
+        bugExplosion.style.opacity = opacity.toString();
+    });
+}
+
+function renderWizardExplosion(){
+    let bugExplosionElement = document.querySelectorAll('.wizardExplosion');
+
+    bugExplosionElement.forEach(bugExplosion => {
+        let explosionWidth = parseInt(bugExplosion.style.width);
+        let explosionHeight = parseInt(bugExplosion.style.width);
+        let explosionTop = parseInt(bugExplosion.style.top);
+        let explosionLeft = parseInt(bugExplosion.style.left);
+        let opacity = parseFloat(bugExplosion.style.opacity) - 0.2;
+        if(opacity <= 0.01){
+            bugExplosion.remove();          
+        }
+        else if(opacity <= 0.05){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.005;
+        }
+        else if(opacity <= 0.2){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.01;
+        }
+        else if(opacity <= 0.3){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
+        }
+
+        bugExplosion.style.width = explosionWidth + 100 + 'px';
+        bugExplosion.style.height = explosionHeight + 100 + 'px';
+        bugExplosion.style.top = explosionTop - 50 + 'px';
+        bugExplosion.style.left = explosionLeft - 50 + 'px';
+        bugExplosion.style.opacity = opacity.toString();
+    });
+}
+
+function renderWizardHelthy(){
+    let bugExplosionElement = document.querySelectorAll('.wizardHelthy');
+
+    bugExplosionElement.forEach(bugExplosion => {
+        let explosionWidth = parseInt(bugExplosion.style.width);
+        let explosionHeight = parseInt(bugExplosion.style.width);
+        let explosionTop = parseInt(bugExplosion.style.top);
+        let explosionLeft = parseInt(bugExplosion.style.left);
+        let opacity = parseFloat(bugExplosion.style.opacity) - 0.1;
+        if(opacity <= 0.01){
+            bugExplosion.remove();          
+        }
+        else if(opacity <= 0.05){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.01;
+
+        }
+        else if(opacity <= 0.2){
+            opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
+        }
+
+        bugExplosion.style.width = explosionWidth + 40 + 'px';
+        bugExplosion.style.height = explosionHeight + 40 + 'px';
+        bugExplosion.style.top = explosionTop - 20 + 'px';
+        bugExplosion.style.left = explosionLeft - 20 + 'px';
+        bugExplosion.style.opacity = opacity.toString();
     });
 }
 
@@ -74,6 +157,7 @@ function renderIronMen(state, wizardElement){
 
         // Detect collision with wizard
         if (detectCollision(wizardElement, bug) && state.healthInterval <= 0) {
+            state.isShoted = true;
             state.wizard.health -= 10;
             state.healthInterval = 200;
             bug.remove();
@@ -97,6 +181,7 @@ function renderSpear(state, wizardElement){
 
         // Detect collsion with wizard
         if (detectCollision(wizardElement, spear) && state.healthInterval <= 0) {
+            state.isShoted = true;
             state.wizard.health -= 7;
             isSpareColision = true;
             state.healthInterval = 200;
@@ -138,6 +223,7 @@ function renderHeart(state, wizardElement){
         // }
         // Detect collsion with heart
         if (detectCollision(wizardElement, heart)) {
+            animateWizardHealthy(heart, game, state);
             state.wizard.health += state.heartStats.addHealth;
             isPoint = true;
             heart.remove();
@@ -163,6 +249,7 @@ function renderDiamond(state, wizardElement){
         // Detect collsion with heart
         if (detectCollision(wizardElement, diamond)) {
             // state.wizard.health+=state.heartStats.addHealth;
+            animateWizardHealthy(diamond, game, state);
             diamond.remove();
             state.diamondCount++;
         }

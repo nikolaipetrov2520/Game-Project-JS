@@ -204,6 +204,16 @@ function initGameObject() {
 
             gameScreen.appendChild(bugElement);
         },
+        createBugPoints(stats, left, top) {
+            const bugPointsElement = document.createElement('div');
+            bugPointsElement.classList.add('bugPoints');
+            bugPointsElement.textContent = `+${stats.points}`;
+            bugPointsElement.style.fontSize = stats.fontSize+ 'px';
+            bugPointsElement.style.left = (left - stats.width / 2) + 'px';
+            bugPointsElement.style.top = (top - stats.height / 2) + 'px';
+            bugPointsElement.style.opacity = stats.opacity;
+            gameScreen.appendChild(bugPointsElement);
+        },
         createBugExploxion(stats, left, top) {
             const bugExplosionElement = document.createElement('div');
             bugExplosionElement.classList.add('bugExplosion');
@@ -213,6 +223,26 @@ function initGameObject() {
             bugExplosionElement.style.top = (top - stats.height / 2) + 'px';
             bugExplosionElement.style.opacity = stats.opacity;
             gameScreen.appendChild(bugExplosionElement);
+        },
+        createWizardExplosion(stats, left, top) {
+            const wizardExplosionElement = document.createElement('div');
+            wizardExplosionElement.classList.add('wizardExplosion');
+            wizardExplosionElement.style.width = stats.width + 'px';
+            wizardExplosionElement.style.height = stats.height + 'px';
+            wizardExplosionElement.style.left = (left - stats.width / 2) + 'px';
+            wizardExplosionElement.style.top = (top - stats.height / 2) + 'px';
+            wizardExplosionElement.style.opacity = stats.opacity - 0.5;
+            gameScreen.appendChild(wizardExplosionElement);
+        },
+        createWizardHealthy(stats, left, top) {
+            const wizardHealthyElement = document.createElement('div');
+            wizardHealthyElement.classList.add('wizardHelthy');
+            wizardHealthyElement.style.width = stats.width + 'px';
+            wizardHealthyElement.style.height = stats.height + 'px';
+            wizardHealthyElement.style.left = (left - stats.width / 2) + 'px';
+            wizardHealthyElement.style.top = (top - stats.height / 2) + 'px';
+            wizardHealthyElement.style.opacity = stats.opacity;
+            gameScreen.appendChild(wizardHealthyElement);
         },
         createSpider(stats) {
             stats.isDown = true;

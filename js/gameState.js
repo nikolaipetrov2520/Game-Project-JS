@@ -17,6 +17,7 @@ function initState() {
         healthInterval: 0,
         heartCount: 0,
         diamondCount: 0,
+        isShoted: false,
         wizard: {
             
             width: 57,
@@ -38,7 +39,14 @@ function initState() {
         bugExplosionStats: {
             width: 0,
             height: 0,
+            opacity: 0.8,
+        },
+        bugPointsStats: {
+            width: 80,
+            height: 35,
             opacity: 1,
+            points: 100,
+            fontSize: 25,
         },
         heartStats: {
             width: 54,

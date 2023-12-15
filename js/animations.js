@@ -36,4 +36,17 @@ function animateExplosion(bug, game, state){
     let width = bug.getBoundingClientRect().left + bug.getBoundingClientRect().width / 2;
     bug.remove();
     game.createBugExploxion(state.bugExplosionStats, width, height);
+    game.createBugPoints(state.bugPointsStats, width, height);
+}
+
+function animateWizardExplosion(wizard, game, state){
+    let height = wizard.getBoundingClientRect().top + wizard.getBoundingClientRect().height / 2;
+    let width = wizard.getBoundingClientRect().left + wizard.getBoundingClientRect().width / 2;
+    game.createWizardExplosion(state.bugExplosionStats, width, height);
+}
+
+function animateWizardHealthy(element, game, state){
+    let height = element.getBoundingClientRect().top + element.getBoundingClientRect().height / 2;
+    let width = element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2;
+    game.createWizardHealthy(state.bugExplosionStats, width, height);
 }
