@@ -34,7 +34,7 @@ function initState() {
             nextSpawnTimestamp: 400,
             maxSpawnInterval: 4000,
             startInterval: 4000,
-            speed: 2,
+            speed: 4,
         },
         bugExplosionStats: {
             width: 0,

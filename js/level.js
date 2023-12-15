@@ -244,8 +244,10 @@ function upLevel(state) {
         state.bugStats.height = 78;
     }
 
-    if (state.level < 20) {
-        state.bugStats.speed = state.level * 1.1;
+    if (state.level > 6 && state.level < 32 ) {
+        state.bugStats.speed = state.level * 0.6;       
+    }
+    if(state.level < 20){
         state.scoreRate = state.startScoreRate * (state.level / 2);
     }
 }
