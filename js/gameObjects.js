@@ -224,6 +224,16 @@ function initGameObject() {
             heartPointsElement.style.opacity = stats.heartPointsStats.opacity;
             gameScreen.appendChild(heartPointsElement);
         },
+        createLevel(stats) {
+            const levelElement = document.createElement('div');
+            levelElement.classList.add('level');
+            levelElement.textContent = `Level ${stats.level}`;
+            levelElement.style.fontSize = stats.levelStats.fontSize+ 'px';
+            levelElement.style.left = stats.levelStats.posX + 'px';
+            levelElement.style.top = stats.levelStats.posY + 'px';
+            levelElement.style.opacity = stats.heartPointsStats.opacity;
+            gameScreen.appendChild(levelElement);
+        },
         createBugExploxion(stats, left, top) {
             const bugExplosionElement = document.createElement('div');
             bugExplosionElement.classList.add('bugExplosion');

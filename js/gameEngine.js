@@ -638,13 +638,15 @@ function gameLoop(state, game, timestamp) {
         state.score += state.scoreRate;
         window.requestAnimationFrame(gameLoop.bind(null, state, game));
     }
-
+    console.log(state.level)
     if (state.level > state.previousLevel) {
         isBlink = true;
         levelCounter--;
         scoreScreenBlink("#1ae41ae0", game.scoreScreen, levelCounter);
-        if (levelCounter == 0) {
+        if (levelCounter <= 0) {
             state.previousLevel = state.level;
+            game.createLevel(state);
+            isBlink = false;
         }
     } else {
         if (!isBlink) {
@@ -678,6 +680,7 @@ function gameLoop(state, game, timestamp) {
     renderTree2();
     renderSpear(state, wizardElement);
     renderIronMen(state, wizardElement);
+    renderLevelText();
     renderBugExplosions();
     renderBugPoints();
     renderWizardExplosion();

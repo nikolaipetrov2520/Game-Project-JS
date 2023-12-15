@@ -380,7 +380,14 @@ h3 span1{
     position: absolute;
     top: 55%;
     left:  5%; 
-
+}
+.level{
+    position: absolute;
+    color: rgb(187, 121, 59);
+    background-size: cover;
+    z-index: 10;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px #181818;
 }
 h3{
     text-align: center;

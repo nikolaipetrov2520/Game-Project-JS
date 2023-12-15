@@ -72,6 +72,35 @@ function renderHeartPoints(){
     });
 }
 
+function renderLevelText(){
+    let bugExplosionElement = document.querySelectorAll('.level');
+    if(bugExplosionElement.length > 0){
+        bugExplosionElement.forEach(bugExplosion => {
+            let size = parseInt(bugExplosion.style.fontSize)
+            let explosionTop = parseInt(bugExplosion.style.top);
+            let explosionLeft = parseInt(bugExplosion.style.left);
+            let opacity = parseFloat(bugExplosion.style.opacity)
+
+            if(opacity <= 0.01){
+                bugExplosion.remove();          
+            }
+            else if(opacity <= 0.05){
+                opacity = parseFloat(bugExplosion.style.opacity) - 0.01;
+            }
+            else if(opacity <= 0.2){
+                opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
+            }
+            else{
+                opacity = parseFloat(bugExplosion.style.opacity) - 0.03;
+            }
+            bugExplosion.style.fontSize = size + 8 + 'px';
+            bugExplosion.style.top = explosionTop - 12 + 'px';
+            bugExplosion.style.left = explosionLeft - 16 + 'px';
+            bugExplosion.style.opacity = opacity.toString();
+        });
+    }
+}
+
 function renderWizardExplosion(){
     let bugExplosionElement = document.querySelectorAll('.wizardExplosion');
 
@@ -93,7 +122,6 @@ function renderWizardExplosion(){
         else if(opacity <= 0.3){
             opacity = parseFloat(bugExplosion.style.opacity) - 0.02;
         }
-
         bugExplosion.style.width = explosionWidth + 100 + 'px';
         bugExplosion.style.height = explosionHeight + 100 + 'px';
         bugExplosion.style.top = explosionTop - 50 + 'px';

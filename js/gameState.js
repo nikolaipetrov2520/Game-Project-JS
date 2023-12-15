@@ -55,6 +55,12 @@ function initState() {
             points: 0,
             fontSize: 40,
         },
+        levelStats: {
+            opacity: 1,
+            fontSize: 80,
+            posX: 800,
+            posY: 600,
+        },
         heartStats: {
             width: 54,
             height: 47,
