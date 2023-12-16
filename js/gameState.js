@@ -18,6 +18,13 @@ function initState() {
         heartCount: 0,
         diamondCount: 0,
         isShoted: false,
+        isBlink: false,
+        capDirection: '',
+        spiderTime: 0,
+        isBreakRope: false,
+        isGetHearth: false,
+        irChangeDirTime: 0,
+        irDirection: '',
         wizard: {
             
             width: 57,
@@ -60,6 +67,12 @@ function initState() {
             fontSize: 80,
             posX: 800,
             posY: 600,
+        },
+        battleTimeTextStats: {
+            opacity: 1,
+            fontSize: 70,
+            posX: 700,
+            posY: 400,
         },
         heartStats: {
             width: 54,
@@ -108,7 +121,7 @@ function initState() {
             health: 10,
             maxHealth: 10,
             posX: 2000,
-            posY: 2000,
+            posY: 1000,
         },
         ironBigStats: {
             width: 125,
@@ -121,7 +134,7 @@ function initState() {
             health: 15,
             maxHealth: 15,
             posX: 2000,
-            posY: 2000,
+            posY: 1000,
         },
         fireball: {
             width: 20,

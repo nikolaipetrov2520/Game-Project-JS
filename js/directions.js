@@ -40,3 +40,23 @@ function elementDirection(state, elementState){
     }
     return dir;
 }
+
+function modifyWizardPosition(state, game) {
+    const { wizard } = state;
+
+    if (state.keys.KeyA || state.keys.ArrowLeft) {
+        wizard.posX = Math.max(wizard.posX - wizard.speed, 0);
+    }
+
+    if (state.keys.KeyS || state.keys.ArrowDown) {
+        wizard.posY = Math.min(wizard.posY + wizard.speed, game.gameScreen.offsetHeight - wizard.height);
+    }
+
+    if (state.keys.KeyD || state.keys.ArrowRight) {
+        wizard.posX = Math.min(wizard.posX + wizard.speed, game.gameScreen.offsetWidth - wizard.width);
+    }
+
+    if (state.keys.KeyW || state.keys.ArrowUp) {
+        wizard.posY = Math.max(wizard.posY - wizard.speed, 0);
+    }
+}

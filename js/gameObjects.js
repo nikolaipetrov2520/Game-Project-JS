@@ -231,8 +231,18 @@ function initGameObject() {
             levelElement.style.fontSize = stats.levelStats.fontSize+ 'px';
             levelElement.style.left = stats.levelStats.posX + 'px';
             levelElement.style.top = stats.levelStats.posY + 'px';
-            levelElement.style.opacity = stats.heartPointsStats.opacity;
+            levelElement.style.opacity = stats.levelStats.opacity;
             gameScreen.appendChild(levelElement);
+        },
+        createBattleTimeText(stats) {
+            const battleTimeTextElement = document.createElement('div');
+            battleTimeTextElement.classList.add('battleTimeText');
+            battleTimeTextElement.textContent = `Battle Time`;
+            battleTimeTextElement.style.fontSize = stats.battleTimeTextStats.fontSize+ 'px';
+            battleTimeTextElement.style.left = stats.battleTimeTextStats.posX + 'px';
+            battleTimeTextElement.style.top = stats.battleTimeTextStats.posY + 'px';
+            battleTimeTextElement.style.opacity = stats.battleTimeTextStats.opacity;
+            gameScreen.appendChild(battleTimeTextElement);
         },
         createBugExploxion(stats, left, top) {
             const bugExplosionElement = document.createElement('div');

@@ -4,30 +4,23 @@ let levelCounter = 100;
 let heartHealthcCounter = 100;
 let healthCounter = 100;
 let countKill = 0;
-let isBlink = false;
-let isBreakRope = false;
-let spiderTime = 0;
 let spearTime = 0;
 let cloudTime = 0;
 let tree1Time = 0;
 let tree2Time = 0;
 let pointTimer = 0;
 let isPoint = false;
-let isGetHearth = false;
 let spiderCount = 0;
-let capDirection = '';
-let irDirection = '';
 let haveCaptan = false;
 let haveCaptan2 = true;
 let haveIronBig = false;
 let haveIronBig2 = true;
-let irChangeDirTime = 0;
 let caChangeDirTime = 0;
 let irFireArr = [];
 let capFireArr = [];
-let capEmptiProgress;
 let capProgress;
 let irEmptiProgress;
+let capEmptiProgress;
 let irProgress;
 
 function start(state, game) {
@@ -166,250 +159,33 @@ function gameLoop(state, game, timestamp) {
         caChangeDirTime = 80;
         state.captanStats.health = state.captanStats.maxHealth;
         game.createCaptan(state.captanStats);
+        game.createBattleTimeText(state);
         capEmptiProgress = game.createCapEmptyHealthProgress(captanStats, state.capHealthEmpty);
         capProgress = game.createCapHealthProgress(captanStats, state.capHealthBar);
         haveCaptan = true;
         haveCaptan2 = true;
     }
-    // Render captan
-    let captanElement = document.querySelectorAll('.captan');
-    captanElement.forEach(cap => {
-        state.captanStats.posX = parseInt(cap.style.left);
-        state.captanStats.posY = parseInt(cap.style.top);
-
-        // Detect collsion with wizard
-        if (detectCollision(wizardElement, cap) && state.healthInterval <= 0) {
-            state.isShoted = true;
-            state.wizard.health -= 10;
-            state.healthInterval = 200;
-            if (state.wizard.health <= 0) {
-                state.gameOver = true;
-            }
-        }
-
-        if (caChangeDirTime < 0) {
-            if (state.captanStats.posX < gameScreen.offsetWidth * 3 / 4) {
-                state.captanStats.left = true;
-            }
-            else if (state.captanStats.posX >= gameScreen.offsetWidth - state.captanStats.width) {
-                state.captanStats.right = true;
-            }
-            else if (state.captanStats.posY <= 0) {
-                state.captanStats.up = true;
-            }
-            else if (state.captanStats.posY >= gameScreen.offsetHeight - state.captanStats.height) {
-                state.captanStats.down = true;
-            }
-            else {
-                cap.style.left = state.captanStats.posX - state.captanStats.speed * 3 + 'px';
-            }
-        }
-        else {
-            cap.style.left = state.captanStats.posX - state.captanStats.speed * 3 + 'px';
-            caChangeDirTime--;
-        }
-
-        if (state.captanStats.right || state.captanStats.left || state.captanStats.up || state.captanStats.down) {
-            capDirection = elementDirection(state, 'captan');
-            state.captanStats.right = false;
-            state.captanStats.left = false;
-            state.captanStats.up = false;
-            state.captanStats.down = false;
-
-        }
-
-        switch (capDirection) {
-            case 'left': cap.style.left = state.captanStats.posX - state.captanStats.speed * 3 + 'px';
-                break;
-            case 'right': cap.style.left = state.captanStats.posX + state.captanStats.speed * 3 + 'px';
-                break;
-            case 'up': cap.style.top = state.captanStats.posY - state.captanStats.speed * 3 + 'px';
-                break;
-            case 'down': cap.style.top = state.captanStats.posY + state.captanStats.speed * 3 + 'px';
-                break;
-            case 'leftUp':
-                cap.style.left = state.captanStats.posX - state.captanStats.speed + 'px';
-                cap.style.top = state.captanStats.posY - state.captanStats.speed + 'px';
-                break;
-            case 'leftDown':
-                cap.style.left = state.captanStats.posX - state.captanStats.speed + 'px';
-                cap.style.top = state.captanStats.posY + state.captanStats.speed + 'px';
-                break;
-            case 'rightUp':
-                cap.style.left = state.captanStats.posX + state.captanStats.speed + 'px';
-                cap.style.top = state.captanStats.posY - state.captanStats.speed + 'px';
-                break;
-            case 'rightDown':
-                cap.style.left = state.captanStats.posX + state.captanStats.speed + 'px';
-                cap.style.top = state.captanStats.posY + state.captanStats.speed + 'px';
-                break;
-        }
-        capEmptiProgress.style.left = parseInt(cap.style.left) + 'px';
-        capEmptiProgress.style.top = parseInt(cap.style.top) - 18 + 'px';
-        capProgress.style.left = parseInt(cap.style.left) + 'px';
-        capProgress.style.top = parseInt(cap.style.top) - 17 + 'px';
-        capProgress.style.width = state.capHealthEmpty.width / state.captanStats.maxHealth * state.captanStats.health + 'px';
-        if (parseInt(capProgress.style.width) >= 50) {
-            capProgress.className = '';
-            capProgress.classList.add('progress-green');
-        }
-        else if (parseInt(capProgress.style.width) >= 20) {
-            capProgress.className = '';
-            capProgress.classList.add('progress-yello');
-        }
-        else {
-            capProgress.className = '';
-            capProgress.classList.add('progress-red');
-        }
-    });
 
     // Spawn ironBig
     if (spiderCount % 10 == 0 && !haveIronBig2 && !haveIronBig) {
-        irChangeDirTime = 80;
+        state.irChangeDirTime = 80;
         state.ironBigStats.health = state.ironBigStats.maxHealth;
         game.createIronBig(state.ironBigStats);
+        game.createBattleTimeText(state);
         irEmptiProgress = game.createIrEmptyHealthProgress(ironBigStats, state.irHealthEmpty);
         irProgress = game.createIrHealthProgress(ironBigStats, state.irHealthBar);
         haveIronBig = true;
         haveIronBig2 = true;
     }
 
-    // Render ironBig
-    let ironBigElement = document.querySelectorAll('.ironBig');
-    ironBigElement.forEach(ir => {
-        state.ironBigStats.posX = parseInt(ir.style.left);
-        state.ironBigStats.posY = parseInt(ir.style.top);
-
-        // Detect collsion with wizard
-        if (detectCollision(wizardElement, ir) && state.healthInterval <= 0) {
-            state.isShoted = true;
-            state.wizard.health -= 10;
-            state.healthInterval = 200;
-            if (state.wizard.health <= 0) {
-                state.gameOver = true;
-            }
-        }
-
-        if (irChangeDirTime < 0) {
-            if (state.ironBigStats.posX < gameScreen.offsetWidth * 3 / 5) {
-                state.ironBigStats.left = true;
-            } else if (state.ironBigStats.posX >= gameScreen.offsetWidth - state.ironBigStats.width) {
-                state.ironBigStats.right = true;
-            } else if (state.ironBigStats.posY <= 0) {
-                state.ironBigStats.up = true;
-            } else if (state.ironBigStats.posY >= gameScreen.offsetHeight - state.ironBigStats.height) {
-                state.ironBigStats.down = true;
-            } else {
-                ir.style.left = state.ironBigStats.posX - state.ironBigStats.speed * 3 + 'px';
-            }
-        }
-        else {
-            ir.style.left = state.ironBigStats.posX - state.ironBigStats.speed * 3 + 'px';
-            irChangeDirTime--;
-        }
-
-        if (state.ironBigStats.right || state.ironBigStats.left || state.ironBigStats.up || state.ironBigStats.down) {
-            irDirection = elementDirection(state, 'ironBig');
-            state.ironBigStats.right = false;
-            state.ironBigStats.left = false;
-            state.ironBigStats.up = false;
-            state.ironBigStats.down = false;
-        }
-
-        switch (irDirection) {
-            case 'left': ir.style.left = state.ironBigStats.posX - state.ironBigStats.speed * 3 + 'px';
-                break;
-            case 'right': ir.style.left = state.ironBigStats.posX + state.ironBigStats.speed * 3 + 'px';
-                break;
-            case 'up': ir.style.top = state.ironBigStats.posY - state.ironBigStats.speed * 3 + 'px';
-                break;
-            case 'down': ir.style.top = state.ironBigStats.posY + state.ironBigStats.speed * 3 + 'px';
-                break;
-            case 'leftUp':
-                ir.style.left = state.ironBigStats.posX - state.ironBigStats.speed + 'px';
-                ir.style.top = state.ironBigStats.posY - state.ironBigStats.speed + 'px';
-                break;
-            case 'leftDown':
-                ir.style.left = state.ironBigStats.posX - state.ironBigStats.speed + 'px';
-                ir.style.top = state.ironBigStats.posY + state.ironBigStats.speed + 'px';
-                break;
-            case 'rightUp':
-                ir.style.left = state.ironBigStats.posX + state.ironBigStats.speed + 'px';
-                ir.style.top = state.ironBigStats.posY - state.ironBigStats.speed + 'px';
-                break;
-            case 'rightDown':
-                ir.style.left = state.ironBigStats.posX + state.ironBigStats.speed + 'px';
-                ir.style.top = state.ironBigStats.posY + state.ironBigStats.speed + 'px';
-                break;
-        }
-        irEmptiProgress.style.left = parseInt(ir.style.left) + 'px';
-        irEmptiProgress.style.top = parseInt(ir.style.top) - 18 + 'px';
-        irProgress.style.left = parseInt(ir.style.left) + 'px';
-        irProgress.style.top = parseInt(ir.style.top) - 17 + 'px';
-        irProgress.style.width = state.irHealthEmpty.width / state.ironBigStats.maxHealth * state.ironBigStats.health + 'px';
-        if (parseInt(irProgress.style.width) >= 50) {
-            irProgress.className = '';
-            irProgress.classList.add('progress-green');
-        }
-        else if (parseInt(irProgress.style.width) >= 20) {
-            irProgress.className = '';
-            irProgress.classList.add('progress-yello');
-        }
-        else {
-            irProgress.className = '';
-            irProgress.classList.add('progress-red');
-        }
-    });
-
     // Spawn Spider
-    if (timestamp > state.spiderStats.nextSpawnTimestamp && spiderTime > 250) {
+    if (timestamp > state.spiderStats.nextSpawnTimestamp && state.spiderTime > 250) {
         game.createSpider(state.spiderStats);
         state.spiderStats.nextSpawnTimestamp = timestamp + Math.random() * state.spiderStats.maxSpawnInterval;
-        spiderTime = 0;
+        state.spiderTime = 0;
     } else {
-        spiderTime++;
+        state.spiderTime++;
     }
-
-    // Render Spider
-    let spiderElements = document.querySelectorAll('.spider');
-    spiderElements.forEach(spider => {
-        let posY = parseInt(spider.style.top);
-
-        // Detect collsion with wizard
-        if (detectCollision(wizardElement, spider) && state.healthInterval <= 0 && !spider.isDed) {
-            state.isShoted = true;
-            state.wizard.health -= 15;
-            state.healthInterval = 200;
-            spider.remove();
-            spiderTime = 0;
-            if (state.wizard.health <= 0) {
-                state.gameOver = true;
-            }
-        }
-        if (!isBreakRope) {
-            if (posY + state.spiderStats.height < game.gameScreen.offsetHeight / 2 && state.spiderStats.isDown) {
-                spider.style.top = posY + state.spiderStats.speed * 4 + 'px';
-            } else {
-                state.spiderStats.isDown = false;
-                if (posY + state.spiderStats.height > 0) {
-                    spider.style.top = posY - state.spiderStats.speed * 2 + 'px';
-                } else {
-                    spider.remove();
-                    spiderTime = 0;
-                }
-            }
-        }
-        else {
-            if (posY < game.gameScreen.offsetHeight) {
-                spider.style.top = posY + state.spiderStats.speed * 9 + 'px';
-            }
-            else {
-                spider.remove();
-                spiderTime = 0;
-                isBreakRope = false;
-            }
-        }
-    });
 
     // Spawn Spear
     if (timestamp > state.spearStats.nextSpawnTimestamp && spearTime > 100) {
@@ -419,6 +195,18 @@ function gameLoop(state, game, timestamp) {
         spearTime = 0;
     } else {
         spearTime++;
+    }
+
+    // Spown Heart
+    if (timestamp > state.heartStats.nextSpawnTimestamp) {
+        game.createHeart(state.heartStats, state.level);
+        state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
+    }
+
+    // Spown Diamond
+    if (timestamp > state.diamondStats.nextSpawnTimestamp) {
+        game.createDiamond(state.diamondStats);
+        state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
     }
 
     //spawn fire
@@ -448,6 +236,8 @@ function gameLoop(state, game, timestamp) {
                 countKill++;
             }
         });
+
+        let spiderElements = document.querySelectorAll('.spider');
         spiderElements.forEach(spider => {
             if (detectCollision(spider, fireball) && !spider.isDed) {
                 state.score += state.killScore * 0.5;
@@ -457,7 +247,7 @@ function gameLoop(state, game, timestamp) {
                 let top = parseInt(spider.style.top);
                 top += 510;
                 spider.style.top = top + 'px';
-                isBreakRope = true;
+                state.isBreakRope = true;
                 spider.isDed = true;
                 haveCaptan2 = false;
                 haveIronBig2 = false
@@ -467,6 +257,7 @@ function gameLoop(state, game, timestamp) {
             }
         });
 
+        let captanElement = document.querySelectorAll('.captan');
         captanElement.forEach(cap => {
             if (detectCollision(cap, fireball)) {
                 fireball.remove();
@@ -484,6 +275,7 @@ function gameLoop(state, game, timestamp) {
             }
         });
 
+        let ironBigElement = document.querySelectorAll('.ironBig');
         ironBigElement.forEach(ir => {
             if (detectCollision(ir, fireball)) {
                 fireball.remove();
@@ -608,79 +400,17 @@ function gameLoop(state, game, timestamp) {
         }
     });
 
-    // Spown Heart
-    if (timestamp > state.heartStats.nextSpawnTimestamp) {
-        game.createHeart(state.heartStats, state.level);
-        state.heartStats.nextSpawnTimestamp = timestamp + Math.random() * state.heartStats.maxSpawnInterval;
-    }
-
-    // Spown Diamond
-    if (timestamp > state.diamondStats.nextSpawnTimestamp) {
-        game.createDiamond(state.diamondStats);
-        state.diamondStats.nextSpawnTimestamp = timestamp + Math.random() * state.diamondStats.maxSpawnInterval;
-    }
-
-    // Render wizard
-    wizardElement.style.left = wizard.posX + 'px';
-    wizardElement.style.top = wizard.posY + 'px';
-
-    if (state.isShoted) {
-        animateWizardExplosion(wizardElement, game, state);
-        state.isShoted = false;
-    }
-
-    if (state.gameOver) {
-        gameOver();
-    }
-    else if (state.gameWin) {
-        gameWin();
-    } else {
-        state.score += state.scoreRate;
-        window.requestAnimationFrame(gameLoop.bind(null, state, game));
-    }
-    console.log(state.level)
-    if (state.level > state.previousLevel) {
-        isBlink = true;
-        levelCounter--;
-        scoreScreenBlink("#1ae41ae0", game.scoreScreen, levelCounter);
-        if (levelCounter <= 0) {
-            state.previousLevel = state.level;
-            game.createLevel(state);
-            isBlink = false;
-        }
-    } else {
-        if (!isBlink) {
-            levelCounter = 100;
-        }
-    }
-    state.healthInterval--;
-    if (state.healthInterval >= 100) {
-        isBlink = true;
-        healthCounter--;
-        scoreScreenBlink("#e61a1ac9", game.healthScreen, healthCounter);
-        wizardBlink(state, wizardElement);
-    } else {
-        wizardElement.style.backgroundImage = "url('../images/1.png')";
-        if (!isBlink) {
-            healthCounter = 100;
-        }
-    }
-    if (isGetHearth) {
-        isBlink = true;
-        heartHealthcCounter--;
-        scoreScreenBlink('#1ae41ae0', game.healthScreen, heartHealthcCounter);
-    } else {
-        if (!isBlink) {
-            heartHealthcCounter = 100;
-        }
-    }
-
+    renderWizard(state, game, wizardElement);
     renderClouds();
     renderTree1();
     renderTree2();
+    renderSpider(state, wizardElement);
     renderSpear(state, wizardElement);
     renderIronMen(state, wizardElement);
+    renderCaptain(state, wizardElement, capEmptiProgress, capProgress);
+    renderIronBig(state, wizardElement, irEmptiProgress, irProgress)
     renderLevelText();
+    renderBattleTimeText();
     renderBugExplosions();
     renderBugPoints();
     renderWizardExplosion();
@@ -701,61 +431,4 @@ function pointAdd(obj, point) {
         pointTimer = 0;
         isPoint = false;
     }
-}
-
-function scoreScreenBlink(color, screen, counter) {
-    if (counter >= 0) {
-        if (counter < 100 && counter >= 95) {
-            screen.style.backgroundColor = color;
-        } else if (counter < 95 && counter >= 90) {
-            screen.style.backgroundColor = "#0942093b";
-        } else if (counter < 90 && counter >= 85) {
-            screen.style.backgroundColor = color;
-        } else if (counter < 85 && counter >= 80) {
-            screen.style.backgroundColor = "#0942093b";
-        } else if (counter < 80 && counter >= 75) {
-            screen.style.backgroundColor = color;
-        } else if (counter < 75 && counter >= 70) {
-            screen.style.backgroundColor = "#0942093b";
-        } else if (counter < 70 && counter >= 65) {
-            screen.style.backgroundColor = color;
-        } else if (counter < 65 && counter >= 60) {
-            screen.style.backgroundColor = "#0942093b";
-        } else if (counter < 60 && counter >= 55) {
-            screen.style.backgroundColor = color;
-        } else if (counter < 55 && counter >= 50) {
-            screen.style.backgroundColor = "#0942093b";
-        }
-    } else {
-        isBlink = false;
-        isGetHearth = false;
-    }
-}
-
-function modifyWizardPosition(state, game) {
-    const { wizard } = state;
-
-    if (state.keys.KeyA || state.keys.ArrowLeft) {
-        wizard.posX = Math.max(wizard.posX - wizard.speed, 0);
-    }
-
-    if (state.keys.KeyS || state.keys.ArrowDown) {
-        wizard.posY = Math.min(wizard.posY + wizard.speed, game.gameScreen.offsetHeight - wizard.height);
-    }
-
-    if (state.keys.KeyD || state.keys.ArrowRight) {
-        wizard.posX = Math.min(wizard.posX + wizard.speed, game.gameScreen.offsetWidth - wizard.width);
-    }
-
-    if (state.keys.KeyW || state.keys.ArrowUp) {
-        wizard.posY = Math.max(wizard.posY - wizard.speed, 0);
-    }
-}
-
-function detectCollision(objectA, objectB) {
-    let first = objectA.getBoundingClientRect();
-    let second = objectB.getBoundingClientRect();
-    let hasCollision = !(first.top > second.bottom || first.bottom < second.top || first.right < second.left || first.left > second.right)
-
-    return hasCollision;
 }
