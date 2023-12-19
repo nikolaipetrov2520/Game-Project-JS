@@ -204,11 +204,15 @@ function initGameObject() {
 
             gameScreen.appendChild(bugElement);
         },
-        createBugPoints(stats, left, top) {
+        createBugPoints(stats, left, top, points, size) {
             const bugPointsElement = document.createElement('div');
             bugPointsElement.classList.add('bugPoints');
-            bugPointsElement.textContent = `+${stats.points}`;
-            bugPointsElement.style.fontSize = stats.fontSize+ 'px';
+            bugPointsElement.textContent = `+${points}`;
+            bugPointsElement.style.fontSize = stats.fontSize * size + 'px';
+            if(size > 1){
+                bugPointsElement.style.fontWeight = "bold";
+                bugPointsElement.style.color = "orange";
+            }
             bugPointsElement.style.left = (left - stats.width / 2) + 'px';
             bugPointsElement.style.top = (top - stats.height / 2) + 'px';
             bugPointsElement.style.opacity = stats.opacity;
@@ -319,7 +323,7 @@ function initGameObject() {
         createHeart(stats, level) {
             const heartElement = document.createElement('div');
             heartElement.classList.add('heart');
-            stats.addHealth = Math.ceil(Math.random() * (level + 3));
+            stats.addHealth = Math.ceil(Math.random() * level);
             heartElement.textContent = `+${stats.addHealth}`;
             heartElement.style.width = stats.width + 'px';
             heartElement.style.height = stats.height + 'px';

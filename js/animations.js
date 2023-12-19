@@ -31,12 +31,11 @@ function wizardBlink(state, wizardElement) {
     }
 }
 
-function animateExplosion(bug, game, state){
+function animateExplosion(bug, game, state, points){
     let height = bug.getBoundingClientRect().top + bug.getBoundingClientRect().height / 2;
     let width = bug.getBoundingClientRect().left + bug.getBoundingClientRect().width / 2;
-    bug.remove();
     game.createBugExploxion(state.bugExplosionStats, width, height);
-    game.createBugPoints(state.bugPointsStats, width, height);
+    game.createBugPoints(state.bugPointsStats, width, height, points, 1);
 }
 
 function animateWizardExplosion(wizard, game, state){

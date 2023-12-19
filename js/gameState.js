@@ -42,6 +42,8 @@ function initState() {
             maxSpawnInterval: 4000,
             startInterval: 4000,
             speed: 4,
+            points: 50,
+            killScore: 100,
         },
         bugExplosionStats: {
             width: 0,
@@ -52,7 +54,6 @@ function initState() {
             width: 80,
             height: 35,
             opacity: 1,
-            points: 100,
             fontSize: 28,
         },
         heartPointsStats: {
@@ -119,9 +120,11 @@ function initState() {
             left: false,
             right: false,
             health: 10,
-            maxHealth: 10,
+            maxHealth: 20,
             posX: 2000,
             posY: 1000,
+            points: 10,
+            killScore: 500,
         },
         ironBigStats: {
             width: 125,
@@ -132,9 +135,11 @@ function initState() {
             left: false,
             right: false,
             health: 15,
-            maxHealth: 15,
+            maxHealth: 30,
             posX: 2000,
             posY: 1000,
+            points: 20,
+            killScore: 1000,
         },
         fireball: {
             width: 20,

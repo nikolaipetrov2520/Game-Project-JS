@@ -59,6 +59,17 @@ function gameLoop(state, game, timestamp) {
     if (state.wizard.health >= 100) {
         state.wizard.health = 100;
     }
+    
+    if (countKill > 550){
+        state.bugStats.points = 200;
+    }
+    else if (countKill > 350){
+        state.bugStats.points = 150;
+    }
+    else if (countKill > 150){
+        state.bugStats.points = 100;
+    }
+
     game.scoreScreen.innerText = `Points \r\n  ${state.score.toFixed(0)}\r\n Level: ${state.level}`;
     let playerName = game.player.value;
 
@@ -155,7 +166,7 @@ function gameLoop(state, game, timestamp) {
     }
 
     // Spawn captan
-    if (spiderCount % 6 == 0 && !haveCaptan2 && !haveCaptan) {
+    if (spiderCount % 7 == 0 && !haveCaptan2 && !haveCaptan) {
         caChangeDirTime = 80;
         state.captanStats.health = state.captanStats.maxHealth;
         game.createCaptan(state.captanStats);
@@ -167,7 +178,7 @@ function gameLoop(state, game, timestamp) {
     }
 
     // Spawn ironBig
-    if (spiderCount % 10 == 0 && !haveIronBig2 && !haveIronBig) {
+    if (spiderCount % 11 == 0 && !haveIronBig2 && !haveIronBig) {
         state.irChangeDirTime = 80;
         state.ironBigStats.health = state.ironBigStats.maxHealth;
         game.createIronBig(state.ironBigStats);
@@ -229,9 +240,9 @@ function gameLoop(state, game, timestamp) {
         // Detect collision
         bugElements.forEach(bug => {
             if (detectCollision(bug, fireball)) {
-                state.score += state.killScore;
-                animateExplosion(bug, game, state);
-
+                state.score += state.bugStats.points;
+                animateExplosion(bug, game, state, state.bugStats.points);
+                bug.remove();
                 fireball.remove();
                 countKill++;
             }
@@ -262,12 +273,17 @@ function gameLoop(state, game, timestamp) {
             if (detectCollision(cap, fireball)) {
                 fireball.remove();
                 state.captanStats.health--;
-
+                state.score += state.captanStats.points;
+                animateExplosion(cap, game, state, state.captanStats.points);
                 if (state.captanStats.health <= 0) {
-                    state.score += state.killScore * 5;
+                    state.score += state.captanStats.killScore;
                     countKill++;
                     haveCaptan = false;
-                    state.captanStats.maxHealth += 2;
+                    state.captanStats.maxHealth += 5;
+                    let height = cap.getBoundingClientRect().top + cap.getBoundingClientRect().height / 2;
+                    let width = cap.getBoundingClientRect().left + cap.getBoundingClientRect().width / 2;
+                    animateWizardExplosion(cap, game, state);
+                    game.createBugPoints(state.bugPointsStats, width, height, state.captanStats.killScore, 2);
                     cap.remove();
                     capProgress.remove();
                     capEmptiProgress.remove();
@@ -280,12 +296,17 @@ function gameLoop(state, game, timestamp) {
             if (detectCollision(ir, fireball)) {
                 fireball.remove();
                 state.ironBigStats.health--;
-
+                state.score += state.ironBigStats.points;
+                animateExplosion(ir, game, state, state.ironBigStats.points);
                 if (state.ironBigStats.health <= 0) {
-                    state.score += state.killScore * 10;
+                    state.score += state.ironBigStats.killScore;
                     countKill++;
                     haveIronBig = false;
-                    state.ironBigStats.maxHealth += 15;
+                    state.ironBigStats.maxHealth += 10;
+                    let height = ir.getBoundingClientRect().top + ir.getBoundingClientRect().height / 2;
+                    let width = ir.getBoundingClientRect().left + ir.getBoundingClientRect().width / 2;
+                    animateWizardExplosion(ir, game, state);
+                    game.createBugPoints(state.bugPointsStats, width, height, state.ironBigStats.killScore, 2);
                     ir.remove();
                     irProgress.remove();
                     irEmptiProgress.remove();
